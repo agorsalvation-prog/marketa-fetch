@@ -442,6 +442,11 @@ header{position:sticky;top:0;z-index:50;background:rgba(246,248,240,.92);backdro
 .payout-row .amt{font-weight:800;color:var(--forest)}
 .wallet-warn{background:#FBE0E0;color:var(--danger);border-radius:14px;padding:14px 18px;font-size:.86rem;font-weight:700;margin-top:14px;line-height:1.5}
 .wallet-ok{background:#E4F4DC;color:var(--forest);border-radius:14px;padding:14px 18px;font-size:.86rem;font-weight:700;margin-top:14px;line-height:1.5}
+.rider-strip{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-top:12px}
+.rider-strip b{display:block;font-size:.88rem;font-weight:800}
+.rider-strip span{font-size:.8rem;color:var(--muted);font-weight:600}
+.pickup-code{font-family:var(--display);font-weight:900;font-size:1.5rem;letter-spacing:.14em;background:var(--ink);color:var(--lime);padding:10px 16px;border-radius:12px;flex-shrink:0}
+.waiting-strip{background:#FFF3C4;color:#8a6d00;border-radius:14px;padding:13px 16px;font-size:.85rem;font-weight:700;margin-top:12px;line-height:1.5}
 .sec-tabs{position:sticky;top:66px;z-index:40;background:rgba(246,248,240,.96);backdrop-filter:blur(10px);margin:26px -20px 0;padding:0 20px;border-bottom:1px solid var(--line)}
 .sec-tabs-track{display:flex;gap:28px;overflow-x:auto;scrollbar-width:none}
 .sec-tabs-track::-webkit-scrollbar{display:none}
@@ -1600,6 +1605,7 @@ function placeOrder(){
     total: t.total,
     payMethod, speed,
     status: 'incoming',
+    pickupCode: String(Math.floor(100 + Math.random()*900)),
     createdAt: new Date().toISOString()
   });
   saveOrders();
@@ -2142,8 +2148,9 @@ function orderCard(o){
     <button class="oa-btn ready" onclick="setOrderStatus('${o.id}','ready')">🛵 Mark as ready</button>
     <button class="oa-btn cancel" onclick="setOrderStatus('${o.id}','cancelled')">Cancel order</button>`;
   if(o.status==='ready') actions = `
-    <button class="oa-btn done" onclick="setOrderStatus('${o.id}','completed')">✓ Mark completed</button>
     <button class="oa-btn cancel" onclick="setOrderStatus('${o.id}','cancelled')">Cancel order</button>`;
+  if(o.status==='assigned') actions = `<span class="dash-note" style="margin:0">Hand the order to ${o.riderName} once they give you the code.</span>`;
+  if(o.status==='picked') actions = `<span class="dash-note" style="margin:0">${o.riderName} is delivering this order now.</span>`;
   return `
     <div class="order-card">
       <div class="order-top">
@@ -2152,6 +2159,11 @@ function orderCard(o){
         <span class="status-badge ${o.status}">${o.status}</span>
       </div>
       <div class="order-cust"><b>${o.customer}</b> · ${o.phone}<br>📍 ${o.address}${o.note?`<br>📝 ${o.note}`:''}</div>
+      ${o.riderId ? `<div class="rider-strip">
+        <div><b>🛵 ${o.riderName} is ${o.status==='picked' ? 'on the way to the customer' : 'coming to collect'}</b>
+        <span>${o.riderPhone||''} · ${o.riderVehicle||''}</span></div>
+        <span class="pickup-code" title="Rider must give you this code">${o.pickupCode}</span>
+      </div>` : (o.status==='ready' ? `<div class="waiting-strip">⏳ Waiting for a rider to accept — riders in ${CITIES[o.city]} can see this order now.</div>` : '')}
       <div class="order-items">${items}</div>
       <div class="order-total"><span>Order total (incl. delivery)</span><span>${fmt(o.total)}</span></div>
       <div class="calc-row sub" style="padding:6px 0 0"><span>Commission (15%)</span><span>− ${fmt(Math.round(foodValue(o)*COMMISSION))}</span></div>
@@ -2545,7 +2557,9 @@ function acceptJob(id){
   if(!o) return;
   if(o.riderId){ toast('Another rider just took that job','⚠️'); renderRiderDash(); return; }
   o.riderId = curRider.id;
-  o.riderName = curRider.firstName;
+  o.riderName = curRider.firstName + ' ' + curRider.lastName;
+  o.riderPhone = curRider.phone;
+  o.riderVehicle = curRider.vehicle;
   o.riderFee = riderPay(o);
   o.status = 'assigned';
   o.updatedAt = new Date().toISOString();
@@ -2574,6 +2588,7 @@ function renderActiveJob(){
         <span class="job-fee">${fmt(o.riderFee)}</span>
       </div>
       ${jobLegs(o)}
+      <div class="rider-strip"><div><b>Give this code at the store</b><span>The vendor checks it before handing over the order</span></div><span class="pickup-code">${o.pickupCode}</span></div>
       <div class="order-cust" style="margin-top:8px">📞 ${o.phone}${o.note?`<br>📝 ${o.note}`:''}</div>
       <div class="order-actions">${action}</div>
     </div>`;
