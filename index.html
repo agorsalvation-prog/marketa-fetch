@@ -425,6 +425,14 @@ header{position:sticky;top:0;z-index:50;background:rgba(246,248,240,.92);backdro
 .job-leg b{font-size:.9rem;display:block}
 .job-leg span{font-size:.82rem;color:var(--muted);font-weight:600}
 .job-line{border-left:2px dashed var(--line);height:14px;margin-left:9px}
+.calc-box{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;max-width:520px}
+.calc-row{display:flex;justify-content:space-between;padding:9px 0;font-size:.92rem;font-weight:600}
+.calc-row.sub{color:var(--muted);font-size:.86rem}
+.calc-row.total{border-top:2px solid var(--ink);margin-top:8px;padding-top:14px;font-weight:800;font-size:1.15rem}
+.calc-row.total .v{color:var(--forest)}
+.calc-badge{display:inline-block;background:var(--lime);color:var(--ink);font-weight:800;font-size:.75rem;padding:5px 12px;border-radius:999px;margin-bottom:14px}
+.calc-note{font-size:.8rem;color:var(--muted);font-weight:600;margin-top:14px;line-height:1.5}
+.calc-slider{width:100%;accent-color:var(--lime-deep);margin:6px 0 2px}
 .sec-tabs{position:sticky;top:66px;z-index:40;background:rgba(246,248,240,.96);backdrop-filter:blur(10px);margin:26px -20px 0;padding:0 20px;border-bottom:1px solid var(--line)}
 .sec-tabs-track{display:flex;gap:28px;overflow-x:auto;scrollbar-width:none}
 .sec-tabs-track::-webkit-scrollbar{display:none}
@@ -920,7 +928,7 @@ footer{border-top:1px solid var(--line);margin-top:40px;background:var(--card)}
     </div>
     <div class="stat-grid">
       <div class="stat-card hi"><div class="s-label">Orders today</div><div class="s-value" id="stOrders">0</div></div>
-      <div class="stat-card"><div class="s-label">Revenue today</div><div class="s-value" id="stRevenue">₦0</div></div>
+      <div class="stat-card"><div class="s-label">Your earnings today</div><div class="s-value" id="stRevenue">₦0</div></div>
       <div class="stat-card"><div class="s-label">Pending orders</div><div class="s-value" id="stPending">0</div></div>
       <div class="stat-card"><div class="s-label">All-time orders</div><div class="s-value" id="stAll">0</div></div>
     </div>
@@ -929,6 +937,20 @@ footer{border-top:1px solid var(--line);margin-top:40px;background:var(--card)}
     <div class="dash-sec">
       <h3>Active orders</h3><button class="refresh-btn" onclick="renderOrders();renderStats();toast('Orders refreshed','🔄')">Refresh</button>
       <div id="ordersList"></div>
+    </div>
+
+    <div class="dash-sec">
+      <h3>What you earn</h3>
+      <div class="calc-box">
+        <span class="calc-badge">15% commission</span>
+        <div class="field" style="margin-bottom:6px">
+          <label for="calcAmt">Order value</label>
+          <input id="calcAmt" type="number" min="0" step="100" value="5000" oninput="renderCalc()">
+          <input class="calc-slider" type="range" id="calcRange" min="500" max="30000" step="500" value="5000" oninput="document.getElementById('calcAmt').value=this.value;renderCalc()">
+        </div>
+        <div id="calcOut"></div>
+        <p class="calc-note">Marketa Fetch takes 15% of the food value only — never your delivery fee, and never the customer's service fee. Payouts are made on what's left.</p>
+      </div>
     </div>
 
     <div class="dash-sec">
@@ -1718,6 +1740,7 @@ function openDash(){
   document.getElementById('coverPrev').innerHTML = curVendor.cover ? `<img src="${curVendor.cover}" alt="">` : '🖼️';
   document.getElementById('logoPrev').innerHTML = curVendor.logo ? `<img src="${curVendor.logo}" alt="">` : '🏪';
   renderMenuEditor();
+  renderCalc();
   renderOrders();
   renderHistory();
   go('vendor-dash');
@@ -1727,7 +1750,7 @@ function renderStats(){
   const cityOrders = orders.filter(o => o.city === curVendor.city);
   const today = new Date().toDateString();
   const todays = cityOrders.filter(o => new Date(o.createdAt).toDateString() === today);
-  const revenue = todays.reduce((a,o)=>a+o.total, 0);
+  const revenue = todays.reduce((a,o)=>a + vendorNet(foodValue(o)), 0);
   const pending = cityOrders.filter(o => o.status === 'incoming').length;
   document.getElementById('stOrders').textContent = todays.length;
   document.getElementById('stRevenue').textContent = fmt(revenue);
@@ -1787,6 +1810,22 @@ function uploadItemPhoto(input){
     document.getElementById('itemPrev').innerHTML = `<img src="${data}" alt="">`;
     toast('Photo ready — save the item to publish it','📷');
   });
+}
+
+/* ================= COMMISSION ================= */
+const COMMISSION = 0.15;
+const foodValue = o => o.items.reduce((a,i)=>a + i.price*i.qty, 0);
+const vendorNet = value => Math.round(value * (1 - COMMISSION));
+
+function renderCalc(){
+  const amt = Math.max(0, parseInt(document.getElementById('calcAmt').value) || 0);
+  const range = document.getElementById('calcRange');
+  if(range && amt <= +range.max) range.value = amt;
+  const fee = Math.round(amt * COMMISSION);
+  document.getElementById('calcOut').innerHTML = `
+    <div class="calc-row"><span>Customer pays for food</span><span>${fmt(amt)}</span></div>
+    <div class="calc-row sub"><span>Marketa Fetch commission (15%)</span><span>− ${fmt(fee)}</span></div>
+    <div class="calc-row total"><span>You keep</span><span class="v">${fmt(amt - fee)}</span></div>`;
 }
 
 /* ================= MENU EDITOR ================= */
@@ -2024,7 +2063,9 @@ function orderCard(o){
       </div>
       <div class="order-cust"><b>${o.customer}</b> · ${o.phone}<br>📍 ${o.address}${o.note?`<br>📝 ${o.note}`:''}</div>
       <div class="order-items">${items}</div>
-      <div class="order-total"><span>Total (incl. delivery)</span><span>${fmt(o.total)}</span></div>
+      <div class="order-total"><span>Order total (incl. delivery)</span><span>${fmt(o.total)}</span></div>
+      <div class="calc-row sub" style="padding:6px 0 0"><span>Commission (15%)</span><span>− ${fmt(Math.round(foodValue(o)*COMMISSION))}</span></div>
+      <div class="calc-row" style="font-weight:800;padding:2px 0 0"><span>You keep</span><span style="color:var(--forest)">${fmt(vendorNet(foodValue(o)))}</span></div>
       <div class="order-actions">${actions}</div>
     </div>`;
 }
