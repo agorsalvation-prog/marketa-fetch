@@ -279,6 +279,8 @@ header{position:sticky;top:0;z-index:50;background:rgba(246,248,240,.92);backdro
 .status-badge.accepted{background:#D8ECF5;color:#0b5394}
 .status-badge.preparing{background:#E7DDF7;color:#5b2d90}
 .status-badge.ready{background:var(--lime);color:var(--ink)}
+.status-badge.assigned{background:#FFE8CC;color:#8a4b00}
+.status-badge.picked{background:#D8ECF5;color:#0b5394}
 .status-badge.completed{background:var(--forest);color:var(--lime)}
 .status-badge.rejected,.status-badge.cancelled{background:#FBE0E0;color:var(--danger)}
 .order-cust{font-size:.85rem;font-weight:600;color:var(--forest);margin-bottom:8px}
@@ -295,6 +297,138 @@ header{position:sticky;top:0;z-index:50;background:rgba(246,248,240,.92);backdro
 .oa-btn.ready{background:var(--forest);color:var(--lime)}
 .oa-btn.done{background:var(--paper);border:1.5px solid var(--forest);color:var(--forest)}
 .refresh-btn{font-weight:800;font-size:.8rem;color:var(--forest);text-decoration:underline;text-underline-offset:3px;margin-left:12px}
+
+/* ===== Store detail (Glovo-style) ===== */
+.store-cover{position:relative;border-radius:0;margin:-38px -20px 0;height:210px;background-size:cover;background-position:center;background-color:var(--line)}
+.store-cover .cover-back{position:absolute;top:16px;left:16px;width:44px;height:44px;border-radius:999px;background:#fff;font-size:1.2rem;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+.store-logo{position:absolute;bottom:-30px;left:20px;width:96px;height:96px;border-radius:22px;background:#fff;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;font-size:2.6rem;overflow:hidden;border:3px solid #fff}
+.store-logo img{width:100%;height:100%;object-fit:cover}
+.store-info{padding-top:44px}
+.store-info h1{font-family:var(--display);font-weight:900;font-style:italic;font-size:clamp(1.5rem,4vw,2.2rem);letter-spacing:-.02em}
+.store-info .s-tags{color:var(--muted);font-weight:600;font-size:.9rem;margin-top:4px}
+.store-chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.s-chip{font-size:.78rem;font-weight:800;padding:7px 14px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--forest)}
+.s-chip.promo{background:var(--lime);border-color:var(--lime);color:var(--ink)}
+.stat-row{display:flex;gap:36px;margin:26px 0 20px;flex-wrap:wrap}
+.stat-pill{text-align:center}
+.stat-pill .circle{width:52px;height:52px;border-radius:999px;background:#FDF3D4;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin:0 auto 8px}
+.stat-pill .val{font-weight:800;font-size:.95rem}
+.store-search{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:13px 20px;margin-bottom:8px}
+.store-search input{border:none;background:none;font-family:var(--body);font-size:.95rem;width:100%;color:var(--ink)}
+.store-search input:focus{outline:none}
+
+/* item cards with photos */
+.menu-item .m-emo{font-size:2rem;background:var(--paper);border-radius:14px;width:76px;height:76px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.menu-item .m-emo img{width:100%;height:100%;object-fit:cover}
+.store-banner img{width:100%;height:100%;object-fit:cover}
+
+/* photo upload */
+.photo-field{margin-bottom:16px}
+.photo-field label{display:block;font-size:.78rem;font-weight:800;margin-bottom:8px;color:var(--forest);text-transform:uppercase;letter-spacing:.03em}
+.photo-drop{display:flex;align-items:center;gap:14px;border:1.5px dashed var(--line);border-radius:14px;padding:14px;background:var(--paper);cursor:pointer}
+.photo-drop:hover{border-color:var(--lime-deep)}
+.photo-prev{width:64px;height:64px;border-radius:12px;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:1.5rem;overflow:hidden;flex-shrink:0;border:1px solid var(--line)}
+.photo-prev img{width:100%;height:100%;object-fit:cover}
+.photo-drop .p-text{font-size:.85rem;font-weight:700;color:var(--forest)}
+.photo-drop .p-hint{font-size:.75rem;font-weight:600;color:var(--muted)}
+.photo-drop input[type=file]{display:none}
+.me-thumb{width:52px;height:52px;border-radius:10px;object-fit:cover;flex-shrink:0}
+
+/* ===== Grocery shelf layout ===== */
+.shelf{margin:34px 0}
+.shelf-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
+.shelf-head h3{font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:-.01em;border:none;padding:0;margin:0;display:block}
+.shelf-arrow{width:44px;height:44px;border-radius:999px;background:var(--ink);color:#fff;font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .15s}
+.shelf-arrow:hover{transform:scale(1.06)}
+.shelf-track{display:flex;gap:16px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:6px;scrollbar-width:none}
+.shelf-track::-webkit-scrollbar{display:none}
+.tile{width:168px;flex-shrink:0}
+.tile-img{position:relative;width:168px;height:168px;border-radius:18px;background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:3rem;overflow:hidden}
+.tile-img img{width:100%;height:100%;object-fit:contain;padding:10px}
+.tile-add{position:absolute;right:8px;bottom:8px;width:44px;height:44px;border-radius:999px;background:#fff;box-shadow:0 3px 12px rgba(14,22,17,.18);font-size:1.4rem;font-weight:800;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:transform .12s}
+.tile-add:hover{transform:scale(1.08)}
+.tile-step{position:absolute;right:8px;bottom:8px;display:flex;align-items:center;gap:8px;background:var(--ink);border-radius:999px;padding:5px 10px;box-shadow:0 3px 12px rgba(14,22,17,.2)}
+.tile-step button{color:var(--lime);font-weight:900;font-size:1rem;width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+.tile-step .q{color:#fff;font-weight:800;font-size:.85rem;min-width:12px;text-align:center}
+.tile-name{font-weight:700;font-size:.92rem;margin-top:12px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tile-price{font-weight:800;font-size:.92rem;color:var(--forest);margin-top:6px}
+
+/* ===== Shop by category grid ===== */
+.shop-cat{margin-top:34px}
+.shop-cat h2{font-family:var(--display);font-weight:700;font-size:1.25rem;letter-spacing:-.01em;margin-bottom:18px}
+.shop-cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:20px 16px}
+.cat-tile{text-align:center;background:none}
+.cat-tile .ct-img{width:100%;aspect-ratio:1;border-radius:16px;background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:2.6rem;overflow:hidden;border:1px solid var(--line);transition:transform .15s,box-shadow .15s}
+.cat-tile .ct-img img{width:100%;height:100%;object-fit:contain;padding:10px}
+.cat-tile:hover .ct-img{transform:translateY(-3px);box-shadow:var(--shadow)}
+.cat-tile .ct-name{font-weight:700;font-size:.92rem;margin-top:10px;line-height:1.3}
+.cat-tile.on .ct-img{border-color:var(--ink);border-width:2px}
+.shelf-filter{display:flex;align-items:center;gap:12px;margin-top:26px}
+.shelf-filter .clear{font-weight:800;font-size:.85rem;color:var(--forest);text-decoration:underline;text-underline-offset:3px}
+
+/* ===== Partner section ===== */
+.partner{background:linear-gradient(180deg,#EDF6E2 0%,#F6F8F0 100%);margin-top:50px;padding:56px 0 66px}
+.partner-inner{max-width:1120px;margin:0 auto;padding:0 20px;text-align:center}
+.partner .handshake{font-size:2.6rem;margin-bottom:8px}
+.partner h2{font-family:var(--display);font-weight:900;font-style:italic;font-size:clamp(1.7rem,4.5vw,2.8rem);letter-spacing:-.03em;margin-bottom:44px}
+.partner-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:38px}
+.partner-card{display:flex;flex-direction:column;align-items:center}
+.blob{width:210px;height:210px;background:var(--lime-deep);border-radius:58% 42% 46% 54% / 52% 48% 52% 48%;display:flex;align-items:center;justify-content:center;font-size:4.6rem;margin-bottom:22px;transition:transform .3s,border-radius .5s}
+.partner-card:hover .blob{transform:translateY(-6px);border-radius:44% 56% 58% 42% / 46% 54% 46% 54%}
+.partner-card h3{font-family:var(--display);font-weight:700;font-size:1.35rem;letter-spacing:-.01em;margin-bottom:12px}
+.partner-card p{color:var(--muted);font-weight:500;font-size:.95rem;max-width:34ch;margin-bottom:22px;line-height:1.55}
+.partner-card .reg-btn{background:var(--forest);color:var(--lime);font-weight:800;font-size:.95rem;padding:14px 34px;border-radius:999px;transition:transform .15s}
+.partner-card .reg-btn:hover{transform:translateY(-2px)}
+
+/* referral screen */
+.ref-code{background:var(--ink);color:var(--lime);font-family:var(--display);font-weight:900;font-size:1.6rem;letter-spacing:.12em;padding:20px;border-radius:16px;text-align:center;margin:18px 0}
+.ref-steps{counter-reset:r;margin-top:8px}
+.ref-step{display:flex;gap:14px;padding:12px 0;align-items:flex-start}
+.ref-step .n{background:var(--lime);color:var(--ink);width:28px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;flex-shrink:0}
+.ref-step b{font-size:.95rem;display:block}
+.ref-step span{font-size:.85rem;color:var(--muted);font-weight:600}
+
+/* ===== Rider dashboard ===== */
+.online-bar{display:flex;align-items:center;justify-content:space-between;gap:18px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 22px;margin-top:22px}
+.online-bar b{display:block;font-size:1rem;font-weight:800}
+.online-bar span{font-size:.83rem;color:var(--muted);font-weight:600}
+.online-bar.on{background:var(--ink);border-color:var(--ink)}
+.online-bar.on b{color:var(--lime)}
+.online-bar.on span{color:#B9C6BC}
+.toggle{width:62px;height:34px;border-radius:999px;background:var(--line);position:relative;flex-shrink:0;transition:background .2s}
+.toggle .knob{position:absolute;top:4px;left:4px;width:26px;height:26px;border-radius:999px;background:#fff;transition:left .2s;box-shadow:0 2px 6px rgba(14,22,17,.2)}
+.toggle.on{background:var(--lime)}
+.toggle.on .knob{left:32px}
+.job-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+.job-card.active{border:2px solid var(--ink)}
+.job-fee{font-family:var(--display);font-weight:900;font-size:1.3rem;color:var(--forest)}
+.job-leg{display:flex;gap:12px;padding:10px 0;align-items:flex-start}
+.job-leg .pin{font-size:1.1rem;flex-shrink:0}
+.job-leg b{font-size:.9rem;display:block}
+.job-leg span{font-size:.82rem;color:var(--muted);font-weight:600}
+.job-line{border-left:2px dashed var(--line);height:14px;margin-left:9px}
+.sec-tabs{position:sticky;top:66px;z-index:40;background:rgba(246,248,240,.96);backdrop-filter:blur(10px);margin:26px -20px 0;padding:0 20px;border-bottom:1px solid var(--line)}
+.sec-tabs-track{display:flex;gap:28px;overflow-x:auto;scrollbar-width:none}
+.sec-tabs-track::-webkit-scrollbar{display:none}
+.sec-tab{white-space:nowrap;padding:15px 0;font-weight:700;font-size:1rem;color:var(--muted);border-bottom:3px solid transparent;transition:color .15s,border-color .15s}
+.sec-tab.on{color:var(--ink);font-weight:800;border-bottom-color:var(--ink)}
+.menu-block{padding-top:8px}
+.menu-block h3.block-title{font-family:var(--display);font-weight:700;font-size:1.3rem;letter-spacing:-.01em;margin:34px 0 8px;border:none;padding:0;display:block}
+.dish-row{display:flex;gap:18px;padding:20px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.dish-img{width:120px;height:120px;border-radius:16px;background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:2.6rem;overflow:hidden;flex-shrink:0}
+.dish-img img{width:100%;height:100%;object-fit:cover}
+.dish-body{flex:1;min-width:0;display:flex;flex-direction:column;min-height:120px}
+.dish-top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.dish-top h4{font-size:1.05rem;font-weight:700;line-height:1.3}
+.dish-top .d-price{font-size:1.05rem;font-weight:700;white-space:nowrap}
+.dish-desc{color:var(--muted);font-weight:500;font-size:.92rem;margin-top:6px;line-height:1.45}
+.dish-action{margin-top:auto;display:flex;justify-content:flex-end;padding-top:12px}
+.dish-add{width:46px;height:46px;border-radius:999px;background:var(--paper);border:1px solid var(--line);font-size:1.4rem;font-weight:700;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:transform .12s,background .15s}
+.dish-add:hover{transform:scale(1.06);background:var(--lime);border-color:var(--lime)}
+.dish-step{display:flex;align-items:center;gap:12px;background:var(--ink);border-radius:999px;padding:7px 14px}
+.dish-step button{color:var(--lime);font-weight:900;font-size:1.1rem;width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+.dish-step .q{color:#fff;font-weight:800;font-size:.95rem;min-width:14px;text-align:center}
+@media(max-width:560px){.dish-img{width:96px;height:96px}.dish-body{min-height:96px}.dish-top h4,.dish-top .d-price{font-size:.98rem}}
 
 /* footer */
 footer{border-top:1px solid var(--line);margin-top:40px;background:var(--card)}
@@ -343,6 +477,33 @@ footer{border-top:1px solid var(--line);margin-top:40px;background:var(--card)}
     <div class="section-head"><h2 id="popTitle">Popular in Asaba</h2><button class="link" onclick="openCategory('all')">See all stores</button></div>
     <div class="store-grid" id="popGrid"></div>
   </div>
+
+  <div class="partner">
+    <div class="partner-inner">
+      <div class="handshake">🤝</div>
+      <h2>Let's do it together</h2>
+      <div class="partner-grid">
+        <div class="partner-card">
+          <div class="blob">🛵</div>
+          <h3>Become a rider</h3>
+          <p>Earn on your own schedule delivering across Asaba, Warri and Abraka. Use your bike, keke or car.</p>
+          <button class="reg-btn" onclick="openRider()">Register here</button>
+        </div>
+        <div class="partner-card">
+          <div class="blob">👨‍🍳</div>
+          <h3>Register your business</h3>
+          <p>Put your kitchen, shop or pharmacy in front of customers in your city and take orders from day one.</p>
+          <button class="reg-btn" onclick="openDash()">Register here</button>
+        </div>
+        <div class="partner-card">
+          <div class="blob">🎁</div>
+          <h3>Refer &amp; earn</h3>
+          <p>Share your code with friends and family. They save on their first order, you earn credit on every one.</p>
+          <button class="reg-btn" onclick="openReferral()">Get my code</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ============ STORES LIST ============ -->
@@ -359,8 +520,7 @@ footer{border-top:1px solid var(--line);margin-top:40px;background:var(--card)}
 
 <!-- ============ STORE DETAIL ============ -->
 <section id="view-store" class="view">
-  <div class="section">
-    <button class="back-btn" onclick="go('stores')">← All stores</button>
+  <div class="section" style="overflow:hidden">
     <div id="storeDetail"></div>
   </div>
 </section>
@@ -421,6 +581,156 @@ footer{border-top:1px solid var(--line);margin-top:40px;background:var(--card)}
     <div class="steps" id="trackSteps"></div>
     <div class="track-actions">
       <button class="cta" onclick="go('home')">Order something else</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RIDER SIGN-UP ============ -->
+<section id="view-rider-signup" class="view">
+  <div class="vendor-wrap">
+    <button class="back-btn" onclick="go('home')">← Back to home</button>
+    <h1>Ride with Marketa Fetch</h1>
+    <p class="sub">Deliver on your own schedule and get paid per drop. Bike, keke, motorcycle or car — all welcome.</p>
+
+    <div class="auth-tabs" role="tablist">
+      <button type="button" class="auth-tab on" id="rtab-signup" onclick="switchRiderAuth('signup')">Register</button>
+      <button type="button" class="auth-tab" id="rtab-signin" onclick="switchRiderAuth('signin')">Sign in</button>
+    </div>
+
+    <div id="riderSigninPane" style="display:none">
+      <form class="vendor-form" onsubmit="loginRider(event)">
+        <div class="field" id="rlf-email"><label for="rlEmail">Email</label><input id="rlEmail" type="email" placeholder="you@email.com"><div class="err">Enter a valid email</div></div>
+        <div class="field" id="rlf-pass"><label for="rlPass">Password</label><input id="rlPass" type="password" placeholder="Your password"><div class="err">Enter your password</div></div>
+        <button type="submit" class="vendor-btn-submit">Sign in</button>
+      </form>
+    </div>
+
+    <div id="riderSignupPane">
+    <form class="vendor-form" onsubmit="registerRider(event)">
+      <div class="two-col">
+        <div class="field" id="rf-first"><label for="rFirst">First name <span class="req">*</span></label><input id="rFirst" type="text" placeholder="e.g. Efe"><div class="err">Enter your first name</div></div>
+        <div class="field" id="rf-last"><label for="rLast">Last name <span class="req">*</span></label><input id="rLast" type="text" placeholder="e.g. Oghenekaro"><div class="err">Enter your last name</div></div>
+      </div>
+
+      <div class="field" id="rf-phone"><label for="rPhone">Mobile phone number <span class="req">*</span></label>
+        <div class="phone-wrap"><span class="prefix">+234</span><input id="rPhone" type="tel" inputmode="tel" placeholder="803 123 4567"></div>
+        <div class="err">Enter a valid phone number</div>
+      </div>
+
+      <div class="field" id="rf-email"><label for="rEmail">Email <span class="req">*</span></label><input id="rEmail" type="email" placeholder="you@email.com"><div class="err">Enter a valid email</div></div>
+
+      <div class="two-col">
+        <div class="field" id="rf-city"><label for="rCity">City you'll ride in <span class="req">*</span></label>
+          <select id="rCity"><option value="">Select city</option><option value="asaba">Asaba</option><option value="warri">Warri</option><option value="abraka">Abraka</option></select>
+          <div class="err">Select your city</div>
+        </div>
+        <div class="field" id="rf-veh"><label for="rVeh">Vehicle <span class="req">*</span></label>
+          <select id="rVeh"><option value="">Select vehicle</option><option>Motorcycle (okada)</option><option>Keke napep</option><option>Bicycle</option><option>Car</option><option>On foot</option></select>
+          <div class="err">Select your vehicle</div>
+        </div>
+      </div>
+
+      <div class="field" id="rf-avail"><label for="rAvail">Availability <span class="req">*</span></label>
+        <select id="rAvail"><option value="">Select availability</option><option>Full-time (most days)</option><option>Part-time (some days)</option><option>Weekends only</option><option>Evenings only</option></select>
+        <div class="err">Select your availability</div>
+      </div>
+
+      <div class="field" id="rf-pass"><label for="rPass">Password <span class="req">*</span></label><input id="rPass" type="password" placeholder="At least 6 characters"><div class="err">Password must be 6+ characters</div></div>
+
+      <div class="info-notice"><span class="i-icon">ⓘ</span><span>We'll call this number to confirm your details and arrange a short onboarding before your first delivery.</span></div>
+
+      <div class="radio-q">Do you have a valid ID? <span class="req">*</span></div>
+      <div class="radio-row">
+        <label><input type="radio" name="rID" value="yes"> Yes</label>
+        <label><input type="radio" name="rID" value="no"> No</label>
+      </div>
+      <div class="err" id="ridErr" style="color:var(--danger);font-size:.75rem;font-weight:700;margin:-10px 0 14px;display:none">Select an option</div>
+
+      <label class="check-row"><input type="checkbox" id="rPolicy"><span>I accept the <b style="text-decoration:underline;color:var(--forest)">Rider Terms &amp; Privacy Policy</b> <span class="req">*</span></span></label>
+      <div class="err" id="rPolicyErr" style="color:var(--danger);font-size:.75rem;font-weight:700;margin:-10px 0 6px;display:none">You must accept the terms</div>
+
+      <button type="submit" class="vendor-btn-submit">Register</button>
+    </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RIDER DASHBOARD ============ -->
+<section id="view-rider-dash" class="view">
+  <div class="section">
+    <div class="dash-head">
+      <div>
+        <h1 id="riderName">My rides</h1>
+        <span class="dash-city" id="riderCityBadge">📍 Asaba</span>
+      </div>
+      <button class="logout-btn" onclick="logoutRider()">Log out</button>
+    </div>
+
+    <div class="online-bar">
+      <div>
+        <b id="onlineLabel">You're offline</b>
+        <span id="onlineHint">Go online to see delivery jobs in your city.</span>
+      </div>
+      <button class="toggle" id="onlineToggle" onclick="toggleOnline()" role="switch" aria-checked="false"><span class="knob"></span></button>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card hi"><div class="s-label">Deliveries today</div><div class="s-value" id="rdToday">0</div></div>
+      <div class="stat-card"><div class="s-label">Earnings today</div><div class="s-value" id="rdEarned">₦0</div></div>
+      <div class="stat-card"><div class="s-label">Jobs available</div><div class="s-value" id="rdAvail">0</div></div>
+      <div class="stat-card"><div class="s-label">All-time drops</div><div class="s-value" id="rdAll">0</div></div>
+    </div>
+
+    <div class="dash-sec">
+      <h3>My active delivery</h3>
+      <div id="activeJob"></div>
+    </div>
+
+    <div class="dash-sec">
+      <h3>Available jobs</h3><button class="refresh-btn" onclick="renderRiderDash();toast('Jobs refreshed','🔄')">Refresh</button>
+      <div id="jobList"></div>
+    </div>
+
+    <div class="dash-sec">
+      <h3>Delivery history</h3>
+      <div id="rideHistory"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RIDER SUCCESS ============ -->
+<section id="view-rider-success" class="view">
+  <div class="vendor-wrap">
+    <div class="vendor-success">
+      <span class="big-emo">🛵</span>
+      <h2 id="riderSuccessName">You're on the list!</h2>
+      <p>Thanks for signing up to ride in <span id="riderSuccessCity">Asaba</span>. We'll call you on the number you gave to confirm your details and set up your first shift.</p>
+      <button class="next" onclick="openRider()">Go to my dashboard »»</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REFERRAL ============ -->
+<section id="view-referral" class="view">
+  <div class="vendor-wrap">
+    <button class="back-btn" onclick="go('home')">← Back to home</button>
+    <h1>Refer &amp; earn</h1>
+    <p class="sub">Share your code. Your friend saves on their first order, and you earn credit towards yours.</p>
+
+    <div class="panel">
+      <h3>Your referral code</h3>
+      <div class="ref-code" id="refCode">FETCH-XXXX</div>
+      <button class="cta" onclick="copyRefCode()">Copy my code</button>
+    </div>
+
+    <div class="panel">
+      <h3>How it works</h3>
+      <div class="ref-steps">
+        <div class="ref-step"><span class="n">1</span><div><b>Share your code</b><span>Send it to friends, family, your group chats — anyone in Asaba, Warri or Abraka.</span></div></div>
+        <div class="ref-step"><span class="n">2</span><div><b>They order</b><span>Your friend enters your code at checkout and gets money off their first delivery.</span></div></div>
+        <div class="ref-step"><span class="n">3</span><div><b>You earn</b><span>Credit lands in your account once their order is delivered. No limit on how many friends you refer.</span></div></div>
+      </div>
+      <p class="note" id="refNote"></p>
     </div>
   </div>
 </section>
@@ -604,6 +914,28 @@ footer{border-top:1px solid var(--line);margin-top:40px;background:var(--card)}
     </div>
 
     <div class="dash-sec">
+      <h3>Store photos</h3>
+      <div style="max-width:520px">
+        <div class="photo-field">
+          <label>Cover photo <span style="text-transform:none;font-weight:600;color:var(--muted)">— the big banner customers see</span></label>
+          <label class="photo-drop">
+            <span class="photo-prev" id="coverPrev">🖼️</span>
+            <span><span class="p-text">Choose cover photo</span><br><span class="p-hint">A wide shot of your shop or your best dish</span></span>
+            <input type="file" accept="image/*" onchange="uploadStorePhoto(this,'cover')">
+          </label>
+        </div>
+        <div class="photo-field">
+          <label>Store logo</label>
+          <label class="photo-drop">
+            <span class="photo-prev" id="logoPrev">🏪</span>
+            <span><span class="p-text">Choose logo</span><br><span class="p-hint">Your sign, badge or brand mark</span></span>
+            <input type="file" accept="image/*" onchange="uploadStorePhoto(this,'logo')">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-sec">
       <h3>My menu</h3>
       <div id="menuList"></div>
       <form class="add-item-form vendor-form" onsubmit="saveMenuItem(event)">
@@ -613,7 +945,19 @@ footer{border-top:1px solid var(--line);margin-top:40px;background:var(--card)}
           <div class="field" id="mf-price"><label for="mPrice">Price (₦)</label><input id="mPrice" type="number" min="50" placeholder="5500"><div class="err">Enter a price</div></div>
         </div>
         <div class="field"><label for="mDesc">Description (optional)</label><input id="mDesc" type="text" placeholder="e.g. Fresh palm-nut banga with fish"></div>
-        <div class="field"><label for="mEmo">Emoji (optional)</label><input id="mEmo" type="text" maxlength="4" placeholder="🍲"></div>
+        <div class="field"><label for="mSec">Section / aisle</label><input id="mSec" type="text" list="secList" placeholder="e.g. Rice Dishes"><datalist id="secList"></datalist>
+          <div class="p-hint" id="secHint" style="margin-top:6px">This becomes the tab customers tap, so write it the way you'd want it read — "Rice Dishes", not "rice".</div>
+        </div>
+        <div class="field"><label for="mEmo">Emoji (used if no photo)</label><input id="mEmo" type="text" maxlength="4" placeholder="🍲"></div>
+        <div class="photo-field">
+          <label>Item photo</label>
+          <label class="photo-drop">
+            <span class="photo-prev" id="itemPrev">📷</span>
+            <span><span class="p-text">Choose a photo of this item</span><br><span class="p-hint">Clear, well-lit photos get more orders</span></span>
+            <input type="file" accept="image/*" id="mPhotoInput" onchange="uploadItemPhoto(this)">
+          </label>
+        </div>
+        <input type="hidden" id="mPhoto">
         <input type="hidden" id="mEditId">
         <button type="submit" class="vendor-btn-submit" style="margin-top:8px" id="menuFormBtn">Add item »»</button>
         <button type="button" class="me-btn" id="menuCancelBtn" style="display:none;margin-top:10px;width:100%" onclick="resetMenuForm()">Cancel editing</button>
@@ -717,36 +1061,65 @@ const STORES = [
   {id:'grocer', name:'Delta Grocer', cat:'grocery', cities:['asaba','warri'], tags:'Groceries · Essentials', emo:'🛒', bg:'#D8ECF5',
    rating:4.5, time:'30–45 min', fee:1000, promo:'Free delivery over ₦25,000',
    menu:[
-    {sec:'Staples', items:[
+    {sec:'Pantry', items:[
       {id:'i1', emo:'🍚', name:'Rice 5kg (long grain)', desc:'Stone-free, premium parboiled', price:9500},
       {id:'i2', emo:'🫙', name:'Groundnut oil 3L', desc:'Pure and filtered', price:8000},
       {id:'i3', emo:'🥣', name:'Kpokpo garri (paint bucket)', desc:'Crisp Delta garri — soak or make eba', price:4500},
-      {id:'i4', emo:'🥚', name:'Eggs — crate of 30', desc:'Farm fresh', price:5800},
+      {id:'i8', emo:'🍝', name:'Spaghetti (pack of 5)', desc:'500g packs', price:4500},
+      {id:'i9', emo:'🧂', name:'Maggi cubes (bag)', desc:'Seasoning cubes', price:2200},
     ]},
-    {sec:'Fresh', items:[
+    {sec:'Milk, Dairy & Eggs', items:[
+      {id:'i4', emo:'🥚', name:'Eggs — crate of 30', desc:'Farm fresh', price:5800},
+      {id:'i10', emo:'🥛', name:'Peak evaporated milk (tin)', desc:'170g tin', price:1200},
+      {id:'i11', emo:'🧈', name:'Butter 500g', desc:'Salted, chilled', price:6500},
+    ]},
+    {sec:'Fruits & Veggies', items:[
       {id:'i5', emo:'🍅', name:'Tomato basket (small)', desc:'Fresh from Ogbogonogo Market', price:3800},
       {id:'i6', emo:'🍌', name:'Plantain bunch', desc:'Ripe and ready to fry', price:3000},
+      {id:'i12', emo:'🧅', name:'Onion bag (medium)', desc:'Fresh red onions', price:4200},
+      {id:'i13', emo:'🌶️', name:'Fresh pepper (rubber)', desc:'Ata rodo, hot', price:2500},
+    ]},
+    {sec:'Meat, Poultry and Fish', items:[
       {id:'i7', emo:'🐟', name:'Fresh catfish (1kg)', desc:'Live-weight, cleaned on request', price:5500},
+      {id:'i14', emo:'🍗', name:'Chicken (whole, 1.5kg)', desc:'Cleaned and cut on request', price:9000},
+      {id:'i15', emo:'🥩', name:'Fresh beef (1kg)', desc:'Cut to order', price:8500},
+    ]},
+    {sec:'Salty and Sweet Snacks', items:[
+      {id:'i16', emo:'🍪', name:'Digestive biscuits', desc:'Family pack', price:1800},
+      {id:'i17', emo:'🥜', name:'Groundnut (bottle)', desc:'Roasted and salted', price:1500},
+      {id:'i18', emo:'🍬', name:'Assorted sweets pack', desc:'Mixed flavours', price:1200},
     ]},
    ]},
   {id:'chill', name:'Chill Hub Drinks', cat:'drinks', cities:['asaba','warri','abraka'], tags:'Soft drinks · Juice · Water', emo:'🧃', bg:'#E7DDF7',
    rating:4.4, time:'15–25 min', fee:600, promo:'Cold guaranteed',
    menu:[
-    {sec:'Drinks', items:[
+    {sec:'Water, Drinks & Juices', items:[
       {id:'d1', emo:'🥤', name:'Soft drinks — pack of 12', desc:'Assorted 50cl bottles, chilled', price:7200},
-      {id:'d2', emo:'🧃', name:'Chapman mix (1L)', desc:'House-made, just add ice', price:3500},
       {id:'d3', emo:'💧', name:'Bottled water — pack of 12', desc:'75cl bottles', price:3000},
+      {id:'d5', emo:'🧃', name:'Fruit juice 1L', desc:'Assorted flavours', price:2500},
+    ]},
+    {sec:'Local Favourites', items:[
+      {id:'d2', emo:'🧃', name:'Chapman mix (1L)', desc:'House-made, just add ice', price:3500},
       {id:'d4', emo:'🍹', name:'Zobo (1L)', desc:'Fresh hibiscus, ginger kick', price:2000},
+      {id:'d6', emo:'🥥', name:'Kunu (1L)', desc:'Chilled and fresh', price:2000},
     ]},
    ]},
   {id:'care', name:'DeltaCare Pharmacy', cat:'pharmacy', cities:['warri','asaba'], tags:'Pharmacy · Wellness', emo:'💊', bg:'#D9F0EC',
    rating:4.9, time:'20–30 min', fee:700, promo:'Licensed pharmacy',
    menu:[
-    {sec:'Everyday health', items:[
+    {sec:'Everyday Health', items:[
       {id:'p1', emo:'🩹', name:'First aid kit', desc:'Home essentials pack', price:8500},
       {id:'p2', emo:'💊', name:'Paracetamol (pack)', desc:'Pain and fever relief', price:1200},
-      {id:'p3', emo:'🧴', name:'Hand sanitiser 500ml', desc:'70% alcohol', price:2500},
       {id:'p4', emo:'🌡️', name:'Digital thermometer', desc:'Fast, accurate reading', price:4500},
+    ]},
+    {sec:'Personal Care', items:[
+      {id:'p3', emo:'🧴', name:'Hand sanitiser 500ml', desc:'70% alcohol', price:2500},
+      {id:'p5', emo:'🧼', name:'Antiseptic liquid 500ml', desc:'For cuts and cleaning', price:3200},
+      {id:'p6', emo:'🪥', name:'Toothpaste (large)', desc:'Fluoride, complete care', price:2100},
+    ]},
+    {sec:'Baby & Healthcare', items:[
+      {id:'p7', emo:'🍼', name:'Baby powder 200g', desc:'Gentle, mild scent', price:2800},
+      {id:'p8', emo:'🧷', name:'Diapers (pack)', desc:'Medium size, 40 count', price:9500},
     ]},
    ]},
   {id:'buka', name:'Buka 24/7', cat:'food', cities:['abraka','warri'], tags:'Nigerian · Late night', emo:'🌙', bg:'#FCE1EE',
@@ -771,6 +1144,7 @@ let curCat = 'all';
 let curSort = 'recommended';
 let curSearch = '';
 let curStore = null;
+let curSection = null;
 let speed = 'standard';
 let payMethod = 'card';
 let trackTimer = null;
@@ -832,7 +1206,7 @@ function renderHome(){
 }
 function storeCard(s){
   return `<button class="store-card" onclick="openStore('${s.id}')">
-    <div class="store-banner" style="background:${s.bg}">${s.emo}<span class="badge">${s.promo}</span></div>
+    <div class="store-banner" style="background:${s.bg}">${s.cover ? `<img src="${s.cover}" alt="">` : s.emo}<span class="badge">${s.promo}</span></div>
     <div class="store-body">
       <h3>${s.name}</h3><div class="tags">${s.tags}</div>
       <div class="store-meta"><span>⭐ ${s.rating}</span><span>⏱ ${s.time}</span><span>🛵 ${fmt(s.fee)}</span></div>
@@ -869,19 +1243,152 @@ function renderStores(){
 /* ================= RENDER: STORE DETAIL ================= */
 function renderStoreDetail(){
   const s = curStore;
+  const cover = s.cover ? `background-image:url('${s.cover}')` : `background:${s.bg}`;
+  const logo = s.logo ? `<img src="${s.logo}" alt="">` : s.emo;
+  const ratingTxt = s.rating === 'New' ? 'New' : `${Math.round((s.rating/5)*100)}%`;
   document.getElementById('storeDetail').innerHTML = `
-    <div class="store-hero" style="background:${s.bg}">
-      <span class="big-emo">${s.emo}</span>
-      <div><h1>${s.name}</h1><div class="tags">${s.tags}</div>
-        <div class="store-meta" style="margin-top:10px"><span>⭐ ${s.rating}</span><span>⏱ ${s.time}</span><span>🛵 Delivery ${fmt(s.fee)}</span><span>📍 ${cityNames(s)}</span></div>
-      </div>
+    <div class="store-cover" style="${cover}">
+      <button class="cover-back" onclick="go('stores')" aria-label="Back">←</button>
+      <div class="store-logo">${logo}</div>
     </div>
-    ${s.menu.map(sec=>`<div class="menu-section"><h3>${sec.sec}</h3>
-      <div class="menu-grid">${sec.items.map(menuItem).join('')}</div></div>`).join('')}`;
+    <div class="store-info">
+      <h1>${s.name}</h1>
+      <div class="s-tags">${s.tags}</div>
+      <div class="store-chips">
+        <span class="s-chip promo">${s.promo}</span>
+        <span class="s-chip">📍 ${cityNames(s)}</span>
+      </div>
+      <div class="stat-row">
+        <div class="stat-pill"><div class="circle">👍</div><div class="val">${ratingTxt}</div></div>
+        <div class="stat-pill"><div class="circle">⏱️</div><div class="val">${s.time}</div></div>
+        <div class="stat-pill"><div class="circle">🛵</div><div class="val">${fmt(s.fee)}</div></div>
+      </div>
+      <div class="store-search">🔎<input type="search" id="storeSearch" placeholder="Search in ${s.name}" oninput="filterStoreMenu(this.value)" aria-label="Search this store"></div>
+    </div>
+    <div id="shopCatWrap"></div>
+    <div id="storeMenuWrap"></div>`;
+  curSection = null;
+  renderShopCategories();
+  renderStoreMenu('');
 }
+
+function renderShopCategories(){
+  const wrap = document.getElementById('shopCatWrap');
+  const s = curStore;
+  if(!isShelfStore(s) || s.menu.length < 2){ wrap.innerHTML = ''; return; }
+  wrap.innerHTML = `<div class="shop-cat">
+    <h2>Shop by category</h2>
+    <div class="shop-cat-grid">
+      ${s.menu.map((sec,i)=>{
+        const pic = sec.items.find(it=>it.photo);
+        const art = pic ? `<img src="${pic.photo}" alt="">` : (sec.items[0]?.emo || '🛒');
+        const on = curSection === sec.sec ? 'on' : '';
+        return `<button class="cat-tile ${on}" onclick="pickSection('${sec.sec.replace(/'/g,"\\'")}')">
+          <div class="ct-img">${art}</div>
+          <div class="ct-name">${sec.sec}</div>
+        </button>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+function pickSection(sec){
+  curSection = (curSection === sec) ? null : sec;
+  renderShopCategories();
+  renderStoreMenu(document.getElementById('storeSearch')?.value || '');
+  if(curSection){
+    document.getElementById('storeMenuWrap').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+
+function renderStoreMenu(q){
+  const s = curStore;
+  const term = (q||'').toLowerCase();
+  const shelf = isShelfStore(s);
+  const wrap = document.getElementById('storeMenuWrap');
+
+  if(!shelf){
+    // Restaurant layout — sticky tabs + list rows
+    const blocks = s.menu.map((sec,i)=>{
+      const items = sec.items.filter(it => !term || (it.name+' '+(it.desc||'')).toLowerCase().includes(term));
+      if(!items.length) return null;
+      return {sec: sec.sec, items, id: 'blk-'+i};
+    }).filter(Boolean);
+    if(!blocks.length){ wrap.innerHTML = `<div class="empty-menu">Nothing here matches that search.</div>`; return; }
+    wrap.innerHTML = `
+      ${blocks.length > 1 ? `<div class="sec-tabs"><div class="sec-tabs-track" id="secTabs">
+        ${blocks.map((b,i)=>`<button class="sec-tab ${i===0?'on':''}" data-target="${b.id}" onclick="jumpToBlock('${b.id}')">${b.sec}</button>`).join('')}
+      </div></div>` : ''}
+      ${blocks.map(b=>`<div class="menu-block" id="${b.id}">
+        <h3 class="block-title">${b.sec}</h3>
+        ${b.items.map(dishRow).join('')}
+      </div>`).join('')}`;
+    watchBlocks(blocks.map(b=>b.id));
+    return;
+  }
+
+  // Grocery shelf layout
+  const filterNote = curSection
+    ? `<div class="shelf-filter"><span class="s-chip promo">${curSection}</span><button class="clear" onclick="pickSection('${curSection.replace(/'/g,"\\'")}')">Show all aisles</button></div>`
+    : '';
+  const secs = s.menu.map((sec, i)=>{
+    if(curSection && sec.sec !== curSection) return '';
+    const items = sec.items.filter(it => !term || (it.name+' '+(it.desc||'')).toLowerCase().includes(term));
+    if(!items.length) return '';
+    return shelfSection({sec: sec.sec, items}, i);
+  }).join('');
+  wrap.innerHTML = filterNote + (secs ||
+    `<div class="empty-menu">Nothing here matches that search.</div>`);
+}
+
+function dishRow(it){
+  return `<div class="dish-row">
+    <div class="dish-img">${it.photo ? `<img src="${it.photo}" alt="">` : it.emo}</div>
+    <div class="dish-body">
+      <div class="dish-top"><h4>${it.name}</h4><span class="d-price">${fmt(it.price)}</span></div>
+      ${it.desc ? `<div class="dish-desc">${it.desc}</div>` : ''}
+      <div class="dish-action"><span id="ctl-${it.id}">${dishControl(it.id)}</span></div>
+    </div>
+  </div>`;
+}
+
+function dishControl(id){
+  const q = cart[id]?.qty || 0;
+  if(!q) return `<button class="dish-add" onclick="addItem('${id}')" aria-label="Add">＋</button>`;
+  return `<span class="dish-step"><button onclick="chQty('${id}',-1)" aria-label="Remove one">−</button><span class="q">${q}</span><button onclick="chQty('${id}',1)" aria-label="Add one">＋</button></span>`;
+}
+
+function jumpToBlock(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const y = el.getBoundingClientRect().top + window.scrollY - 130;
+  window.scrollTo({top: y, behavior:'smooth'});
+  setActiveTab(id);
+}
+
+function setActiveTab(id){
+  document.querySelectorAll('.sec-tab').forEach(t=>{
+    const on = t.dataset.target === id;
+    t.classList.toggle('on', on);
+    if(on) t.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+  });
+}
+
+let blockObserver = null;
+function watchBlocks(ids){
+  if(blockObserver) blockObserver.disconnect();
+  if(ids.length < 2 || !('IntersectionObserver' in window)) return;
+  blockObserver = new IntersectionObserver(entries=>{
+    const visible = entries.filter(e=>e.isIntersecting)
+      .sort((a,b)=>a.boundingClientRect.top - b.boundingClientRect.top)[0];
+    if(visible) setActiveTab(visible.target.id);
+  }, {rootMargin:'-140px 0px -70% 0px'});
+  ids.forEach(id=>{ const el=document.getElementById(id); if(el) blockObserver.observe(el); });
+}
+function filterStoreMenu(q){ renderStoreMenu(q); }
 function menuItem(it){
   return `<div class="menu-item">
-    <div class="m-emo">${it.emo}</div>
+    <div class="m-emo">${it.photo ? `<img src="${it.photo}" alt="">` : it.emo}</div>
     <div class="m-info"><h4>${it.name}</h4><p>${it.desc}</p><div class="price">${fmt(it.price)}</div></div>
     <span id="ctl-${it.id}">${itemControl(it.id)}</span>
   </div>`;
@@ -911,7 +1418,8 @@ function chQty(id,delta){
 }
 function syncItem(id){
   const el = document.getElementById('ctl-'+id);
-  if(el) el.innerHTML = itemControl(id);
+  const shelf = curStore && isShelfStore(curStore);
+  if(el) el.innerHTML = shelf ? tileControl(id) : dishControl(id);
   renderCart(); updateCount();
 }
 function updateCount(){
@@ -1187,6 +1695,8 @@ function openDash(){
   document.getElementById('dashName').textContent = curVendor.bizName;
   document.getElementById('dashCity').textContent = '📍 ' + CITIES[curVendor.city];
   renderStats();
+  document.getElementById('coverPrev').innerHTML = curVendor.cover ? `<img src="${curVendor.cover}" alt="">` : '🖼️';
+  document.getElementById('logoPrev').innerHTML = curVendor.logo ? `<img src="${curVendor.logo}" alt="">` : '🏪';
   renderMenuEditor();
   renderOrders();
   renderHistory();
@@ -1213,8 +1723,72 @@ function logoutVendor(){
   toast('Logged out','👋');
 }
 
+/* ================= PHOTO UPLOADS ================= */
+function compressImage(file, maxW, cb){
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, maxW / img.width);
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * scale);
+      c.height = Math.round(img.height * scale);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      cb(c.toDataURL('image/jpeg', 0.72));
+    };
+    img.onerror = () => cb(null);
+    img.src = ev.target.result;
+  };
+  reader.onerror = () => cb(null);
+  reader.readAsDataURL(file);
+}
+
+function uploadStorePhoto(input, kind){
+  const file = input.files[0];
+  if(!file) return;
+  compressImage(file, kind==='cover' ? 900 : 300, data => {
+    if(!data){ toast('Could not read that image','⚠️'); return; }
+    curVendor[kind] = data;
+    vendors[curVendor.id] = curVendor;
+    try{ saveVendors(); }catch(err){ toast('Storage full — try a smaller photo','⚠️'); return; }
+    document.getElementById(kind==='cover'?'coverPrev':'logoPrev').innerHTML = `<img src="${data}" alt="">`;
+    renderHome(); renderStores();
+    toast(kind==='cover' ? 'Cover photo saved' : 'Logo saved','📸');
+  });
+}
+
+function uploadItemPhoto(input){
+  const file = input.files[0];
+  if(!file) return;
+  compressImage(file, 600, data => {
+    if(!data){ toast('Could not read that image','⚠️'); return; }
+    document.getElementById('mPhoto').value = data;
+    document.getElementById('itemPrev').innerHTML = `<img src="${data}" alt="">`;
+    toast('Photo ready — save the item to publish it','📷');
+  });
+}
+
 /* ================= MENU EDITOR ================= */
+function renderSectionOptions(){
+  const dl = document.getElementById('secList');
+  if(!dl) return;
+  const shelf = SHELF_CATS.includes(curVendor.bizType || 'food');
+  const common = shelf
+    ? ['Water, Drinks & Juices','Salty and Sweet Snacks','Bread and Bakery','Pantry','Frozen & Ice Creams','Milk, Dairy & Eggs','Breakfast and Provisions','Personal Care','Home & Living','Baby & Healthcare','Fruits & Veggies','Meat, Poultry and Fish']
+    : ['Rice Dishes','Swallow & Soups','Alternative Dishes','Grills & Suya','Small Chops','Sides','Breakfast','Drinks','Desserts'];
+  const used = [...new Set((curVendor.menus||[]).map(m=>m.sec).filter(Boolean))];
+  dl.innerHTML = [...new Set([...used, ...common])].map(o=>`<option value="${o}">`).join('');
+
+  const inp = document.getElementById('mSec');
+  if(inp) inp.placeholder = shelf ? 'e.g. Water, Drinks & Juices' : 'e.g. Rice Dishes';
+  const hint = document.getElementById('secHint');
+  if(hint) hint.textContent = shelf
+    ? 'This becomes the aisle name customers browse, so write it the way you\'d want it read — "Fruits & Veggies", not "fruits".'
+    : 'This becomes the tab customers tap, so write it the way you\'d want it read — "Rice Dishes", not "rice".';
+}
+
 function renderMenuEditor(){
+  renderSectionOptions();
   const list = document.getElementById('menuList');
   const menus = curVendor.menus || [];
   if(!menus.length){
@@ -1223,8 +1797,8 @@ function renderMenuEditor(){
   }
   list.innerHTML = menus.map(m=>`
     <div class="menu-edit-row">
-      <span class="me-emo">${m.emo}</span>
-      <div class="me-info"><h4>${m.name}</h4><p>${m.desc||''}</p></div>
+      ${m.photo ? `<img class="me-thumb" src="${m.photo}" alt="">` : `<span class="me-emo">${m.emo}</span>`}
+      <div class="me-info"><h4>${m.name}</h4><p>${m.sec ? `<b>${m.sec}</b>${m.desc? ' · '+m.desc : ''}` : (m.desc||'')}</p></div>
       <span class="me-price">${fmt(m.price)}</span>
       <span class="me-actions">
         <button class="me-btn" onclick="editMenuItem('${m.id}')">Edit</button>
@@ -1239,6 +1813,8 @@ function saveMenuItem(e){
   const price = parseInt(document.getElementById('mPrice').value);
   const desc = document.getElementById('mDesc').value.trim();
   const emo = document.getElementById('mEmo').value.trim() || '🍽️';
+  const photo = document.getElementById('mPhoto').value;
+  const sec = document.getElementById('mSec').value.trim() || 'Menu';
   const editId = document.getElementById('mEditId').value;
   let ok = true;
   document.getElementById('mf-name').classList.toggle('invalid', !(name.length>=2)); if(name.length<2) ok=false;
@@ -1247,10 +1823,10 @@ function saveMenuItem(e){
   if(!curVendor.menus) curVendor.menus = [];
   if(editId){
     const item = curVendor.menus.find(m=>m.id===editId);
-    if(item){ item.name=name; item.price=price; item.desc=desc; item.emo=emo; }
+    if(item){ item.name=name; item.price=price; item.desc=desc; item.emo=emo; item.sec=sec; if(photo) item.photo=photo; }
     toast('Item updated','✏️');
   }else{
-    curVendor.menus.push({ id: curVendor.id + '-m' + Date.now(), name, price, desc, emo });
+    curVendor.menus.push({ id: curVendor.id + '-m' + Date.now(), name, price, desc, emo, photo, sec });
     toast('Item added to your menu','✅');
   }
   vendors[curVendor.id] = curVendor; saveVendors();
@@ -1266,6 +1842,9 @@ function editMenuItem(id){
   document.getElementById('mDesc').value = m.desc||'';
   document.getElementById('mEmo').value = m.emo;
   document.getElementById('mEditId').value = m.id;
+  document.getElementById('mPhoto').value = m.photo || '';
+  document.getElementById('mSec').value = m.sec || '';
+  document.getElementById('itemPrev').innerHTML = m.photo ? `<img src="${m.photo}" alt="">` : '📷';
   document.getElementById('menuFormTitle').textContent = 'Edit item';
   document.getElementById('menuFormBtn').textContent = 'Save changes »»';
   document.getElementById('menuCancelBtn').style.display = 'block';
@@ -1279,7 +1858,9 @@ function deleteMenuItem(id){
 }
 
 function resetMenuForm(){
-  ['mName','mPrice','mDesc','mEmo','mEditId'].forEach(id=>document.getElementById(id).value='');
+  ['mName','mPrice','mDesc','mEmo','mEditId','mPhoto','mSec'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('itemPrev').innerHTML = '📷';
+  const fi=document.getElementById('mPhotoInput'); if(fi) fi.value='';
   document.getElementById('menuFormTitle').textContent = 'Add a menu item';
   document.getElementById('menuFormBtn').textContent = 'Add item »»';
   document.getElementById('menuCancelBtn').style.display = 'none';
@@ -1303,13 +1884,61 @@ function vendorStores(){
       time: `${v.time}–${v.time+10} min`,
       fee: v.fee,
       promo: 'New on Fetch',
-      menu: [{sec:'Menu', items: v.menus}]
+      cover: v.cover || null,
+      logo: v.logo || null,
+      menu: groupBySection(v.menus)
     }));
 }
 function allStores(){ return [...STORES, ...vendorStores()]; }
 
+function groupBySection(items){
+  const map = {};
+  (items||[]).forEach(it=>{
+    const k = it.sec || 'Menu';
+    (map[k] = map[k] || []).push(it);
+  });
+  return Object.entries(map).map(([sec, items]) => ({sec, items}));
+}
+
+/* stores that use the grocery shelf layout */
+const SHELF_CATS = ['grocery','pharmacy','drinks'];
+const isShelfStore = s => SHELF_CATS.includes(s.cat);
+
+function shelfSection(sec, idx){
+  const trackId = 'shelf-' + idx;
+  return `<div class="shelf">
+    <div class="shelf-head">
+      <h3>${sec.sec}</h3>
+      ${sec.items.length > 2 ? `<button class="shelf-arrow" onclick="scrollShelf('${trackId}')" aria-label="Scroll ${sec.sec}">→</button>` : ''}
+    </div>
+    <div class="shelf-track" id="${trackId}">${sec.items.map(tileItem).join('')}</div>
+  </div>`;
+}
+
+function tileItem(it){
+  return `<div class="tile">
+    <div class="tile-img">
+      ${it.photo ? `<img src="${it.photo}" alt="">` : it.emo}
+      <span id="ctl-${it.id}">${tileControl(it.id)}</span>
+    </div>
+    <div class="tile-name">${it.name}</div>
+    <div class="tile-price">${fmt(it.price)}</div>
+  </div>`;
+}
+
+function tileControl(id){
+  const q = cart[id]?.qty || 0;
+  if(!q) return `<button class="tile-add" onclick="addItem('${id}')" aria-label="Add">＋</button>`;
+  return `<span class="tile-step"><button onclick="chQty('${id}',-1)" aria-label="Remove one">−</button><span class="q">${q}</span><button onclick="chQty('${id}',1)" aria-label="Add one">＋</button></span>`;
+}
+
+function scrollShelf(id){
+  const el = document.getElementById(id);
+  if(el) el.scrollBy({left: el.clientWidth * 0.8, behavior:'smooth'});
+}
+
 /* ================= ORDER MANAGEMENT ================= */
-const ACTIVE_STATUSES = ['incoming','accepted','preparing','ready'];
+const ACTIVE_STATUSES = ['incoming','accepted','preparing','ready','assigned','picked'];
 
 function renderOrders(){
   const list = document.getElementById('ordersList');
@@ -1521,6 +2150,282 @@ function reorder(orderId){
   if(!added){ toast('Those items are no longer available','⚠️'); return; }
   toggleCart(true);
   toast(missing ? `${added} item(s) added — ${missing} unavailable` : 'Added to your cart','🔁');
+}
+
+/* ================= RIDERS ================= */
+let riders = {};
+try{ riders = JSON.parse(localStorage.getItem('mf_riders')) || {}; }catch(e){ riders = {}; }
+const saveRiders = () => { try{ localStorage.setItem('mf_riders', JSON.stringify(riders)); }catch(e){} };
+
+function registerRider(e){
+  e.preventDefault();
+  const checks = [
+    ['rf-first','rFirst', v=>v.length>=2],
+    ['rf-last','rLast', v=>v.length>=2],
+    ['rf-phone','rPhone', v=>v.replace(/\D/g,'').length>=9],
+    ['rf-email','rEmail', v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)],
+    ['rf-city','rCity', v=>v.length>0],
+    ['rf-veh','rVeh', v=>v.length>0],
+    ['rf-avail','rAvail', v=>v.length>0],
+    ['rf-pass','rPass', v=>v.length>=6],
+  ];
+  let ok = true;
+  for(const [f,id,test] of checks){
+    const bad = !test(document.getElementById(id).value.trim());
+    document.getElementById(f).classList.toggle('invalid', bad);
+    if(bad) ok=false;
+  }
+  const hasId = document.querySelector('input[name="rID"]:checked');
+  document.getElementById('ridErr').style.display = hasId ? 'none' : 'block';
+  if(!hasId) ok = false;
+  const policy = document.getElementById('rPolicy').checked;
+  document.getElementById('rPolicyErr').style.display = policy ? 'none' : 'block';
+  if(!policy) ok = false;
+  if(!ok){ toast('Fill all required fields','⚠️'); return; }
+
+  const id = 'r-' + Math.random().toString(36).substr(2,9);
+  const first = document.getElementById('rFirst').value.trim();
+  const city = document.getElementById('rCity').value;
+  riders[id] = {
+    id, firstName: first,
+    lastName: document.getElementById('rLast').value.trim(),
+    phone: '+234 ' + document.getElementById('rPhone').value.trim(),
+    email: document.getElementById('rEmail').value.trim(),
+    city,
+    vehicle: document.getElementById('rVeh').value,
+    availability: document.getElementById('rAvail').value,
+    hasId: hasId.value,
+    pass: document.getElementById('rPass').value,
+    online: false,
+    activeJob: null,
+    status: 'pending',
+    createdAt: new Date().toISOString()
+  };
+  saveRiders();
+  curRider = riders[id];
+  try{ localStorage.setItem('mf_rider_session', id); }catch(e){}
+  document.getElementById('riderSuccessName').textContent = `You're on the list, ${first}!`;
+  document.getElementById('riderSuccessCity').textContent = CITIES[city];
+  go('rider-success');
+  toast('Rider application received','🛵');
+}
+
+/* ================= RIDER AUTH + DASHBOARD ================= */
+let curRider = null;
+(function restoreRiderSession(){
+  let id=null; try{ id = localStorage.getItem('mf_rider_session'); }catch(e){}
+  if(id && riders[id]) curRider = riders[id];
+})();
+
+function switchRiderAuth(mode){
+  document.getElementById('riderSignupPane').style.display = mode==='signup' ? 'block' : 'none';
+  document.getElementById('riderSigninPane').style.display = mode==='signin' ? 'block' : 'none';
+  document.getElementById('rtab-signup').classList.toggle('on', mode==='signup');
+  document.getElementById('rtab-signin').classList.toggle('on', mode==='signin');
+}
+
+function openRider(){
+  if(!curRider){ switchRiderAuth('signin'); go('rider-signup'); return; }
+  renderRiderDash();
+  go('rider-dash');
+}
+
+function loginRider(e){
+  e.preventDefault();
+  const email = document.getElementById('rlEmail').value.trim().toLowerCase();
+  const pass = document.getElementById('rlPass').value;
+  const found = Object.values(riders).find(r=>r.email.toLowerCase()===email && r.pass===pass);
+  document.getElementById('rlf-email').classList.toggle('invalid', !found);
+  document.getElementById('rlf-pass').classList.toggle('invalid', !found);
+  if(!found){ toast('No rider account found with that email and password','⚠️'); return; }
+  curRider = found;
+  try{ localStorage.setItem('mf_rider_session', found.id); }catch(e){}
+  openRider();
+  toast(`Welcome back, ${found.firstName}!`,'🛵');
+}
+
+function logoutRider(){
+  if(curRider){ curRider.online = false; riders[curRider.id] = curRider; saveRiders(); }
+  curRider = null;
+  try{ localStorage.removeItem('mf_rider_session'); }catch(e){}
+  switchRiderAuth('signin'); go('home');
+  toast('Logged out','👋');
+}
+
+function toggleOnline(){
+  curRider.online = !curRider.online;
+  riders[curRider.id] = curRider; saveRiders();
+  renderRiderDash();
+  toast(curRider.online ? "You're online — jobs will show up here" : "You're offline", curRider.online ? '🟢' : '⚪');
+}
+
+function renderRiderDash(){
+  const r = curRider;
+  document.getElementById('riderName').textContent = `${r.firstName}'s rides`;
+  document.getElementById('riderCityBadge').textContent = '📍 ' + CITIES[r.city];
+
+  // online state
+  const bar = document.querySelector('.online-bar');
+  const tog = document.getElementById('onlineToggle');
+  bar.classList.toggle('on', !!r.online);
+  tog.classList.toggle('on', !!r.online);
+  tog.setAttribute('aria-checked', r.online ? 'true' : 'false');
+  document.getElementById('onlineLabel').textContent = r.online ? "You're online" : "You're offline";
+  document.getElementById('onlineHint').textContent = r.online
+    ? 'Accept a job below to start your delivery.'
+    : 'Go online to see delivery jobs in your city.';
+
+  // stats
+  const mine = orders.filter(o => o.riderId === r.id);
+  const today = new Date().toDateString();
+  const doneToday = mine.filter(o => o.status==='completed' && new Date(o.updatedAt||o.createdAt).toDateString()===today);
+  const earned = doneToday.reduce((a,o)=>a + (o.riderFee||0), 0);
+  const available = orders.filter(o => o.city===r.city && o.status==='ready' && !o.riderId);
+  document.getElementById('rdToday').textContent = doneToday.length;
+  document.getElementById('rdEarned').textContent = fmt(earned);
+  document.getElementById('rdAvail').textContent = r.online ? available.length : 0;
+  document.getElementById('rdAll').textContent = mine.filter(o=>o.status==='completed').length;
+
+  renderActiveJob();
+  renderJobList(available);
+  renderRideHistory(mine);
+}
+
+function jobLegs(o){
+  const store = o.items[0]?.store || 'Store';
+  return `<div class="job-leg"><span class="pin">🏪</span><div><b>Pick up — ${store}</b><span>${o.items.length} item(s) · order #${o.id}</span></div></div>
+    <div class="job-line"></div>
+    <div class="job-leg"><span class="pin">🏠</span><div><b>Drop off — ${o.customer}</b><span>${o.address}</span></div></div>`;
+}
+
+function renderJobList(available){
+  const list = document.getElementById('jobList');
+  if(!curRider.online){
+    list.innerHTML = `<div class="empty-menu">You're offline. Flip the switch above to see jobs.</div>`; return;
+  }
+  if(curRider.activeJob){
+    list.innerHTML = `<div class="empty-menu">Finish your active delivery before taking another job.</div>`; return;
+  }
+  if(!available.length){
+    list.innerHTML = `<div class="empty-menu">No jobs right now in ${CITIES[curRider.city]}. Orders appear here once a vendor marks them ready.</div>`; return;
+  }
+  list.innerHTML = available.map(o=>`
+    <div class="job-card">
+      <div class="order-top">
+        <span class="o-id">#${o.id}</span>
+        <span class="job-fee">${fmt(riderPay(o))}</span>
+      </div>
+      ${jobLegs(o)}
+      <div class="order-actions"><button class="oa-btn accept" onclick="acceptJob('${o.id}')">✓ Accept job</button></div>
+    </div>`).join('');
+}
+
+function riderPay(o){
+  // rider keeps the delivery fee portion of the order
+  const stores = [...new Set(o.items.map(i=>i.store))];
+  const base = allStores().filter(s=>stores.includes(s.name)).reduce((a,s)=>a+s.fee, 0) || 800;
+  return o.speed==='priority' ? base + 600 : base;
+}
+
+function acceptJob(id){
+  const o = orders.find(x=>x.id===id);
+  if(!o) return;
+  if(o.riderId){ toast('Another rider just took that job','⚠️'); renderRiderDash(); return; }
+  o.riderId = curRider.id;
+  o.riderName = curRider.firstName;
+  o.riderFee = riderPay(o);
+  o.status = 'assigned';
+  o.updatedAt = new Date().toISOString();
+  saveOrders();
+  curRider.activeJob = id; riders[curRider.id] = curRider; saveRiders();
+  renderRiderDash();
+  toast('Job accepted — head to the store','🛵');
+}
+
+function renderActiveJob(){
+  const box = document.getElementById('activeJob');
+  const o = orders.find(x => x.id === curRider.activeJob);
+  if(!o || ['completed','cancelled','rejected'].includes(o.status)){
+    if(curRider.activeJob){ curRider.activeJob = null; riders[curRider.id] = curRider; saveRiders(); }
+    box.innerHTML = `<div class="empty-menu">No active delivery. Accept a job below to get started.</div>`;
+    return;
+  }
+  let action = '';
+  if(o.status==='assigned') action = `<button class="oa-btn prep" onclick="riderStatus('${o.id}','picked')">📦 Picked up</button>`;
+  if(o.status==='picked') action = `<button class="oa-btn ready" onclick="riderStatus('${o.id}','completed')">✓ Delivered</button>`;
+  box.innerHTML = `
+    <div class="job-card active">
+      <div class="order-top">
+        <span class="o-id">#${o.id}</span>
+        <span class="status-badge ${o.status}">${o.status==='picked'?'on the way':o.status}</span>
+        <span class="job-fee">${fmt(o.riderFee)}</span>
+      </div>
+      ${jobLegs(o)}
+      <div class="order-cust" style="margin-top:8px">📞 ${o.phone}${o.note?`<br>📝 ${o.note}`:''}</div>
+      <div class="order-actions">${action}</div>
+    </div>`;
+}
+
+function riderStatus(id, status){
+  const o = orders.find(x=>x.id===id);
+  if(!o) return;
+  o.status = status;
+  o.updatedAt = new Date().toISOString();
+  saveOrders();
+  if(status==='completed'){
+    curRider.activeJob = null; riders[curRider.id] = curRider; saveRiders();
+  }
+  renderRiderDash();
+  toast(status==='picked' ? 'Picked up — on the way' : 'Delivered! Earnings added', status==='picked' ? '📦' : '🎉');
+}
+
+function renderRideHistory(mine){
+  const list = document.getElementById('rideHistory');
+  const past = mine.filter(o=>o.status==='completed')
+    .sort((a,b)=> new Date(b.updatedAt||b.createdAt) - new Date(a.updatedAt||a.createdAt)).slice(0,20);
+  if(!past.length){ list.innerHTML = `<div class="empty-menu">No completed deliveries yet.</div>`; return; }
+  list.innerHTML = past.map(o=>{
+    const when = new Date(o.updatedAt||o.createdAt).toLocaleString('en-NG',{hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'});
+    return `<div class="job-card">
+      <div class="order-top"><span class="o-id">#${o.id}</span><span class="o-time">${when}</span><span class="job-fee">${fmt(o.riderFee||0)}</span></div>
+      <div class="order-cust">📍 ${o.address}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ================= REFERRAL ================= */
+function refCodeFor(){
+  if(curCustomer){
+    if(!curCustomer.refCode){
+      curCustomer.refCode = 'FETCH-' + curCustomer.name.split(' ')[0].toUpperCase().slice(0,5).replace(/[^A-Z]/g,'') + Math.floor(10+Math.random()*89);
+      customers[curCustomer.id] = curCustomer; saveCustomers();
+    }
+    return curCustomer.refCode;
+  }
+  let code=null; try{ code = localStorage.getItem('mf_guest_ref'); }catch(e){}
+  if(!code){
+    code = 'FETCH-' + Math.random().toString(36).substr(2,5).toUpperCase();
+    try{ localStorage.setItem('mf_guest_ref', code); }catch(e){}
+  }
+  return code;
+}
+
+function openReferral(){
+  document.getElementById('refCode').textContent = refCodeFor();
+  document.getElementById('refNote').textContent = curCustomer
+    ? 'This code is tied to your account — credit lands there automatically.'
+    : 'Create an account to keep this code and track the credit you earn.';
+  go('referral');
+}
+
+function copyRefCode(){
+  const code = document.getElementById('refCode').textContent;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(code).then(()=>toast('Code copied — go share it!','📋'))
+      .catch(()=>toast('Your code is ' + code,'🎁'));
+  } else {
+    toast('Your code is ' + code,'🎁');
+  }
 }
 
 /* init */
