@@ -47,7 +47,12 @@ header{position:sticky;top:0;z-index:50;background:rgba(246,248,240,.92);backdro
 .cart-btn{position:relative;background:var(--ink);color:var(--lime);border-radius:999px;padding:10px 18px;font-weight:800;font-size:.88rem;display:flex;align-items:center;gap:8px;transition:transform .15s}
 .cart-btn:hover{transform:translateY(-1px)}
 .cart-count{background:var(--lime);color:var(--ink);border-radius:999px;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;padding:0 6px}
-@media(max-width:680px){.cart-btn .lbl{display:none}.logo{font-size:1rem}}
+.vendor-btn{background:var(--forest);color:var(--lime);border-radius:999px;padding:10px 18px;font-weight:800;font-size:.88rem;display:flex;align-items:center;gap:8px;transition:transform .15s}
+.vendor-btn:hover{transform:translateY(-1px)}
+.acct-btn{background:var(--card);border:1.5px solid var(--line);color:var(--forest);border-radius:999px;padding:9px 18px;font-weight:800;font-size:.88rem;transition:all .15s;white-space:nowrap}
+.acct-btn:hover{border-color:var(--lime-deep)}
+@media(max-width:820px){.acct-btn{padding:8px 13px;font-size:.78rem}.vendor-btn{padding:8px 13px;font-size:.78rem}}
+@media(max-width:680px){.cart-btn .lbl{display:none}.vendor-btn{font-size:.75rem;padding:8px 14px}.logo{font-size:1rem}}
 
 /* ===== Hero ===== */
 .hero{max-width:1120px;margin:0 auto;padding:52px 20px 20px}
@@ -202,6 +207,95 @@ header{position:sticky;top:0;z-index:50;background:rgba(246,248,240,.92);backdro
 .toast.show{transform:translateX(-50%);opacity:1}
 .toast .t-emo{font-size:1.1rem}
 
+/* ===== Vendor Sign-Up ===== */
+.vendor-wrap{max-width:520px;margin:0 auto;padding:40px 20px 60px}
+.vendor-wrap h1{font-family:var(--display);font-weight:900;font-style:italic;font-size:clamp(1.4rem,4vw,2rem);margin-bottom:10px}
+.vendor-wrap .sub{color:var(--muted);font-weight:500;font-size:.95rem;margin-bottom:28px}
+.vendor-form .field{margin-bottom:18px}
+.vendor-form .field label{display:block;font-size:.78rem;font-weight:800;margin-bottom:8px;color:var(--forest);text-transform:uppercase;letter-spacing:.03em}
+.vendor-form .field input,.vendor-form .field select{width:100%;padding:13px 16px;border:1.5px solid var(--line);border-radius:12px;font-family:var(--body);font-size:.95rem;background:var(--paper);color:var(--ink);transition:border-color .15s}
+.vendor-form .field input:focus,.vendor-form .field select:focus{outline:none;border-color:var(--lime-deep)}
+.vendor-form .field .err{color:var(--danger);font-size:.75rem;font-weight:700;margin-top:5px;display:none}
+.vendor-form .field.invalid input,.vendor-form .field.invalid select{border-color:var(--danger);background:#fff5f5}
+.vendor-form .field.invalid .err{display:block}
+.vendor-form .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.vendor-form .two-col{grid-template-columns:1fr}}
+.vendor-btn-submit{width:100%;background:var(--lime);color:var(--ink);font-weight:800;font-size:1rem;border-radius:14px;padding:16px;margin-top:24px;transition:transform .15s;font-family:var(--body)}
+.vendor-btn-submit:hover{transform:translateY(-2px)}
+.vendor-btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.vendor-success{text-align:center;padding:50px 20px}
+.vendor-success .big-emo{font-size:4rem;display:block;margin-bottom:16px}
+.vendor-success h2{font-family:var(--display);font-weight:900;font-style:italic;font-size:1.8rem;margin-bottom:12px}
+.vendor-success p{color:var(--muted);font-weight:500;font-size:.95rem;margin-bottom:24px;max-width:40ch}
+.vendor-success .next{background:var(--forest);color:var(--lime);padding:16px 26px;border-radius:14px;font-weight:800;display:inline-block;text-decoration:none;transition:transform .15s;margin:0 auto}
+.vendor-success .next:hover{transform:translateY(-2px)}
+.auth-tabs{display:flex;gap:8px;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:5px;margin-bottom:26px}
+.auth-tab{flex:1;padding:11px;border-radius:999px;font-weight:800;font-size:.9rem;color:var(--forest);transition:all .15s}
+.auth-tab.on{background:var(--ink);color:var(--lime)}
+.info-notice{display:flex;gap:12px;background:#E8F0FA;border-radius:14px;padding:16px;font-size:.85rem;font-weight:600;color:#2b3a4a;margin-bottom:18px;line-height:1.5}
+.info-notice .i-icon{font-size:1.1rem}
+.check-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;cursor:pointer;font-size:.9rem;font-weight:600}
+.check-row input{width:20px;height:20px;accent-color:var(--forest);margin-top:2px;flex-shrink:0}
+.radio-q{font-weight:800;font-size:.92rem;margin-bottom:10px}
+.radio-q .req{color:var(--danger)}
+.radio-row{display:flex;gap:26px;margin-bottom:18px}
+.radio-row label{display:flex;gap:8px;align-items:center;font-weight:600;font-size:.9rem;cursor:pointer}
+.radio-row input{width:19px;height:19px;accent-color:var(--forest)}
+.phone-wrap{display:flex;gap:8px}
+.phone-wrap .prefix{background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font-weight:800;font-size:.95rem;color:var(--forest)}
+.phone-wrap input{flex:1}
+.field .req{color:var(--danger)}
+.dash-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+.dash-head h1{font-family:var(--display);font-weight:900;font-style:italic;font-size:clamp(1.3rem,3.5vw,1.9rem)}
+.dash-city{display:inline-flex;align-items:center;gap:6px;background:var(--lime);color:var(--ink);border-radius:999px;padding:6px 14px;font-size:.8rem;font-weight:800}
+.logout-btn{font-weight:800;font-size:.85rem;color:var(--danger);text-decoration:underline;text-underline-offset:3px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-top:24px}
+.stat-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.stat-card .s-label{font-size:.72rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.stat-card .s-value{font-family:var(--display);font-weight:900;font-size:1.6rem;margin-top:6px}
+.stat-card.hi{background:var(--ink);color:#fff}
+.stat-card.hi .s-label{color:var(--lime)}
+.dash-note{color:var(--muted);font-weight:600;font-size:.85rem;margin-top:18px}
+.dash-sec{margin-top:36px}
+.dash-sec h3{font-family:var(--display);font-weight:700;font-size:1rem;padding-bottom:8px;border-bottom:2px solid var(--ink);display:inline-block;margin-bottom:16px}
+.menu-edit-row{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:10px}
+.menu-edit-row .me-emo{font-size:1.5rem}
+.menu-edit-row .me-info{flex:1;min-width:0}
+.menu-edit-row h4{font-size:.92rem;font-weight:800}
+.menu-edit-row p{font-size:.78rem;color:var(--muted);font-weight:500}
+.menu-edit-row .me-price{font-weight:800;color:var(--forest);font-size:.88rem}
+.me-actions{display:flex;gap:8px}
+.me-btn{font-weight:800;font-size:.78rem;padding:7px 12px;border-radius:10px;background:var(--paper);border:1px solid var(--line);color:var(--forest)}
+.me-btn.del{color:var(--danger)}
+.add-item-form{background:var(--card);border:1.5px dashed var(--line);border-radius:var(--radius);padding:20px;margin-top:14px}
+.add-item-form .form-title{font-weight:800;font-size:.9rem;margin-bottom:14px}
+.empty-menu{color:var(--muted);font-weight:600;font-size:.88rem;padding:20px 0}
+.order-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+.order-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.order-top .o-id{font-family:var(--display);font-weight:700;font-size:.9rem}
+.order-top .o-time{font-size:.75rem;color:var(--muted);font-weight:600}
+.status-badge{font-size:.7rem;font-weight:800;padding:5px 12px;border-radius:999px;letter-spacing:.04em;text-transform:uppercase}
+.status-badge.incoming{background:#FFF3C4;color:#8a6d00}
+.status-badge.accepted{background:#D8ECF5;color:#0b5394}
+.status-badge.preparing{background:#E7DDF7;color:#5b2d90}
+.status-badge.ready{background:var(--lime);color:var(--ink)}
+.status-badge.completed{background:var(--forest);color:var(--lime)}
+.status-badge.rejected,.status-badge.cancelled{background:#FBE0E0;color:var(--danger)}
+.order-cust{font-size:.85rem;font-weight:600;color:var(--forest);margin-bottom:8px}
+.order-cust b{font-weight:800}
+.order-items{border-top:1px dashed var(--line);border-bottom:1px dashed var(--line);padding:8px 0;margin:8px 0}
+.order-items .oi{display:flex;justify-content:space-between;font-size:.85rem;font-weight:600;padding:2px 0}
+.order-total{display:flex;justify-content:space-between;font-weight:800;font-size:.95rem;margin-top:6px}
+.order-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.oa-btn{font-weight:800;font-size:.83rem;padding:10px 18px;border-radius:12px;transition:transform .12s}
+.oa-btn:hover{transform:translateY(-1px)}
+.oa-btn.accept{background:var(--lime);color:var(--ink)}
+.oa-btn.reject,.oa-btn.cancel{background:#FBE0E0;color:var(--danger)}
+.oa-btn.prep{background:var(--ink);color:var(--lime)}
+.oa-btn.ready{background:var(--forest);color:var(--lime)}
+.oa-btn.done{background:var(--paper);border:1.5px solid var(--forest);color:var(--forest)}
+.refresh-btn{font-weight:800;font-size:.8rem;color:var(--forest);text-decoration:underline;text-underline-offset:3px;margin-left:12px}
+
 /* footer */
 footer{border-top:1px solid var(--line);margin-top:40px;background:var(--card)}
 .foot-inner{max-width:1120px;margin:0 auto;padding:34px 20px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
@@ -221,6 +315,8 @@ footer{border-top:1px solid var(--line);margin-top:40px;background:var(--card)}
     </select>
     <div class="searchbar">🔎<input id="topSearch" type="search" placeholder="Search banga, suya, groceries…" aria-label="Search stores and dishes"></div>
     <button class="cart-btn" onclick="toggleCart(true)" aria-label="Open cart"><span>🛍️</span><span class="lbl">Cart</span><span class="cart-count" id="cartCount">0</span></button>
+    <button class="acct-btn" onclick="openAccount()" id="acctBtn" aria-label="My account">Sign in</button>
+    <button class="vendor-btn" onclick="openDash()" aria-label="For Vendors">For Vendors</button>
   </div>
 </header>
 
@@ -325,6 +421,208 @@ footer{border-top:1px solid var(--line);margin-top:40px;background:var(--card)}
     <div class="steps" id="trackSteps"></div>
     <div class="track-actions">
       <button class="cta" onclick="go('home')">Order something else</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CUSTOMER AUTH ============ -->
+<section id="view-cust-auth" class="view">
+  <div class="vendor-wrap">
+    <h1>Your Marketa Fetch account</h1>
+    <p class="sub">Save your address, track your orders and reorder your favourites in one tap.</p>
+
+    <div class="auth-tabs" role="tablist">
+      <button type="button" class="auth-tab on" id="ctab-signup" onclick="switchCustAuth('signup')">Create account</button>
+      <button type="button" class="auth-tab" id="ctab-signin" onclick="switchCustAuth('signin')">Sign in</button>
+    </div>
+
+    <div id="custSignupPane">
+    <form class="vendor-form" onsubmit="registerCustomer(event)">
+      <div class="field" id="cf-name"><label for="cName">Full name <span class="req">*</span></label><input id="cName" type="text" placeholder="e.g. Efe Oghenekaro"><div class="err">Enter your name</div></div>
+      <div class="field" id="cf-phone"><label for="cPhone">Mobile phone number <span class="req">*</span></label>
+        <div class="phone-wrap"><span class="prefix">+234</span><input id="cPhone" type="tel" inputmode="tel" placeholder="803 123 4567"></div>
+        <div class="err">Enter a valid phone number</div>
+      </div>
+      <div class="field" id="cf-email"><label for="cEmail">Email <span class="req">*</span></label><input id="cEmail" type="email" placeholder="you@email.com"><div class="err">Enter a valid email</div></div>
+      <div class="field" id="cf-city"><label for="cCity">City <span class="req">*</span></label>
+        <select id="cCity"><option value="">Select your city</option><option value="asaba">Asaba</option><option value="warri">Warri</option><option value="abraka">Abraka</option></select>
+        <div class="err">Select your city</div>
+      </div>
+      <div class="field" id="cf-addr"><label for="cAddr">Delivery address <span class="req">*</span></label><input id="cAddr" type="text" placeholder="Street, area, landmark"><div class="err">Enter your delivery address</div></div>
+      <div class="field" id="cf-pass"><label for="cPass">Password <span class="req">*</span></label><input id="cPass" type="password" placeholder="At least 6 characters"><div class="err">Password must be 6+ characters</div></div>
+      <button type="submit" class="vendor-btn-submit">Create account</button>
+      <p class="note" style="margin-top:14px">You can always order without an account — signing up just saves your details.</p>
+    </form>
+    </div>
+
+    <div id="custSigninPane" style="display:none">
+    <form class="vendor-form" onsubmit="loginCustomer(event)">
+      <div class="field" id="clf-email"><label for="clEmail">Email</label><input id="clEmail" type="email" placeholder="you@email.com"><div class="err">Enter a valid email</div></div>
+      <div class="field" id="clf-pass"><label for="clPass">Password</label><input id="clPass" type="password" placeholder="Your password"><div class="err">Enter your password</div></div>
+      <button type="submit" class="vendor-btn-submit">Sign in</button>
+    </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CUSTOMER ACCOUNT ============ -->
+<section id="view-cust-account" class="view">
+  <div class="section">
+    <div class="dash-head">
+      <div>
+        <h1 id="custName">My account</h1>
+        <span class="dash-city" id="custCityBadge">📍 Asaba</span>
+      </div>
+      <button class="logout-btn" onclick="logoutCustomer()">Sign out</button>
+    </div>
+
+    <div class="dash-sec">
+      <h3>My details</h3>
+      <form class="vendor-form" onsubmit="saveCustomerDetails(event)" style="max-width:520px">
+        <div class="field"><label for="eName">Full name</label><input id="eName" type="text"></div>
+        <div class="field"><label for="ePhone">Phone</label><input id="ePhone" type="tel"></div>
+        <div class="field"><label for="eCity">City</label>
+          <select id="eCity"><option value="asaba">Asaba</option><option value="warri">Warri</option><option value="abraka">Abraka</option></select>
+        </div>
+        <div class="field"><label for="eAddr">Delivery address</label><input id="eAddr" type="text"></div>
+        <button type="submit" class="vendor-btn-submit">Save changes</button>
+      </form>
+    </div>
+
+    <div class="dash-sec">
+      <h3>My orders</h3>
+      <div id="custOrders"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VENDOR SIGN-UP ============ -->
+<section id="view-vendor-signup" class="view">
+  <div class="vendor-wrap">
+    <h1>Grow your business on Marketa Fetch</h1>
+    <p class="sub">Register your store and start receiving orders from customers in your city.</p>
+
+    <div class="auth-tabs" role="tablist">
+      <button type="button" class="auth-tab on" id="tab-signup" onclick="switchAuth('signup')">Create account</button>
+      <button type="button" class="auth-tab" id="tab-signin" onclick="switchAuth('signin')">Sign in</button>
+    </div>
+
+    <div id="signupPane">
+    <form class="vendor-form" onsubmit="registerVendor(event)">
+      <div class="field" id="vf-name"><label for="vBizName">Name of the establishment <span class="req">*</span></label><input id="vBizName" type="text" placeholder="e.g. Mama Efe's Kitchen"><div class="err">Enter your establishment name</div></div>
+
+      <div class="two-col">
+        <div class="field" id="vf-first"><label for="vFirst">First name <span class="req">*</span></label><input id="vFirst" type="text" placeholder="e.g. Efe"><div class="err">Enter your first name</div></div>
+        <div class="field" id="vf-last"><label for="vLast">Last name <span class="req">*</span></label><input id="vLast" type="text" placeholder="e.g. Oghenekaro"><div class="err">Enter your last name</div></div>
+      </div>
+
+      <div class="field" id="vf-type"><label for="vType">Business type <span class="req">*</span></label>
+        <select id="vType"><option value="">Select business type</option><option value="food">Restaurant / Local kitchen</option><option value="fast">Fast food</option><option value="grills">Grills / Suya</option><option value="grocery">Groceries / Supermarket</option><option value="pharmacy">Pharmacy</option><option value="drinks">Drinks</option><option value="healthy">Healthy food</option></select>
+        <div class="err">Select your business type</div>
+      </div>
+
+      <div class="two-col">
+        <div class="field" id="vf-branches"><label for="vBranches">Branches <span class="req">*</span></label><input id="vBranches" type="number" min="1" value="1"><div class="err">Enter number of branches</div></div>
+        <div class="field" id="vf-city"><label for="vCity">City <span class="req">*</span></label>
+          <select id="vCity"><option value="">Select your city</option><option value="asaba">Asaba</option><option value="warri">Warri</option><option value="abraka">Abraka</option></select>
+          <div class="err">Select your city</div>
+        </div>
+      </div>
+
+      <div class="field" id="vf-email"><label for="vEmail">Business email <span class="req">*</span></label><input id="vEmail" type="email" placeholder="hello@store.com"><div class="err">Enter a valid email</div></div>
+
+      <div class="field" id="vf-phone"><label for="vPhone">Mobile phone number <span class="req">*</span></label>
+        <div class="phone-wrap"><span class="prefix">+234</span><input id="vPhone" type="tel" inputmode="tel" placeholder="803 123 4567"></div>
+        <div class="err">Enter a valid phone number</div>
+      </div>
+
+      <div class="info-notice"><span class="i-icon">ⓘ</span><span>This number will be used for order alerts and all important communication about your store.</span></div>
+
+      <label class="check-row"><input type="checkbox" id="vSamePhone" checked><span>My mobile phone number is the same as my store number</span></label>
+      <label class="check-row"><input type="checkbox" id="vWhatsapp"><span>I'd like to get updates &amp; promotions by WhatsApp 💬</span></label>
+
+      <div class="radio-q">Do you have business registration? <span class="req">*</span></div>
+      <div class="radio-row" id="vf-reg">
+        <label><input type="radio" name="vReg" value="yes"> Yes</label>
+        <label><input type="radio" name="vReg" value="no"> No</label>
+      </div>
+      <div class="err" id="regErr" style="color:var(--danger);font-size:.75rem;font-weight:700;margin:-10px 0 14px;display:none">Select an option</div>
+
+      <div class="field" id="vf-pass"><label for="vPass">Password <span class="req">*</span></label><input id="vPass" type="password" placeholder="At least 6 characters"><div class="err">Password must be 6+ characters</div></div>
+
+      <label class="check-row"><input type="checkbox" id="vPolicy"><span>I accept the <b style="text-decoration:underline;color:var(--forest)">Privacy Policy</b> <span class="req">*</span></span></label>
+      <div class="err" id="policyErr" style="color:var(--danger);font-size:.75rem;font-weight:700;margin:-10px 0 6px;display:none">You must accept the Privacy Policy</div>
+
+      <button type="submit" class="vendor-btn-submit">Register</button>
+    </form>
+    </div>
+
+    <div id="signinPane" style="display:none">
+    <form class="vendor-form" onsubmit="loginVendor(event)">
+      <div class="field" id="lf-email"><label for="lEmail">Email</label><input id="lEmail" type="email" placeholder="hello@store.com" required><div class="err">Enter a valid email</div></div>
+      <div class="field" id="lf-pass"><label for="lPass">Password</label><input id="lPass" type="password" placeholder="Your password" required><div class="err">Enter your password</div></div>
+      <button type="submit" class="vendor-btn-submit">Sign in »»</button>
+    </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VENDOR SUCCESS ============ -->
+<section id="view-vendor-success" class="view">
+  <div class="vendor-wrap">
+    <div class="vendor-success">
+      <span class="big-emo">🎉</span>
+      <h2 id="successName">Welcome, Mama Efe!</h2>
+      <p>Your store is registered on Marketa Fetch. You can now start receiving orders from <span id="successCity">Asaba</span>.</p>
+      <p style="color:var(--forest);font-size:.85rem;font-weight:600">Next: Upload your menu items and start taking orders.</p>
+      <button class="next" onclick="openDash()">Go to my dashboard »»</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VENDOR DASHBOARD (shell — features coming in next steps) ============ -->
+<section id="view-vendor-dash" class="view">
+  <div class="section">
+    <div class="dash-head">
+      <div>
+        <h1 id="dashName">My store</h1>
+        <span class="dash-city" id="dashCity">📍 Asaba</span>
+      </div>
+      <button class="logout-btn" onclick="logoutVendor()">Log out</button>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card hi"><div class="s-label">Orders today</div><div class="s-value" id="stOrders">0</div></div>
+      <div class="stat-card"><div class="s-label">Revenue today</div><div class="s-value" id="stRevenue">₦0</div></div>
+      <div class="stat-card"><div class="s-label">Pending orders</div><div class="s-value" id="stPending">0</div></div>
+      <div class="stat-card"><div class="s-label">All-time orders</div><div class="s-value" id="stAll">0</div></div>
+    </div>
+    <p class="dash-note" id="dashIntro">Counting orders placed by customers in your city.</p>
+
+    <div class="dash-sec">
+      <h3>Active orders</h3><button class="refresh-btn" onclick="renderOrders();renderStats();toast('Orders refreshed','🔄')">Refresh</button>
+      <div id="ordersList"></div>
+    </div>
+
+    <div class="dash-sec">
+      <h3>My menu</h3>
+      <div id="menuList"></div>
+      <form class="add-item-form vendor-form" onsubmit="saveMenuItem(event)">
+        <div class="form-title" id="menuFormTitle">Add a menu item</div>
+        <div class="two-col">
+          <div class="field" id="mf-name"><label for="mName">Item name</label><input id="mName" type="text" placeholder="e.g. Banga soup + starch"><div class="err">Enter the item name</div></div>
+          <div class="field" id="mf-price"><label for="mPrice">Price (₦)</label><input id="mPrice" type="number" min="50" placeholder="5500"><div class="err">Enter a price</div></div>
+        </div>
+        <div class="field"><label for="mDesc">Description (optional)</label><input id="mDesc" type="text" placeholder="e.g. Fresh palm-nut banga with fish"></div>
+        <div class="field"><label for="mEmo">Emoji (optional)</label><input id="mEmo" type="text" maxlength="4" placeholder="🍲"></div>
+        <input type="hidden" id="mEditId">
+        <button type="submit" class="vendor-btn-submit" style="margin-top:8px" id="menuFormBtn">Add item »»</button>
+        <button type="button" class="me-btn" id="menuCancelBtn" style="display:none;margin-top:10px;width:100%" onclick="resetMenuForm()">Cancel editing</button>
+      </form>
+    </div>
+
+    <div class="dash-sec">
+      <h3>Order history</h3>
+      <div id="historyList"></div>
     </div>
   </div>
 </section>
@@ -476,6 +774,12 @@ let curStore = null;
 let speed = 'standard';
 let payMethod = 'card';
 let trackTimer = null;
+let vendors = {};
+try{ vendors = JSON.parse(localStorage.getItem('mf_vendors')) || {}; }catch(e){ vendors = {}; }
+const saveVendors = () => { try{ localStorage.setItem('mf_vendors', JSON.stringify(vendors)); }catch(e){} };
+let orders = [];
+try{ orders = JSON.parse(localStorage.getItem('mf_orders')) || []; }catch(e){ orders = []; }
+const saveOrders = () => { try{ localStorage.setItem('mf_orders', JSON.stringify(orders)); }catch(e){} };
 
 const inCity = s => s.cities.includes(curCity);
 const cityNames = s => s.cities.map(c=>CITIES[c]).join(' · ');
@@ -499,7 +803,7 @@ function openCategory(cat){
   renderStores(); go('stores');
 }
 function openStore(id){
-  curStore = STORES.find(s=>s.id===id);
+  curStore = allStores().find(s=>s.id===id);
   renderStoreDetail(); go('store');
 }
 function heroGo(){
@@ -515,13 +819,13 @@ function renderHome(){
   document.getElementById('cityTabs').innerHTML = Object.entries(CITIES).map(([id,name])=>
     `<button class="city-tab ${curCity===id?'on':''}" onclick="setCity('${id}')">${name}</button>`).join('');
   document.getElementById('catGrid').innerHTML = CATS.map(c=>{
-    const n = STORES.filter(s=>s.cat===c.id && inCity(s)).length;
+    const n = allStores().filter(s=>s.cat===c.id && inCity(s)).length;
     return `<button class="cat-card" onclick="openCategory('${c.id}')">
       <span class="emo">${c.emo}</span><span class="nm">${c.name}</span><br>
       <span class="ct">${n} store${n!==1?'s':''} in ${CITIES[curCity]}</span></button>`;
   }).join('');
   document.getElementById('popGrid').innerHTML =
-    STORES.filter(inCity).sort((a,b)=>b.rating-a.rating).slice(0,4).map(storeCard).join('');
+    allStores().filter(inCity).sort((a,b)=>(b.rating==='New'?0:b.rating)-(a.rating==='New'?0:a.rating)).slice(0,4).map(storeCard).join('');
   const words = ['BANGA','STARCH','SUYA','UKODO','GROCERIES','SHAWARMA','PHARMACY','ZOBO','COLD DRINKS','FRESH FISH'];
   const track = words.map(w=>`${w} »»`).join(' &nbsp; ');
   document.getElementById('marquee').innerHTML = track + ' &nbsp; ' + track;
@@ -545,14 +849,14 @@ function renderStores(){
   document.getElementById('sortChips').innerHTML = sorts.map(([id,name])=>
     `<button class="chip ${curSort===id?'on':''}" onclick="curSort='${id}';renderStores()">${name}</button>`).join('');
 
-  let list = STORES.filter(s=>inCity(s) && (curCat==='all'||s.cat===curCat));
+  let list = allStores().filter(s=>inCity(s) && (curCat==='all'||s.cat===curCat));
   if(curSearch){
     list = list.filter(s=>{
       const hay = (s.name+' '+s.tags+' '+s.menu.flatMap(m=>m.items.map(i=>i.name+' '+i.desc)).join(' ')).toLowerCase();
       return hay.includes(curSearch);
     });
   }
-  if(curSort==='rating') list=[...list].sort((a,b)=>b.rating-a.rating);
+  if(curSort==='rating') list=[...list].sort((a,b)=>(b.rating==='New'?0:b.rating)-(a.rating==='New'?0:a.rating));
   if(curSort==='fastest') list=[...list].sort((a,b)=>parseInt(a.time)-parseInt(b.time));
   if(curSort==='fee') list=[...list].sort((a,b)=>a.fee-b.fee);
 
@@ -590,7 +894,7 @@ function itemControl(id){
 
 /* ================= CART ================= */
 function findItem(id){
-  for(const s of STORES) for(const sec of s.menu) for(const it of sec.items)
+  for(const s of allStores()) for(const sec of s.menu) for(const it of sec.items)
     if(it.id===id) return {item:it, store:s};
   return null;
 }
@@ -617,7 +921,7 @@ function updateCount(){
 function totals(){
   const sub = Object.values(cart).reduce((a,c)=>a+c.item.price*c.qty,0);
   const stores = [...new Set(Object.values(cart).map(c=>c.store.id))];
-  let del = stores.reduce((a,id)=>a+STORES.find(s=>s.id===id).fee,0);
+  let del = stores.reduce((a,id)=>a+allStores().find(s=>s.id===id).fee,0);
   if(speed==='priority') del += 600;
   return {sub, del, svc:SERVICE_FEE, total: sub+del+SERVICE_FEE, stores};
 }
@@ -664,6 +968,13 @@ function pickPay(v){
   document.getElementById('pay-cash').classList.toggle('sel', v==='cash');
 }
 function renderCheckout(){
+  if(curCustomer){
+    const f = (id,val) => { const el=document.getElementById(id); if(el && !el.value) el.value = val; };
+    f('inName', curCustomer.name);
+    f('inPhone', curCustomer.phone);
+    f('inAddr', curCustomer.address);
+    document.getElementById('inCity').value = curCustomer.city;
+  }
   const t = totals();
   const el = document.getElementById('checkoutSummary');
   if(!Object.keys(cart).length){
@@ -698,6 +1009,22 @@ function placeOrder(){
   if(!validate()){ toast('Fill in the highlighted fields','⚠️'); return; }
   const orderNo = 'MF-' + Math.floor(1000+Math.random()*9000);
   document.getElementById('orderNo').textContent = 'Order #' + orderNo;
+  const t = totals();
+  orders.push({
+    id: orderNo,
+    customerId: curCustomer ? curCustomer.id : null,
+    city: document.getElementById('inCity').value,
+    customer: document.getElementById('inName').value.trim(),
+    phone: document.getElementById('inPhone').value.trim(),
+    address: document.getElementById('inAddr').value.trim(),
+    note: document.getElementById('inNote').value.trim(),
+    items: Object.values(cart).map(c=>({name:c.item.name, qty:c.qty, price:c.item.price, store:c.store.name})),
+    total: t.total,
+    payMethod, speed,
+    status: 'incoming',
+    createdAt: new Date().toISOString()
+  });
+  saveOrders();
   cart = {}; updateCount(); renderCart();
   startTracking();
   go('tracking');
@@ -755,8 +1082,451 @@ function toast(msg, emo='✅'){
   toastT = setTimeout(()=>t.classList.remove('show'), 2400);
 }
 
+/* ================= VENDOR REGISTRATION ================= */
+function validateVendorForm(){
+  let ok = true;
+  const checks = [
+    ['vf-name', 'vBizName', v => v.length >= 2],
+    ['vf-first', 'vFirst', v => v.length >= 2],
+    ['vf-last', 'vLast', v => v.length >= 2],
+    ['vf-type', 'vType', v => v.length > 0],
+    ['vf-branches', 'vBranches', v => !isNaN(v) && parseInt(v) >= 1],
+    ['vf-city', 'vCity', v => v.length > 0],
+    ['vf-email', 'vEmail', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)],
+    ['vf-phone', 'vPhone', v => v.replace(/\D/g,'').length >= 9],
+    ['vf-pass', 'vPass', v => v.length >= 6],
+  ];
+  for(const [field, id, test] of checks){
+    const val = document.getElementById(id).value.trim();
+    const bad = !test(val);
+    document.getElementById(field).classList.toggle('invalid', bad);
+    if(bad) ok = false;
+  }
+  const reg = document.querySelector('input[name="vReg"]:checked');
+  document.getElementById('regErr').style.display = reg ? 'none' : 'block';
+  if(!reg) ok = false;
+  const policy = document.getElementById('vPolicy').checked;
+  document.getElementById('policyErr').style.display = policy ? 'none' : 'block';
+  if(!policy) ok = false;
+  return ok;
+}
+
+function registerVendor(e){
+  e.preventDefault();
+  if(!validateVendorForm()){ toast('Fill all required fields','⚠️'); return; }
+
+  const bizName = document.getElementById('vBizName').value.trim();
+  const firstName = document.getElementById('vFirst').value.trim();
+  const lastName = document.getElementById('vLast').value.trim();
+  const bizType = document.getElementById('vType').value;
+  const branches = parseInt(document.getElementById('vBranches').value);
+  const city = document.getElementById('vCity').value;
+  const email = document.getElementById('vEmail').value.trim();
+  const phone = '+234 ' + document.getElementById('vPhone').value.trim();
+  const pass = document.getElementById('vPass').value;
+  const samePhone = document.getElementById('vSamePhone').checked;
+  const whatsapp = document.getElementById('vWhatsapp').checked;
+  const hasReg = document.querySelector('input[name="vReg"]:checked').value;
+  const fee = 800;   // default — vendor can change later
+  const time = 25;   // default prep time (min)
+
+  const vendorId = 'v-' + Math.random().toString(36).substr(2,9);
+  vendors[vendorId] = {
+    id: vendorId,
+    bizName, firstName, lastName, bizType, branches, city, phone, email, pass,
+    samePhone, whatsapp, hasReg, fee, time,
+    createdAt: new Date().toISOString(),
+    menus: []
+  };
+  saveVendors();
+  
+  document.getElementById('successName').textContent = `Welcome, ${bizName}!`;
+  document.getElementById('successCity').textContent = CITIES[city];
+  curVendor = vendors[vendorId];
+  try{ localStorage.setItem('mf_session', vendorId); }catch(e){}
+  
+  go('vendor-success');
+  toast('Account created! You can now manage orders.','🎉');
+}
+
+/* ================= VENDOR AUTH + DASHBOARD ================= */
+let curVendor = null;
+(function restoreSession(){
+  let id=null; try{ id = localStorage.getItem('mf_session'); }catch(e){}
+  if(id && vendors[id]) curVendor = vendors[id];
+})();
+
+function switchAuth(mode){
+  document.getElementById('signupPane').style.display = mode==='signup' ? 'block' : 'none';
+  document.getElementById('signinPane').style.display = mode==='signin' ? 'block' : 'none';
+  document.getElementById('tab-signup').classList.toggle('on', mode==='signup');
+  document.getElementById('tab-signin').classList.toggle('on', mode==='signin');
+}
+
+function loginVendor(e){
+  e.preventDefault();
+  const email = document.getElementById('lEmail').value.trim().toLowerCase();
+  const pass = document.getElementById('lPass').value;
+  const found = Object.values(vendors).find(v => v.email.toLowerCase()===email && v.pass===pass);
+  const emailField = document.getElementById('lf-email');
+  const passField = document.getElementById('lf-pass');
+  emailField.classList.remove('invalid'); passField.classList.remove('invalid');
+  if(!found){
+    emailField.classList.add('invalid'); passField.classList.add('invalid');
+    toast('No account found with that email and password','⚠️');
+    return;
+  }
+  curVendor = found;
+  try{ localStorage.setItem('mf_session', found.id); }catch(e){}
+  openDash();
+  toast(`Welcome back, ${found.bizName}!`,'👋');
+}
+
+function openDash(){
+  if(!curVendor){ switchAuth('signin'); go('vendor-signup'); return; }
+  document.getElementById('dashName').textContent = curVendor.bizName;
+  document.getElementById('dashCity').textContent = '📍 ' + CITIES[curVendor.city];
+  renderStats();
+  renderMenuEditor();
+  renderOrders();
+  renderHistory();
+  go('vendor-dash');
+}
+
+function renderStats(){
+  const cityOrders = orders.filter(o => o.city === curVendor.city);
+  const today = new Date().toDateString();
+  const todays = cityOrders.filter(o => new Date(o.createdAt).toDateString() === today);
+  const revenue = todays.reduce((a,o)=>a+o.total, 0);
+  const pending = cityOrders.filter(o => o.status === 'incoming').length;
+  document.getElementById('stOrders').textContent = todays.length;
+  document.getElementById('stRevenue').textContent = fmt(revenue);
+  document.getElementById('stPending').textContent = pending;
+  document.getElementById('stAll').textContent = cityOrders.length;
+}
+
+function logoutVendor(){
+  curVendor = null;
+  try{ localStorage.removeItem('mf_session'); }catch(e){}
+  switchAuth('signin');
+  go('vendor-signup');
+  toast('Logged out','👋');
+}
+
+/* ================= MENU EDITOR ================= */
+function renderMenuEditor(){
+  const list = document.getElementById('menuList');
+  const menus = curVendor.menus || [];
+  if(!menus.length){
+    list.innerHTML = `<div class="empty-menu">No items yet — add your first dish below and your store will appear to customers in ${CITIES[curVendor.city]}.</div>`;
+    return;
+  }
+  list.innerHTML = menus.map(m=>`
+    <div class="menu-edit-row">
+      <span class="me-emo">${m.emo}</span>
+      <div class="me-info"><h4>${m.name}</h4><p>${m.desc||''}</p></div>
+      <span class="me-price">${fmt(m.price)}</span>
+      <span class="me-actions">
+        <button class="me-btn" onclick="editMenuItem('${m.id}')">Edit</button>
+        <button class="me-btn del" onclick="deleteMenuItem('${m.id}')">Delete</button>
+      </span>
+    </div>`).join('');
+}
+
+function saveMenuItem(e){
+  e.preventDefault();
+  const name = document.getElementById('mName').value.trim();
+  const price = parseInt(document.getElementById('mPrice').value);
+  const desc = document.getElementById('mDesc').value.trim();
+  const emo = document.getElementById('mEmo').value.trim() || '🍽️';
+  const editId = document.getElementById('mEditId').value;
+  let ok = true;
+  document.getElementById('mf-name').classList.toggle('invalid', !(name.length>=2)); if(name.length<2) ok=false;
+  document.getElementById('mf-price').classList.toggle('invalid', !(price>=50)); if(!(price>=50)) ok=false;
+  if(!ok){ toast('Fill in the highlighted fields','⚠️'); return; }
+  if(!curVendor.menus) curVendor.menus = [];
+  if(editId){
+    const item = curVendor.menus.find(m=>m.id===editId);
+    if(item){ item.name=name; item.price=price; item.desc=desc; item.emo=emo; }
+    toast('Item updated','✏️');
+  }else{
+    curVendor.menus.push({ id: curVendor.id + '-m' + Date.now(), name, price, desc, emo });
+    toast('Item added to your menu','✅');
+  }
+  vendors[curVendor.id] = curVendor; saveVendors();
+  resetMenuForm(); renderMenuEditor();
+  renderHome(); renderStores();
+}
+
+function editMenuItem(id){
+  const m = (curVendor.menus||[]).find(x=>x.id===id);
+  if(!m) return;
+  document.getElementById('mName').value = m.name;
+  document.getElementById('mPrice').value = m.price;
+  document.getElementById('mDesc').value = m.desc||'';
+  document.getElementById('mEmo').value = m.emo;
+  document.getElementById('mEditId').value = m.id;
+  document.getElementById('menuFormTitle').textContent = 'Edit item';
+  document.getElementById('menuFormBtn').textContent = 'Save changes »»';
+  document.getElementById('menuCancelBtn').style.display = 'block';
+}
+
+function deleteMenuItem(id){
+  curVendor.menus = (curVendor.menus||[]).filter(m=>m.id!==id);
+  vendors[curVendor.id] = curVendor; saveVendors();
+  renderMenuEditor(); renderHome(); renderStores();
+  toast('Item removed','🗑️');
+}
+
+function resetMenuForm(){
+  ['mName','mPrice','mDesc','mEmo','mEditId'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('menuFormTitle').textContent = 'Add a menu item';
+  document.getElementById('menuFormBtn').textContent = 'Add item »»';
+  document.getElementById('menuCancelBtn').style.display = 'none';
+  document.getElementById('mf-name').classList.remove('invalid');
+  document.getElementById('mf-price').classList.remove('invalid');
+}
+
+/* ================= VENDOR STORES ON CUSTOMER SIDE ================= */
+function vendorStores(){
+  return Object.values(vendors)
+    .filter(v => (v.menus||[]).length > 0)
+    .map(v => ({
+      id: v.id,
+      name: v.bizName,
+      cat: v.bizType || 'food',
+      cities: [v.city],
+      tags: 'Local vendor',
+      emo: '🍽️',
+      bg: '#EFF7DD',
+      rating: 'New',
+      time: `${v.time}–${v.time+10} min`,
+      fee: v.fee,
+      promo: 'New on Fetch',
+      menu: [{sec:'Menu', items: v.menus}]
+    }));
+}
+function allStores(){ return [...STORES, ...vendorStores()]; }
+
+/* ================= ORDER MANAGEMENT ================= */
+const ACTIVE_STATUSES = ['incoming','accepted','preparing','ready'];
+
+function renderOrders(){
+  const list = document.getElementById('ordersList');
+  const cityOrders = orders
+    .filter(o => o.city === curVendor.city && ACTIVE_STATUSES.includes(o.status))
+    .sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+  if(!cityOrders.length){
+    list.innerHTML = `<div class="empty-menu">No active orders right now. New orders from customers in ${CITIES[curVendor.city]} will appear here.</div>`;
+    return;
+  }
+  list.innerHTML = cityOrders.map(orderCard).join('');
+}
+
+function orderCard(o){
+  const when = new Date(o.createdAt).toLocaleString('en-NG', {hour:'2-digit', minute:'2-digit', day:'numeric', month:'short'});
+  const items = o.items.map(i=>`<div class="oi"><span>${i.qty}× ${i.name}</span><span>${fmt(i.price*i.qty)}</span></div>`).join('');
+  let actions = '';
+  if(o.status==='incoming') actions = `
+    <button class="oa-btn accept" onclick="setOrderStatus('${o.id}','accepted')">✓ Accept</button>
+    <button class="oa-btn reject" onclick="setOrderStatus('${o.id}','rejected')">✕ Reject</button>`;
+  if(o.status==='accepted') actions = `
+    <button class="oa-btn prep" onclick="setOrderStatus('${o.id}','preparing')">👨‍🍳 Start preparing</button>
+    <button class="oa-btn cancel" onclick="setOrderStatus('${o.id}','cancelled')">Cancel order</button>`;
+  if(o.status==='preparing') actions = `
+    <button class="oa-btn ready" onclick="setOrderStatus('${o.id}','ready')">🛵 Mark as ready</button>
+    <button class="oa-btn cancel" onclick="setOrderStatus('${o.id}','cancelled')">Cancel order</button>`;
+  if(o.status==='ready') actions = `
+    <button class="oa-btn done" onclick="setOrderStatus('${o.id}','completed')">✓ Mark completed</button>
+    <button class="oa-btn cancel" onclick="setOrderStatus('${o.id}','cancelled')">Cancel order</button>`;
+  return `
+    <div class="order-card">
+      <div class="order-top">
+        <span class="o-id">#${o.id}</span>
+        <span class="o-time">${when}</span>
+        <span class="status-badge ${o.status}">${o.status}</span>
+      </div>
+      <div class="order-cust"><b>${o.customer}</b> · ${o.phone}<br>📍 ${o.address}${o.note?`<br>📝 ${o.note}`:''}</div>
+      <div class="order-items">${items}</div>
+      <div class="order-total"><span>Total (incl. delivery)</span><span>${fmt(o.total)}</span></div>
+      <div class="order-actions">${actions}</div>
+    </div>`;
+}
+
+function setOrderStatus(id, status){
+  const o = orders.find(x=>x.id===id);
+  if(!o) return;
+  o.status = status;
+  o.updatedAt = new Date().toISOString();
+  saveOrders();
+  renderOrders(); renderStats(); renderHistory();
+  const msgs = {accepted:['Order accepted','✓'], rejected:['Order rejected','✕'], preparing:['Marked as preparing','👨‍🍳'], ready:['Marked as ready for pickup','🛵'], completed:['Order completed','🎉'], cancelled:['Order cancelled','⚠️']};
+  const [msg,emo] = msgs[status] || ['Updated','✅'];
+  toast(msg, emo);
+}
+
+function renderHistory(){
+  const list = document.getElementById('historyList');
+  const past = orders
+    .filter(o => o.city === curVendor.city && !ACTIVE_STATUSES.includes(o.status))
+    .sort((a,b) => new Date(b.updatedAt||b.createdAt) - new Date(a.updatedAt||a.createdAt))
+    .slice(0, 20);
+  if(!past.length){
+    list.innerHTML = `<div class="empty-menu">No past orders yet. Completed, rejected and cancelled orders will show here.</div>`;
+    return;
+  }
+  list.innerHTML = past.map(orderCard).join('');
+}
+
+/* ================= CUSTOMER ACCOUNTS ================= */
+let customers = {};
+try{ customers = JSON.parse(localStorage.getItem('mf_customers')) || {}; }catch(e){ customers = {}; }
+const saveCustomers = () => { try{ localStorage.setItem('mf_customers', JSON.stringify(customers)); }catch(e){} };
+let curCustomer = null;
+(function restoreCustSession(){
+  let id=null; try{ id = localStorage.getItem('mf_cust_session'); }catch(e){}
+  if(id && customers[id]) curCustomer = customers[id];
+})();
+
+function updateAcctBtn(){
+  const btn = document.getElementById('acctBtn');
+  btn.textContent = curCustomer ? (curCustomer.name.split(' ')[0] || 'Account') : 'Sign in';
+}
+function openAccount(){
+  if(!curCustomer){ switchCustAuth('signup'); go('cust-auth'); return; }
+  document.getElementById('custName').textContent = curCustomer.name;
+  document.getElementById('custCityBadge').textContent = '📍 ' + CITIES[curCustomer.city];
+  document.getElementById('eName').value = curCustomer.name;
+  document.getElementById('ePhone').value = curCustomer.phone;
+  document.getElementById('eCity').value = curCustomer.city;
+  document.getElementById('eAddr').value = curCustomer.address;
+  renderCustomerOrders();
+  go('cust-account');
+}
+function switchCustAuth(mode){
+  document.getElementById('custSignupPane').style.display = mode==='signup' ? 'block' : 'none';
+  document.getElementById('custSigninPane').style.display = mode==='signin' ? 'block' : 'none';
+  document.getElementById('ctab-signup').classList.toggle('on', mode==='signup');
+  document.getElementById('ctab-signin').classList.toggle('on', mode==='signin');
+}
+
+function registerCustomer(e){
+  e.preventDefault();
+  const checks = [
+    ['cf-name','cName', v=>v.length>=2],
+    ['cf-phone','cPhone', v=>v.replace(/\D/g,'').length>=9],
+    ['cf-email','cEmail', v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)],
+    ['cf-city','cCity', v=>v.length>0],
+    ['cf-addr','cAddr', v=>v.length>=6],
+    ['cf-pass','cPass', v=>v.length>=6],
+  ];
+  let ok = true;
+  for(const [f,id,test] of checks){
+    const bad = !test(document.getElementById(id).value.trim());
+    document.getElementById(f).classList.toggle('invalid', bad);
+    if(bad) ok=false;
+  }
+  if(!ok){ toast('Fill all required fields','⚠️'); return; }
+  const email = document.getElementById('cEmail').value.trim();
+  if(Object.values(customers).some(c=>c.email.toLowerCase()===email.toLowerCase())){
+    document.getElementById('cf-email').classList.add('invalid');
+    toast('An account already exists with that email','⚠️'); return;
+  }
+  const id = 'c-' + Math.random().toString(36).substr(2,9);
+  customers[id] = {
+    id,
+    name: document.getElementById('cName').value.trim(),
+    phone: '+234 ' + document.getElementById('cPhone').value.trim(),
+    email,
+    city: document.getElementById('cCity').value,
+    address: document.getElementById('cAddr').value.trim(),
+    pass: document.getElementById('cPass').value,
+    createdAt: new Date().toISOString()
+  };
+  saveCustomers();
+  curCustomer = customers[id];
+  try{ localStorage.setItem('mf_cust_session', id); }catch(e){}
+  setCity(curCustomer.city);
+  updateAcctBtn(); openAccount();
+  toast(`Welcome, ${curCustomer.name.split(' ')[0]}!`,'🎉');
+}
+
+function loginCustomer(e){
+  e.preventDefault();
+  const email = document.getElementById('clEmail').value.trim().toLowerCase();
+  const pass = document.getElementById('clPass').value;
+  const found = Object.values(customers).find(c=>c.email.toLowerCase()===email && c.pass===pass);
+  document.getElementById('clf-email').classList.toggle('invalid', !found);
+  document.getElementById('clf-pass').classList.toggle('invalid', !found);
+  if(!found){ toast('No account found with that email and password','⚠️'); return; }
+  curCustomer = found;
+  try{ localStorage.setItem('mf_cust_session', found.id); }catch(e){}
+  setCity(found.city);
+  updateAcctBtn(); openAccount();
+  toast(`Welcome back, ${found.name.split(' ')[0]}!`,'👋');
+}
+
+function logoutCustomer(){
+  curCustomer = null;
+  try{ localStorage.removeItem('mf_cust_session'); }catch(e){}
+  updateAcctBtn(); switchCustAuth('signin'); go('home');
+  toast('Signed out','👋');
+}
+
+function saveCustomerDetails(e){
+  e.preventDefault();
+  curCustomer.name = document.getElementById('eName').value.trim();
+  curCustomer.phone = document.getElementById('ePhone').value.trim();
+  curCustomer.city = document.getElementById('eCity').value;
+  curCustomer.address = document.getElementById('eAddr').value.trim();
+  customers[curCustomer.id] = curCustomer; saveCustomers();
+  document.getElementById('custName').textContent = curCustomer.name;
+  document.getElementById('custCityBadge').textContent = '📍 ' + CITIES[curCustomer.city];
+  setCity(curCustomer.city); updateAcctBtn();
+  toast('Details saved','✅');
+}
+
+function renderCustomerOrders(){
+  const list = document.getElementById('custOrders');
+  const mine = orders
+    .filter(o => o.customerId === curCustomer.id)
+    .sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt));
+  if(!mine.length){
+    list.innerHTML = `<div class="empty-menu">No orders yet. Once you order, everything shows here — with one-tap reorder.</div>`;
+    return;
+  }
+  list.innerHTML = mine.map(o=>{
+    const when = new Date(o.createdAt).toLocaleString('en-NG',{hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'});
+    const items = o.items.map(i=>`<div class="oi"><span>${i.qty}× ${i.name}</span><span>${fmt(i.price*i.qty)}</span></div>`).join('');
+    return `<div class="order-card">
+      <div class="order-top"><span class="o-id">#${o.id}</span><span class="o-time">${when}</span><span class="status-badge ${o.status}">${o.status}</span></div>
+      <div class="order-items">${items}</div>
+      <div class="order-total"><span>Total</span><span>${fmt(o.total)}</span></div>
+      <div class="order-actions"><button class="oa-btn accept" onclick="reorder('${o.id}')">🔁 Reorder</button></div>
+    </div>`;
+  }).join('');
+}
+
+function reorder(orderId){
+  const o = orders.find(x=>x.id===orderId);
+  if(!o) return;
+  let added = 0, missing = 0;
+  o.items.forEach(i=>{
+    const match = allStores().flatMap(s=>s.menu.flatMap(sec=>sec.items.map(it=>({it, store:s}))))
+      .find(x => x.it.name === i.name);
+    if(match){ cart[match.it.id] = {item: match.it, store: match.store, qty: i.qty}; added++; }
+    else missing++;
+  });
+  updateCount(); renderCart();
+  if(!added){ toast('Those items are no longer available','⚠️'); return; }
+  toggleCart(true);
+  toast(missing ? `${added} item(s) added — ${missing} unavailable` : 'Added to your cart','🔁');
+}
+
 /* init */
 renderHome(); renderStores(); renderCart(); updateCount();
+if(curCustomer){ curCity = curCustomer.city; document.getElementById('citySel').value = curCity; renderHome(); renderStores(); }
+updateAcctBtn();
 </script>
 </body>
 </html>
