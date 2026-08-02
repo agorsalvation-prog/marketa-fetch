@@ -468,7 +468,7 @@ footer{border-top:1px solid var(--line);margin-top:40px;background:var(--card)}
     <div class="searchbar">🔎<input id="topSearch" type="search" placeholder="Search banga, suya, groceries…" aria-label="Search stores and dishes"></div>
     <button class="cart-btn" onclick="toggleCart(true)" aria-label="Open cart"><span>🛍️</span><span class="lbl">Cart</span><span class="cart-count" id="cartCount">0</span></button>
     <button class="acct-btn" onclick="openAccount()" id="acctBtn" aria-label="My account">Sign in</button>
-    <button class="vendor-btn" onclick="openDash()" aria-label="For Vendors">For Vendors</button>
+    <button class="vendor-btn" id="vendorBtn" onclick="openDash()" aria-label="Account">For Vendors</button>
   </div>
 </header>
 
@@ -1180,6 +1180,7 @@ const cityNames = s => s.cities.map(c=>CITIES[c]).join(' · ');
 function go(view){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+view).classList.add('active');
+  if(typeof updateHeaderBtns === 'function') updateHeaderBtns();
   window.scrollTo({top:0});
   if(view!=='tracking' && trackTimer){clearInterval(trackTimer);trackTimer=null;}
 }
@@ -1704,6 +1705,7 @@ function loginVendor(e){
   }
   curVendor = found;
   try{ localStorage.setItem('mf_session', found.id); }catch(e){}
+  updateHeaderBtns();
   openDash();
   toast(`Welcome back, ${found.bizName}!`,'👋');
 }
@@ -1736,6 +1738,7 @@ function renderStats(){
 function logoutVendor(){
   curVendor = null;
   try{ localStorage.removeItem('mf_session'); }catch(e){}
+  updateHeaderBtns();
   switchAuth('signin');
   go('vendor-signup');
   toast('Logged out','👋');
@@ -2061,9 +2064,36 @@ let curCustomer = null;
   if(id && customers[id]) curCustomer = customers[id];
 })();
 
-function updateAcctBtn(){
-  const btn = document.getElementById('acctBtn');
-  btn.textContent = curCustomer ? (curCustomer.name.split(' ')[0] || 'Account') : 'Sign in';
+function updateAcctBtn(){ updateHeaderBtns(); }
+
+function updateHeaderBtns(){
+  const acct = document.getElementById('acctBtn');
+  const vend = document.getElementById('vendorBtn');
+  if(!acct || !vend) return;
+
+  // right-hand button: vendor store > rider rides > "For Vendors"
+  if(typeof curVendor !== 'undefined' && curVendor){
+    vend.textContent = 'My store';
+    vend.onclick = openDash;
+  } else if(typeof curRider !== 'undefined' && curRider){
+    vend.textContent = 'My rides';
+    vend.onclick = openRider;
+  } else {
+    vend.textContent = 'For Vendors';
+    vend.onclick = openDash;
+  }
+
+  // left button: customer name, or hide it entirely if a vendor/rider is signed in
+  const otherSession = (typeof curVendor !== 'undefined' && curVendor) || (typeof curRider !== 'undefined' && curRider);
+  if(curCustomer){
+    acct.style.display = '';
+    acct.textContent = curCustomer.name.split(' ')[0] || 'Account';
+  } else if(otherSession){
+    acct.style.display = 'none';
+  } else {
+    acct.style.display = '';
+    acct.textContent = 'Sign in';
+  }
 }
 function openAccount(){
   if(!curCustomer){ switchCustAuth('signup'); go('cust-auth'); return; }
@@ -2284,6 +2314,7 @@ function loginRider(e){
   if(!found){ toast('No rider account found with that email and password','⚠️'); return; }
   curRider = found;
   try{ localStorage.setItem('mf_rider_session', found.id); }catch(e){}
+  updateHeaderBtns();
   openRider();
   toast(`Welcome back, ${found.firstName}!`,'🛵');
 }
@@ -2292,6 +2323,7 @@ function logoutRider(){
   if(curRider){ curRider.online = false; riders[curRider.id] = curRider; saveRiders(); }
   curRider = null;
   try{ localStorage.removeItem('mf_rider_session'); }catch(e){}
+  updateHeaderBtns();
   switchRiderAuth('signin'); go('home');
   toast('Logged out','👋');
 }
