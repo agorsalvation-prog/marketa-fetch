@@ -433,6 +433,15 @@ header{position:sticky;top:0;z-index:50;background:rgba(246,248,240,.92);backdro
 .calc-badge{display:inline-block;background:var(--lime);color:var(--ink);font-weight:800;font-size:.75rem;padding:5px 12px;border-radius:999px;margin-bottom:14px}
 .calc-note{font-size:.8rem;color:var(--muted);font-weight:600;margin-top:14px;line-height:1.5}
 .calc-slider{width:100%;accent-color:var(--lime-deep);margin:6px 0 2px}
+.payout-hero{background:var(--ink);color:#fff;border-radius:var(--radius);padding:24px;max-width:520px}
+.payout-hero .p-label{font-size:.72rem;font-weight:800;color:var(--lime);text-transform:uppercase;letter-spacing:.05em}
+.payout-hero .p-amount{font-family:var(--display);font-weight:900;font-size:2.1rem;margin:6px 0 4px}
+.payout-hero .p-when{font-size:.85rem;color:#B9C6BC;font-weight:600}
+.payout-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px dashed var(--line);font-size:.9rem;font-weight:600}
+.payout-row:last-child{border-bottom:none}
+.payout-row .amt{font-weight:800;color:var(--forest)}
+.wallet-warn{background:#FBE0E0;color:var(--danger);border-radius:14px;padding:14px 18px;font-size:.86rem;font-weight:700;margin-top:14px;line-height:1.5}
+.wallet-ok{background:#E4F4DC;color:var(--forest);border-radius:14px;padding:14px 18px;font-size:.86rem;font-weight:700;margin-top:14px;line-height:1.5}
 .sec-tabs{position:sticky;top:66px;z-index:40;background:rgba(246,248,240,.96);backdrop-filter:blur(10px);margin:26px -20px 0;padding:0 20px;border-bottom:1px solid var(--line)}
 .sec-tabs-track{display:flex;gap:28px;overflow-x:auto;scrollbar-width:none}
 .sec-tabs-track::-webkit-scrollbar{display:none}
@@ -708,6 +717,16 @@ footer{border-top:1px solid var(--line);margin-top:40px;background:var(--card)}
     </div>
 
     <div class="dash-sec">
+      <h3>My wallet</h3>
+      <div class="payout-hero">
+        <div class="p-label">Owed to you</div>
+        <div class="p-amount" id="rwOwed">₦0</div>
+        <div class="p-when">Paid every Friday by bank transfer</div>
+      </div>
+      <div style="max-width:520px" id="rwCash"></div>
+    </div>
+
+    <div class="dash-sec">
       <h3>My active delivery</h3>
       <div id="activeJob"></div>
     </div>
@@ -937,6 +956,16 @@ footer{border-top:1px solid var(--line);margin-top:40px;background:var(--card)}
     <div class="dash-sec">
       <h3>Active orders</h3><button class="refresh-btn" onclick="renderOrders();renderStats();toast('Orders refreshed','🔄')">Refresh</button>
       <div id="ordersList"></div>
+    </div>
+
+    <div class="dash-sec">
+      <h3>Payouts</h3>
+      <div class="payout-hero">
+        <div class="p-label">Owed to you</div>
+        <div class="p-amount" id="poAmount">₦0</div>
+        <div class="p-when" id="poWhen">Paid every Friday by bank transfer</div>
+      </div>
+      <div style="max-width:520px;margin-top:16px" id="poBreakdown"></div>
     </div>
 
     <div class="dash-sec">
@@ -1741,6 +1770,7 @@ function openDash(){
   document.getElementById('logoPrev').innerHTML = curVendor.logo ? `<img src="${curVendor.logo}" alt="">` : '🏪';
   renderMenuEditor();
   renderCalc();
+  renderPayouts();
   renderOrders();
   renderHistory();
   go('vendor-dash');
@@ -1826,6 +1856,66 @@ function renderCalc(){
     <div class="calc-row"><span>Customer pays for food</span><span>${fmt(amt)}</span></div>
     <div class="calc-row sub"><span>Marketa Fetch commission (15%)</span><span>− ${fmt(fee)}</span></div>
     <div class="calc-row total"><span>You keep</span><span class="v">${fmt(amt - fee)}</span></div>`;
+}
+
+/* ================= PAYOUTS & WALLET ================= */
+const CASH_CAP = 20000;   // rider must remit above this
+
+function nextFriday(){
+  const d = new Date();
+  const days = (5 - d.getDay() + 7) % 7 || 7;   // next Friday, never today
+  d.setDate(d.getDate() + days);
+  return d.toLocaleDateString('en-NG', {weekday:'long', day:'numeric', month:'long'});
+}
+
+function renderPayouts(){
+  const mine = orders.filter(o => o.city === curVendor.city && o.status === 'completed' && !o.vendorPaid);
+  const gross = mine.reduce((a,o)=>a + foodValue(o), 0);
+  const fee = Math.round(gross * COMMISSION);
+  const net = gross - fee;
+  document.getElementById('poAmount').textContent = fmt(net);
+  document.getElementById('poWhen').textContent = mine.length
+    ? `Next payout ${nextFriday()} by bank transfer`
+    : 'Paid every Friday by bank transfer';
+  document.getElementById('poBreakdown').innerHTML = mine.length ? `
+    <div class="payout-row"><span>Completed orders in this period</span><span class="amt">${mine.length}</span></div>
+    <div class="payout-row"><span>Food value</span><span class="amt">${fmt(gross)}</span></div>
+    <div class="payout-row"><span>Commission (15%)</span><span class="amt">− ${fmt(fee)}</span></div>
+    <div class="payout-row"><span><b>Your payout</b></span><span class="amt">${fmt(net)}</span></div>`
+    : `<div class="empty-menu">Nothing owed yet. Completed orders build up here and are paid out every Friday.</div>`;
+}
+
+function renderWallet(){
+  const mine = orders.filter(o => o.riderId === curRider.id && o.status === 'completed');
+  const owed = mine.filter(o=>!o.riderPaid).reduce((a,o)=>a + (o.riderFee||0), 0);
+  document.getElementById('rwOwed').textContent = fmt(owed);
+
+  // cash the rider is physically holding from cash-on-delivery orders
+  const cashHeld = mine.filter(o => o.payMethod === 'cash' && !o.cashRemitted)
+    .reduce((a,o)=>a + o.total, 0);
+  const box = document.getElementById('rwCash');
+  if(!cashHeld){
+    box.innerHTML = `<div class="wallet-ok">No cash to remit. You're all settled.</div>`;
+    return;
+  }
+  const over = cashHeld >= CASH_CAP;
+  box.innerHTML = `
+    <div class="payout-row" style="margin-top:14px"><span>Cash collected from customers</span><span class="amt">${fmt(cashHeld)}</span></div>
+    <div class="${over ? 'wallet-warn' : 'wallet-ok'}">
+      ${over
+        ? `You're holding ${fmt(cashHeld)} — above the ${fmt(CASH_CAP)} limit. Remit before taking new cash jobs.`
+        : `You're holding ${fmt(cashHeld)} of Marketa Fetch money. Remit before it passes ${fmt(CASH_CAP)}.`}
+    </div>
+    <button class="cta dark" onclick="remitCash()">I've remitted this cash</button>`;
+}
+
+function remitCash(){
+  orders.forEach(o=>{
+    if(o.riderId===curRider.id && o.status==='completed' && o.payMethod==='cash') o.cashRemitted = true;
+  });
+  saveOrders();
+  renderRiderDash();
+  toast('Cash marked as remitted','✅');
 }
 
 /* ================= MENU EDITOR ================= */
@@ -2403,6 +2493,7 @@ function renderRiderDash(){
   document.getElementById('rdAvail').textContent = r.online ? available.length : 0;
   document.getElementById('rdAll').textContent = mine.filter(o=>o.status==='completed').length;
 
+  renderWallet();
   renderActiveJob();
   renderJobList(available);
   renderRideHistory(mine);
@@ -2422,6 +2513,11 @@ function renderJobList(available){
   }
   if(curRider.activeJob){
     list.innerHTML = `<div class="empty-menu">Finish your active delivery before taking another job.</div>`; return;
+  }
+  const heldCash = orders.filter(o => o.riderId===curRider.id && o.status==='completed' && o.payMethod==='cash' && !o.cashRemitted)
+    .reduce((a,o)=>a+o.total, 0);
+  if(heldCash >= CASH_CAP){
+    list.innerHTML = `<div class="wallet-warn">You're holding ${fmt(heldCash)} in cash — above the ${fmt(CASH_CAP)} limit. Remit it in My wallet above to unlock new jobs.</div>`; return;
   }
   if(!available.length){
     list.innerHTML = `<div class="empty-menu">No jobs right now in ${CITIES[curRider.city]}. Orders appear here once a vendor marks them ready.</div>`; return;
