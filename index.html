@@ -1215,6 +1215,21 @@ const fmt = n => '₦' + n.toLocaleString('en-NG');
 
 /* ================= STATE ================= */
 let cart = {};              // itemId -> {item, store, qty}
+const saveCart = () => {
+  try{
+    const light = {}; Object.values(cart).forEach(c=>{ light[c.item.id] = c.qty; });
+    localStorage.setItem('mf_cart', JSON.stringify(light));
+  }catch(e){}
+};
+function restoreCart(){
+  let light = null;
+  try{ light = JSON.parse(localStorage.getItem('mf_cart')); }catch(e){}
+  if(!light) return;
+  Object.entries(light).forEach(([id, qty])=>{
+    const f = findItem(id);
+    if(f) cart[id] = {item: f.item, store: f.store, qty};
+  });
+}
 let curCity = 'asaba';
 let curCat = 'all';
 let curSort = 'recommended';
@@ -1239,6 +1254,7 @@ function go(view){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+view).classList.add('active');
   if(typeof updateHeaderBtns === 'function') updateHeaderBtns();
+  saveNav(view);
   window.scrollTo({top:0});
   if(view!=='tracking' && trackTimer){clearInterval(trackTimer);trackTimer=null;}
   if(view==='tracking' && trackedOrderId && !trackTimer){ renderTrack(); trackTimer = setInterval(renderTrack, 3000); }
@@ -1495,6 +1511,7 @@ function chQty(id,delta){
   syncItem(id);
 }
 function syncItem(id){
+  saveCart();
   const el = document.getElementById('ctl-'+id);
   const shelf = curStore && isShelfStore(curStore);
   if(el) el.innerHTML = shelf ? tileControl(id) : dishControl(id);
@@ -1612,7 +1629,7 @@ function placeOrder(){
     createdAt: new Date().toISOString()
   });
   saveOrders();
-  cart = {}; updateCount(); renderCart();
+  cart = {}; saveCart(); updateCount(); renderCart();
   startTracking(orderNo);
   go('tracking');
   toast('Order placed — rider assigned!','🛵');
@@ -2411,7 +2428,7 @@ function reorder(orderId){
     if(match){ cart[match.it.id] = {item: match.it, store: match.store, qty: i.qty}; added++; }
     else missing++;
   });
-  updateCount(); renderCart();
+  saveCart(); updateCount(); renderCart();
   if(!added){ toast('Those items are no longer available','⚠️'); return; }
   toggleCart(true);
   toast(missing ? `${added} item(s) added — ${missing} unavailable` : 'Added to your cart','🔁');
@@ -2704,10 +2721,73 @@ function copyRefCode(){
   }
 }
 
+/* ================= NAV PERSISTENCE ================= */
+function saveNav(view){
+  try{
+    localStorage.setItem('mf_nav', JSON.stringify({
+      view,
+      storeId: curStore ? curStore.id : null,
+      orderId: typeof trackedOrderId !== 'undefined' ? trackedOrderId : null,
+      cat: curCat,
+      sort: curSort,
+      search: curSearch,
+      section: curSection
+    }));
+  }catch(e){}
+}
+
+function restoreNav(){
+  let nav = null;
+  try{ nav = JSON.parse(localStorage.getItem('mf_nav')); }catch(e){}
+  if(!nav || !nav.view) return false;
+
+  // views that need a live session — fall back home if that session is gone
+  const needs = {
+    'vendor-dash': () => !!curVendor,
+    'rider-dash':  () => !!curRider,
+    'cust-account':() => !!curCustomer,
+  };
+  if(needs[nav.view] && !needs[nav.view]()) return false;
+  if(!document.getElementById('view-'+nav.view)) return false;
+
+  // restore browsing context
+  if(nav.cat) curCat = nav.cat;
+  if(nav.sort) curSort = nav.sort;
+  if(nav.search){
+    curSearch = nav.search;
+    const t = document.getElementById('topSearch'); if(t) t.value = nav.search;
+  }
+  curSection = nav.section || null;
+  renderStores();
+
+  switch(nav.view){
+    case 'store': {
+      const s = allStores().find(x => x.id === nav.storeId);
+      if(!s) return false;
+      curStore = s; renderStoreDetail();
+      break;
+    }
+    case 'tracking': {
+      if(!nav.orderId || !orders.find(o=>o.id===nav.orderId)) return false;
+      startTracking(nav.orderId);
+      break;
+    }
+    case 'checkout':      renderCheckout(); break;
+    case 'vendor-dash':   openDash(); return true;
+    case 'rider-dash':    openRider(); return true;
+    case 'cust-account':  openAccount(); return true;
+    case 'referral':      openReferral(); return true;
+  }
+  go(nav.view);
+  return true;
+}
+
 /* init */
+restoreCart();
 renderHome(); renderStores(); renderCart(); updateCount();
 if(curCustomer){ curCity = curCustomer.city; document.getElementById('citySel').value = curCity; renderHome(); renderStores(); }
 updateAcctBtn();
+restoreNav();
 </script>
 </body>
 </html>
