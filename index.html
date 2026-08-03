@@ -1650,15 +1650,36 @@ const STAGE_OF = s => Math.max(0, TRACK_STEPS.findIndex(t=>t.key===s));
 let trackedOrderId = null;
 function startTracking(orderId){
   trackedOrderId = orderId;
+  lastTrackStatus = null;
+  askNotify();
   if(trackTimer) clearInterval(trackTimer);
   renderTrack();
   // re-read the order so vendor/rider actions show up here
   trackTimer = setInterval(renderTrack, 3000);
 }
 
+let lastTrackStatus = null;
 function renderTrack(){
+  // pull the latest orders — the vendor/rider may be on another device or tab
+  try{ orders = JSON.parse(localStorage.getItem('mf_orders')) || orders; }catch(e){}
   const o = orders.find(x => x.id === trackedOrderId);
   if(!o) return;
+
+  // tell the customer when something actually changes
+  if(lastTrackStatus && lastTrackStatus !== o.status){
+    const says = {
+      accepted:  ['Order confirmed ✓', 'The store has accepted your order'],
+      preparing: ['Preparing 👨‍🍳', 'Your order is being made now'],
+      ready:     ['Ready 📦', 'Waiting for a rider to collect'],
+      assigned:  ['Rider assigned 🛵', `${o.riderName||'A rider'} is heading to the store`],
+      picked:    ['On the way 🏍️', 'Your order has left the store'],
+      completed: ['Delivered 🎉', 'Enjoy your order!'],
+      cancelled: ['Order cancelled', 'You have not been charged'],
+      rejected:  ['Order declined', 'The store could not take this order'],
+    }[o.status];
+    if(says) notify(says[0], says[1]);
+  }
+  lastTrackStatus = o.status;
 
   if(['cancelled','rejected'].includes(o.status)){
     document.getElementById('trackTitle').textContent = o.status==='rejected' ? 'Order declined' : 'Order cancelled';
@@ -1841,6 +1862,8 @@ function openDash(){
   renderPayouts();
   renderOrders();
   renderHistory();
+  askNotify();
+  startAlerts();
   go('vendor-dash');
 }
 
@@ -1857,7 +1880,7 @@ function renderStats(){
 }
 
 function logoutVendor(){
-  curVendor = null;
+  curVendor = null; stopAlerts(); seenOrderIds.clear(); seenRiderIds.clear();
   try{ localStorage.removeItem('mf_session'); }catch(e){}
   updateHeaderBtns();
   switchAuth('signin');
@@ -2235,6 +2258,7 @@ function orderCard(o){
 }
 
 function setOrderStatus(id, status){
+  try{ orders = JSON.parse(localStorage.getItem('mf_orders')) || orders; }catch(e){}
   const o = orders.find(x=>x.id===id);
   if(!o) return;
   o.status = status;
@@ -2508,7 +2532,9 @@ function switchRiderAuth(mode){
 
 function openRider(){
   if(!curRider){ switchRiderAuth('signin'); go('rider-signup'); return; }
+  askNotify();
   renderRiderDash();
+  startAlerts();
   go('rider-dash');
 }
 
@@ -2529,7 +2555,7 @@ function loginRider(e){
 
 function logoutRider(){
   if(curRider){ curRider.online = false; riders[curRider.id] = curRider; saveRiders(); }
-  curRider = null;
+  curRider = null; stopAlerts(); seenJobIds.clear();
   try{ localStorage.removeItem('mf_rider_session'); }catch(e){}
   updateHeaderBtns();
   switchRiderAuth('signin'); go('home');
@@ -2538,6 +2564,7 @@ function logoutRider(){
 
 function toggleOnline(){
   curRider.online = !curRider.online;
+  if(curRider.online){ askNotify(); startAlerts(); }
   riders[curRider.id] = curRider; saveRiders();
   renderRiderDash();
   toast(curRider.online ? "You're online — jobs will show up here" : "You're offline", curRider.online ? '🟢' : '⚪');
@@ -2618,6 +2645,7 @@ function riderPay(o){
 }
 
 function acceptJob(id){
+  try{ orders = JSON.parse(localStorage.getItem('mf_orders')) || orders; }catch(e){}
   const o = orders.find(x=>x.id===id);
   if(!o) return;
   if(o.riderId){ toast('Another rider just took that job','⚠️'); renderRiderDash(); return; }
@@ -2660,6 +2688,7 @@ function renderActiveJob(){
 }
 
 function riderStatus(id, status){
+  try{ orders = JSON.parse(localStorage.getItem('mf_orders')) || orders; }catch(e){}
   const o = orders.find(x=>x.id===id);
   if(!o) return;
   o.status = status;
@@ -2718,6 +2747,84 @@ function copyRefCode(){
       .catch(()=>toast('Your code is ' + code,'🎁'));
   } else {
     toast('Your code is ' + code,'🎁');
+  }
+}
+
+/* ================= LIVE ALERTS ================= */
+let alertPoll = null;
+let seenJobIds = new Set();
+let seenOrderIds = new Set();
+let seenRiderIds = new Set();
+
+function beep(){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = 880; o.type = 'sine';
+    g.gain.setValueAtTime(0.001, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+    o.start(); o.stop(ctx.currentTime + 0.5);
+  }catch(e){}
+}
+
+function askNotify(){
+  if(!('Notification' in window)) return;
+  if(Notification.permission === 'default') Notification.requestPermission();
+}
+
+function notify(title, body){
+  beep();
+  if(navigator.vibrate) navigator.vibrate([200,80,200]);
+  try{
+    if('Notification' in window && Notification.permission === 'granted'){
+      new Notification(title, {body, icon:'', tag:'mf-alert'});
+    }
+  }catch(e){}
+}
+
+function startAlerts(){
+  stopAlerts();
+  // seed with what's already there so we only alert on NEW things
+  if(curRider) orders.filter(o=>o.city===curRider.city && o.status==='ready' && !o.riderId).forEach(o=>seenJobIds.add(o.id));
+  if(curVendor){
+    orders.filter(o=>o.city===curVendor.city && o.status==='incoming').forEach(o=>seenOrderIds.add(o.id));
+    orders.filter(o=>o.city===curVendor.city && o.riderId).forEach(o=>seenRiderIds.add(o.id));
+  }
+  alertPoll = setInterval(checkAlerts, 5000);
+}
+function stopAlerts(){ if(alertPoll){ clearInterval(alertPoll); alertPoll = null; } }
+
+function checkAlerts(){
+  try{ orders = JSON.parse(localStorage.getItem('mf_orders')) || orders; }catch(e){}
+
+  if(curRider && curRider.online){
+    const jobs = orders.filter(o=>o.city===curRider.city && o.status==='ready' && !o.riderId);
+    const fresh = jobs.filter(o=>!seenJobIds.has(o.id));
+    jobs.forEach(o=>seenJobIds.add(o.id));
+    if(fresh.length){
+      notify('New delivery job 🛵', `${fresh.length} job${fresh.length>1?'s':''} available in ${CITIES[curRider.city]}`);
+      toast(`${fresh.length} new job${fresh.length>1?'s':''} available`,'🛵');
+    }
+    if(document.getElementById('view-rider-dash').classList.contains('active')) renderRiderDash();
+  }
+
+  if(curVendor){
+    const incoming = orders.filter(o=>o.city===curVendor.city && o.status==='incoming');
+    const fresh = incoming.filter(o=>!seenOrderIds.has(o.id));
+    incoming.forEach(o=>seenOrderIds.add(o.id));
+    if(fresh.length){
+      notify('New order 🔔', `${fresh.length} new order${fresh.length>1?'s':''} waiting to be accepted`);
+      toast(`${fresh.length} new order${fresh.length>1?'s':''} in`,'🔔');
+    }
+    // alert the vendor when a rider claims one of their ready orders
+    orders.filter(o=>o.city===curVendor.city && o.riderId && !seenRiderIds.has(o.id)).forEach(o=>{
+      seenRiderIds.add(o.id);
+      notify('Rider assigned 🛵', `${o.riderName} is coming for order #${o.id} — code ${o.pickupCode}`);
+      toast(`${o.riderName} is collecting #${o.id}`,'🛵');
+    });
+    if(document.getElementById('view-vendor-dash').classList.contains('active')){ renderOrders(); renderStats(); renderPayouts(); }
   }
 }
 
