@@ -445,6 +445,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(246,248,240,.92);backdro
 .rider-strip{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-top:12px}
 .rider-strip b{display:block;font-size:.88rem;font-weight:800}
 .rider-strip span{font-size:.8rem;color:var(--muted);font-weight:600}
+.call-btn{background:var(--lime);color:var(--ink);font-weight:800;font-size:.85rem;padding:11px 18px;border-radius:999px;text-decoration:none;flex-shrink:0}
 .pickup-code{font-family:var(--display);font-weight:900;font-size:1.5rem;letter-spacing:.14em;background:var(--ink);color:var(--lime);padding:10px 16px;border-radius:12px;flex-shrink:0}
 .waiting-strip{background:#FFF3C4;color:#8a6d00;border-radius:14px;padding:13px 16px;font-size:.85rem;font-weight:700;margin-top:12px;line-height:1.5}
 .sec-tabs{position:sticky;top:66px;z-index:40;background:rgba(246,248,240,.96);backdrop-filter:blur(10px);margin:26px -20px 0;padding:0 20px;border-bottom:1px solid var(--line)}
@@ -618,6 +619,7 @@ footer{border-top:1px solid var(--line);margin-top:40px;background:var(--card)}
       <span class="pin b">🏠</span>
       <div class="rider" id="rider">🛵</div>
     </div>
+    <div id="riderPanel" style="max-width:420px;margin:22px auto 0"></div>
     <div class="steps" id="trackSteps"></div>
     <div class="track-actions">
       <button class="cta" onclick="go('home')">Order something else</button>
@@ -1239,6 +1241,7 @@ function go(view){
   if(typeof updateHeaderBtns === 'function') updateHeaderBtns();
   window.scrollTo({top:0});
   if(view!=='tracking' && trackTimer){clearInterval(trackTimer);trackTimer=null;}
+  if(view==='tracking' && trackedOrderId && !trackTimer){ renderTrack(); trackTimer = setInterval(renderTrack, 3000); }
 }
 function setCity(c){
   curCity = c;
@@ -1610,41 +1613,83 @@ function placeOrder(){
   });
   saveOrders();
   cart = {}; updateCount(); renderCart();
-  startTracking();
+  startTracking(orderNo);
   go('tracking');
   toast('Order placed — rider assigned!','🛵');
 }
 
 /* ================= TRACKING ================= */
 const TRACK_STEPS = [
-  ['✓','Order confirmed','The store has received your order'],
-  ['👨‍🍳','Preparing','Your order is being packed'],
-  ['🛵','Rider on the way','Your rider has picked up the order'],
-  ['🏠','Delivered','Enjoy! Rate your experience'],
+  {key:'incoming',  emo:'📥', title:'Order sent',        desc:'Waiting for the store to accept'},
+  {key:'accepted',  emo:'✓',  title:'Order confirmed',   desc:'The store has accepted your order'},
+  {key:'preparing', emo:'👨‍🍳', title:'Preparing',        desc:'Your order is being made'},
+  {key:'ready',     emo:'📦', title:'Ready',             desc:'Waiting for a rider to collect'},
+  {key:'assigned',  emo:'🛵', title:'Rider on the way',  desc:'Your rider is heading to the store'},
+  {key:'picked',    emo:'🏍️', title:'Out for delivery',  desc:'Your order is on its way to you'},
+  {key:'completed', emo:'🏠', title:'Delivered',         desc:'Enjoy your order!'},
 ];
-function startTracking(){
+const STAGE_OF = s => Math.max(0, TRACK_STEPS.findIndex(t=>t.key===s));
+
+let trackedOrderId = null;
+function startTracking(orderId){
+  trackedOrderId = orderId;
   if(trackTimer) clearInterval(trackTimer);
-  let stage = 0;
-  const mins = speed==='priority'? 18 : 28;
-  renderTrack(stage, mins);
-  trackTimer = setInterval(()=>{
-    stage++;
-    if(stage >= TRACK_STEPS.length){ clearInterval(trackTimer); trackTimer=null; return; }
-    renderTrack(stage, Math.max(2, mins - stage*9));
-  }, 6000);
+  renderTrack();
+  // re-read the order so vendor/rider actions show up here
+  trackTimer = setInterval(renderTrack, 3000);
 }
-function renderTrack(stage, mins){
-  const titles = ['Order confirmed!','Cooking it up…','Your rider is flying »»','Delivered — enjoy!'];
+
+function renderTrack(){
+  const o = orders.find(x => x.id === trackedOrderId);
+  if(!o) return;
+
+  if(['cancelled','rejected'].includes(o.status)){
+    document.getElementById('trackTitle').textContent = o.status==='rejected' ? 'Order declined' : 'Order cancelled';
+    document.getElementById('trackEta').textContent = o.status==='rejected'
+      ? 'The store could not take this order. You have not been charged.'
+      : 'This order was cancelled. You have not been charged.';
+    document.getElementById('trackSteps').innerHTML = '';
+    document.getElementById('riderPanel').innerHTML = '';
+    document.getElementById('rider').style.left = '8%';
+    document.getElementById('pathFill').style.width = '0%';
+    if(trackTimer){ clearInterval(trackTimer); trackTimer = null; }
+    return;
+  }
+
+  const stage = STAGE_OF(o.status);
+  const titles = ['Order sent!','Order confirmed!','Cooking it up…','Ready for pickup','Your rider is coming »»','On the way to you »»','Delivered — enjoy!'];
   document.getElementById('trackTitle').textContent = titles[stage];
-  document.getElementById('trackEta').textContent = stage===3 ? 'Order complete 🎉' : `Arriving in ~${mins} min`;
-  document.getElementById('trackSteps').innerHTML = TRACK_STEPS.map(([e,t,d],i)=>`
+
+  const base = o.speed==='priority' ? 20 : 30;
+  const left = Math.max(2, Math.round(base * (1 - stage/6)));
+  document.getElementById('trackEta').textContent = o.status==='completed'
+    ? 'Order complete 🎉'
+    : `Arriving in ~${left} min`;
+
+  document.getElementById('trackSteps').innerHTML = TRACK_STEPS.map((t,i)=>`
     <div class="step ${i<stage?'done': i===stage?'now':''}">
-      <div class="dot">${i<stage?'✓':e}</div>
-      <div><b>${t}</b><span>${d}</span></div>
+      <div class="dot">${i<stage?'✓':t.emo}</div>
+      <div><b>${t.title}</b><span>${t.desc}</span></div>
     </div>`).join('');
-  const pct = [8, 30, 65, 94][stage];
+
+  // rider panel — the customer finally sees who is bringing their order
+  const panel = document.getElementById('riderPanel');
+  if(o.riderId && o.status!=='completed'){
+    panel.innerHTML = `<div class="rider-strip" style="text-align:left">
+      <div><b>🛵 ${o.riderName}</b><span>${o.riderVehicle||''} · ${o.status==='picked' ? 'bringing your order now' : 'collecting from the store'}</span></div>
+      <a class="call-btn" href="tel:${(o.riderPhone||'').replace(/\s/g,'')}">📞 Call</a>
+    </div>`;
+  } else if(o.status==='completed'){
+    panel.innerHTML = `<div class="wallet-ok" style="text-align:left">Delivered by ${o.riderName||'your rider'}. Thanks for ordering with Marketa Fetch!</div>`;
+  } else {
+    panel.innerHTML = '';
+  }
+
+  const pct = [6, 18, 34, 50, 66, 82, 94][stage];
   document.getElementById('rider').style.left = pct + '%';
   document.getElementById('pathFill').style.width = (pct-6) + '%';
+
+  if(o.status==='completed' && trackTimer){ clearInterval(trackTimer); trackTimer = null; }
 }
 
 /* ================= SEARCH + TOAST ================= */
@@ -2348,7 +2393,10 @@ function renderCustomerOrders(){
       <div class="order-top"><span class="o-id">#${o.id}</span><span class="o-time">${when}</span><span class="status-badge ${o.status}">${o.status}</span></div>
       <div class="order-items">${items}</div>
       <div class="order-total"><span>Total</span><span>${fmt(o.total)}</span></div>
-      <div class="order-actions"><button class="oa-btn accept" onclick="reorder('${o.id}')">🔁 Reorder</button></div>
+      <div class="order-actions">
+        ${ACTIVE_STATUSES.includes(o.status) ? `<button class="oa-btn prep" onclick="startTracking('${o.id}');go('tracking')">📍 Track order</button>` : ''}
+        <button class="oa-btn accept" onclick="reorder('${o.id}')">🔁 Reorder</button>
+      </div>
     </div>`;
   }).join('');
 }
