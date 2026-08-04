@@ -1902,7 +1902,7 @@ function openDash(){
 }
 
 function renderStats(){
-  const cityOrders = orders.filter(o => o.city === curVendor.city);
+  const cityOrders = orders.filter(o => o.city === curVendor.city && String(o.store || (o.items && o.items[0] && o.items[0].store) || '').trim().toLowerCase() === String(curVendor.bizName || '').trim().toLowerCase());
   const today = new Date().toDateString();
   const todays = cityOrders.filter(o => new Date(o.createdAt).toDateString() === today);
   const revenue = todays.reduce((a,o)=>a + vendorNet(foodValue(o)), 0);
