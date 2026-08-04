@@ -2516,8 +2516,17 @@ function reorder(orderId){
 /* ================= RIDERS ================= */
 let riders = {};
 try{ riders = JSON.parse(localStorage.getItem('mf_riders')) || {}; }catch(e){ riders = {}; }
-const saveRiders = () => { try{ localStorage.setItem('mf_riders', JSON.stringify(riders)); }catch(e){} };
-
+const saveRiders = () => {
+  try{ localStorage.setItem('mf_riders', JSON.stringify(riders)); }catch(e){}
+  try{
+    const rows = Object.entries(riders).map(([k,v]) => ({
+      id: String(v.id || k),
+      city: v.city || null,
+      data: v
+    }));
+    if(rows.length) sb.from('riders').upsert(rows).then(({error}) => { if(error) console.warn('rider sync failed', error.message); });
+  }catch(e){ console.warn('rider sync error', e); }
+};
 function registerRider(e){
   e.preventDefault();
   const checks = [
