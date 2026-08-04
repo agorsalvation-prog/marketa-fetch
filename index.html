@@ -1254,7 +1254,19 @@ let orders = [];
 try{ orders = JSON.parse(localStorage.getItem('mf_orders')) || []; }catch(e){ orders = []; }
 const saveOrders = () => { try{ localStorage.setItem('mf_orders', JSON.stringify(orders)); }catch(e){} };
 
-const inCity = s => s.cities.includes(curCity);
+const saveOrders = () => {
+  try{ localStorage.setItem('mf_orders', JSON.stringify(orders)); }catch(e){}
+  try{
+    const rows = orders.map(o => ({
+      id: String(o.id),
+      city: o.city || null,
+      vendor_id: String(o.vendorId || o.vendor_id || '') || null,
+      status: o.status || null,
+      data: o
+    }));
+    if(rows.length) sb.from('orders').upsert(rows).then(({error}) => { if(error) console.warn('sync failed', error.message); });
+  }catch(e){ console.warn('sync error', e); }
+};
 const cityNames = s => s.cities.map(c=>CITIES[c]).join(' · ');
 
 /* ================= NAV ================= */
