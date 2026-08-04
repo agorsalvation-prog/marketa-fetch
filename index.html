@@ -2351,7 +2351,16 @@ function renderHistory(){
 /* ================= CUSTOMER ACCOUNTS ================= */
 let customers = {};
 try{ customers = JSON.parse(localStorage.getItem('mf_customers')) || {}; }catch(e){ customers = {}; }
-const saveCustomers = () => { try{ localStorage.setItem('mf_customers', JSON.stringify(customers)); }catch(e){} };
+const saveCustomers = () => {
+  try{ localStorage.setItem('mf_customers', JSON.stringify(customers)); }catch(e){}
+  try{
+    const rows = Object.entries(customers).map(([k,v]) => ({
+      id: String(v.id || k),
+      data: v
+    }));
+    if(rows.length) sb.from('customers').upsert(rows).then(({error}) => { if(error) console.warn('customer sync failed', error.message); });
+  }catch(e){ console.warn('customer sync error', e); }
+};
 let curCustomer = null;
 (function restoreCustSession(){
   let id=null; try{ id = localStorage.getItem('mf_cust_session'); }catch(e){}
