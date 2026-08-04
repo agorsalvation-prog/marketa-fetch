@@ -1252,7 +1252,6 @@ try{ vendors = JSON.parse(localStorage.getItem('mf_vendors')) || {}; }catch(e){ 
 const saveVendors = () => { try{ localStorage.setItem('mf_vendors', JSON.stringify(vendors)); }catch(e){} };
 let orders = [];
 try{ orders = JSON.parse(localStorage.getItem('mf_orders')) || []; }catch(e){ orders = []; }
-const saveOrders = () => { try{ localStorage.setItem('mf_orders', JSON.stringify(orders)); }catch(e){} };
 
 const saveOrders = () => {
   try{ localStorage.setItem('mf_orders', JSON.stringify(orders)); }catch(e){}
