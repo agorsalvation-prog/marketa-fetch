@@ -1994,7 +1994,7 @@ function nextFriday(){
 }
 
 function renderPayouts(){
-  const mine = orders.filter(o => o.city === curVendor.city && o.status === 'completed' && !o.vendorPaid);
+  const mine = orders.filter(o => o.city === curVendor.city && o.status === 'completed' && !o.vendorPaid && String(o.store || (o.items && o.items[0] && o.items[0].store) || '').trim().toLowerCase() === String(curVendor.bizName || '').trim().toLowerCase());
   const gross = mine.reduce((a,o)=>a + foodValue(o), 0);
   const fee = Math.round(gross * COMMISSION);
   const net = gross - fee;
