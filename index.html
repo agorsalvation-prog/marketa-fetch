@@ -10,8 +10,11 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SUPABASE_URL = 'https://weahsmfgwmtoriirsfmd.supabase.co';
-  const SUPABASE_KEY = 'https://weahsmfgwmtoriirsfmd.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_nnAhcdpCI10W4SqARVkfNQ_UZqi-L6L';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  sb.from('orders').insert({id:'test-1',city:'Asaba',status:'test',data:{note:'connection test'}})
+  .then(({error}) => alert(error ? 'FAILED: ' + error.message : 'Supabase connected ✓'));
+
 </script>
 
 <style>
