@@ -1291,6 +1291,16 @@ const saveOrders = () => {
   }catch(e){ console.warn('pull error', e); }
 }
 setInterval(pullOrders, 15000);
+  async function pullVendors(){
+  try{
+    const { data, error } = await sb.from('vendors').select('data');
+    if(error){ console.warn('vendor pull failed', error.message); return; }
+    (data||[]).forEach(r => { if(r.data && r.data.id) vendors[r.data.id] = r.data; });
+    try{ localStorage.setItem('mf_vendors', JSON.stringify(vendors)); }catch(e){}
+  }catch(e){ console.warn('vendor pull error', e); }
+}
+pullVendors();
+setInterval(pullVendors, 60000);
 const cityNames = s => s.cities.map(c=>CITIES[c]).join(' · ');
 const inCity = s => s.cities.includes(curCity);
 /* ================= NAV ================= */
