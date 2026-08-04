@@ -2244,7 +2244,8 @@ const ACTIVE_STATUSES = ['incoming','accepted','preparing','ready','assigned','p
 function renderOrders(){
   const list = document.getElementById('ordersList');
   const cityOrders = orders
-    .filter(o => o.city === curVendor.city && ACTIVE_STATUSES.includes(o.status))
+  .filter(o => o.city === curVendor.city && ACTIVE_STATUSES.includes(o.status) && String(o.store || (o.items && o.items[0] && o.items[0].store) || '').trim().toLowerCase() === String(curVendor.bizName || '').trim().toLowerCase())
+    
     .sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
   if(!cityOrders.length){
     list.innerHTML = `<div class="empty-menu">No active orders right now. New orders from customers in ${CITIES[curVendor.city]} will appear here.</div>`;
