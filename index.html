@@ -1267,7 +1267,7 @@ const saveOrders = () => {
   }catch(e){ console.warn('sync error', e); }
 };
 const cityNames = s => s.cities.map(c=>CITIES[c]).join(' · ');
-
+const inCity = s => s.cities.includes(curCity);
 /* ================= NAV ================= */
 function go(view){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
