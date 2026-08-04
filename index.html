@@ -1301,6 +1301,16 @@ setInterval(pullOrders, 15000);
 }
 pullVendors();
 setInterval(pullVendors, 60000);
+  async function pullRiders(){
+  try{
+    const { data, error } = await sb.from('riders').select('data');
+    if(error){ console.warn('rider pull failed', error.message); return; }
+    (data||[]).forEach(r => { if(r.data && r.data.id) riders[r.data.id] = r.data; });
+    try{ localStorage.setItem('mf_riders', JSON.stringify(riders)); }catch(e){}
+  }catch(e){ console.warn('rider pull error', e); }
+}
+pullRiders();
+setInterval(pullRiders, 60000);
 const cityNames = s => s.cities.map(c=>CITIES[c]).join(' · ');
 const inCity = s => s.cities.includes(curCity);
 /* ================= NAV ================= */
