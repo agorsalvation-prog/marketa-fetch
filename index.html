@@ -1249,7 +1249,17 @@ let payMethod = 'card';
 let trackTimer = null;
 let vendors = {};
 try{ vendors = JSON.parse(localStorage.getItem('mf_vendors')) || {}; }catch(e){ vendors = {}; }
-const saveVendors = () => { try{ localStorage.setItem('mf_vendors', JSON.stringify(vendors)); }catch(e){} };
+const saveVendors = () => {
+  try{ localStorage.setItem('mf_vendors', JSON.stringify(vendors)); }catch(e){}
+  try{
+    const rows = Object.entries(vendors).map(([k,v]) => ({
+      id: String(v.id || k),
+      city: v.city || null,
+      data: v
+    }));
+    if(rows.length) sb.from('vendors').upsert(rows).then(({error}) => { if(error) console.warn('vendor sync failed', error.message); });
+  }catch(e){ console.warn('vendor sync error', e); }
+};
 let orders = [];
 try{ orders = JSON.parse(localStorage.getItem('mf_orders')) || []; }catch(e){ orders = []; }
 
