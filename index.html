@@ -1266,6 +1266,21 @@ const saveOrders = () => {
     if(rows.length) sb.from('orders').upsert(rows).then(({error}) => { if(error) console.warn('sync failed', error.message); });
   }catch(e){ console.warn('sync error', e); }
 };
+  async function pullOrders(){
+  try{
+    const { data, error } = await sb.from('orders').select('data');
+    if(error){ console.warn('pull failed', error.message); return; }
+    const byId = {};
+    orders.forEach(o => { byId[String(o.id)] = o; });
+    (data||[]).forEach(r => { if(r.data && r.data.id) byId[String(r.data.id)] = r.data; });
+    orders.length = 0;
+    Object.values(byId).forEach(o => orders.push(o));
+    try{ localStorage.setItem('mf_orders', JSON.stringify(orders)); }catch(e){}
+    try{ if(typeof renderOrders === 'function') renderOrders(); }catch(e){}
+    try{ if(typeof renderStats === 'function') renderStats(); }catch(e){}
+  }catch(e){ console.warn('pull error', e); }
+}
+setInterval(pullOrders, 15000);
 const cityNames = s => s.cities.map(c=>CITIES[c]).join(' · ');
 const inCity = s => s.cities.includes(curCity);
 /* ================= NAV ================= */
