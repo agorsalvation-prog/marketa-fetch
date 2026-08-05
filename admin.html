@@ -31,6 +31,49 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
+/* ---------- gate ---------- */
+#gate{
+  position:fixed;inset:0;
+  background:var(--paper);
+  z-index:999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+.gate-box{
+  max-width:340px;
+  width:100%;
+  border:1px solid var(--ink);
+  background:var(--card);
+  padding:30px 26px;
+}
+.gate-box .gm{font-family:var(--display);font-weight:900;font-size:1rem;margin-bottom:2px}
+.gate-box .gm span{color:var(--muted);font-weight:500}
+.gate-box p{font-size:.8rem;color:var(--muted);margin:6px 0 18px}
+.gate-box input{
+  width:100%;
+  padding:10px 12px;
+  border:1px solid var(--rule);
+  border-radius:2px;
+  font-family:var(--body);
+  font-size:.9rem;
+  margin-bottom:10px;
+}
+.gate-box button{
+  width:100%;
+  border:1px solid var(--ink);
+  background:var(--lime);
+  padding:10px;
+  border-radius:2px;
+  font-weight:700;
+  cursor:pointer;
+  font-size:.9rem;
+}
+.gate-box button:hover{background:var(--ink);color:var(--lime)}
+.gate-err{color:var(--danger);font-size:.78rem;margin-top:8px;min-height:1em}
+#appRoot{display:none}
+
 /* ---------- masthead ---------- */
 .masthead{
   border-bottom:2px solid var(--ink);
@@ -121,7 +164,7 @@ h2{
   margin-top:2px;
 }
 
-/* ---------- payout ledger (the signature) ---------- */
+/* ---------- payout ledger ---------- */
 .ledger{border-top:1px solid var(--ink)}
 .ledger-row{
   display:grid;
@@ -227,6 +270,18 @@ td.id{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
 </head>
 <body>
 
+<div id="gate">
+  <div class="gate-box">
+    <div class="gm">marketa fetch <span>/ ops</span></div>
+    <p>Enter the ops password to continue.</p>
+    <input type="password" id="gatePass" placeholder="Password" autocomplete="off">
+    <button id="gateBtn">Unlock</button>
+    <div class="gate-err" id="gateErr"></div>
+  </div>
+</div>
+
+<div id="appRoot">
+
 <header class="masthead">
   <div>
     <div class="wordmark">marketa fetch <span>/ ops</span></div>
@@ -283,9 +338,11 @@ td.id{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
   </div>
 </main>
 
+</div>
+
 <script>
 const SUPABASE_URL = 'https://weahsmfgwmtoriirsfmd.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_nnAhcdpCI10W4SqARVkfNQ_UZqi-L6L';
+const SUPABASE_KEY = 'PASTE_YOUR_PUBLISHABLE_KEY';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const COMMISSION = 0.15;
@@ -297,11 +354,9 @@ let city = '';
 const naira = n => '₦' + Math.round(n || 0).toLocaleString('en-NG');
 const esc = s => String(s ?? '').replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
 
-// The store name lives on each line item, not the order root.
 const storeOf = o =>
   o.store || (o.items && o.items[0] && o.items[0].store) || '—';
 
-// Commission is taken on food value only — never the delivery fee.
 const foodValue = o =>
   (o.items || []).reduce((sum, i) => sum + (i.price || 0) * (i.qty || 1), 0);
 
@@ -353,7 +408,6 @@ const inScope = o => !city || o.city === city;
 function render(){
   const orders = ORDERS.filter(inScope);
 
-  // ---- tallies ----
   const live = orders.filter(o => ACTIVE.includes(o.status)).length;
   const gmv = orders
     .filter(o => o.status === 'completed')
@@ -375,7 +429,6 @@ function render(){
   renderRiders();
 }
 
-// ---- owed out ----
 function renderLedger(orders){
   const unpaid = orders.filter(o => o.status === 'completed' && !o.vendorPaid);
   const byVendor = {};
@@ -433,7 +486,6 @@ async function markPaid(btn){
   }
 }
 
-// ---- orders ----
 function renderOrders(orders){
   const sorted = [...orders].sort((a,b) =>
     new Date(b.createdAt || 0) - new Date(a.createdAt || 0)).slice(0, 60);
@@ -457,7 +509,6 @@ function renderOrders(orders){
   }).join('') : '<tr><td colspan="6" class="empty">No orders yet in this city.</td></tr>';
 }
 
-// ---- vendors ----
 function renderVendors(orders){
   const list = VENDORS.filter(v => !city || v.city === city);
   const counts = {};
@@ -476,7 +527,6 @@ function renderVendors(orders){
     : '<tr><td colspan="3" class="empty">No vendors signed up yet.</td></tr>';
 }
 
-// ---- riders ----
 function renderRiders(){
   const list = RIDERS.filter(r => !city || r.city === city);
   document.getElementById('ridersBody').innerHTML = list.length ? list.map(r => `<tr>
@@ -493,8 +543,34 @@ document.getElementById('cityFilter').addEventListener('change', e => {
 });
 document.getElementById('refreshBtn').addEventListener('click', load);
 
-load();
-setInterval(load, 30000);
+/* ---------- password gate ---------- */
+const OPS_PASSWORD = 'PASTE_YOUR_PASSWORD';
+
+function boot(){
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('appRoot').style.display = 'block';
+  load();
+  setInterval(load, 30000);
+}
+
+function tryUnlock(){
+  const val = document.getElementById('gatePass').value;
+  if(val === OPS_PASSWORD){
+    try{ sessionStorage.setItem('ops_unlocked', '1'); }catch(e){}
+    boot();
+  }else{
+    document.getElementById('gateErr').textContent = 'Wrong password.';
+  }
+}
+
+document.getElementById('gateBtn').addEventListener('click', tryUnlock);
+document.getElementById('gatePass').addEventListener('keydown', e => {
+  if(e.key === 'Enter') tryUnlock();
+});
+
+let alreadyUnlocked = false;
+try{ alreadyUnlocked = sessionStorage.getItem('ops_unlocked') === '1'; }catch(e){}
+if(alreadyUnlocked){ boot(); }
 </script>
 </body>
 </html>
