@@ -1278,7 +1278,15 @@ const saveOrders = () => {
 };
   async function pullOrders(){
   try{
-    const { data, error } = await sb.from('orders').select('data');
+    let q = sb.from('orders').select('data');
+    if(typeof curVendor !== 'undefined' && curVendor){
+      q = q.eq('city', curVendor.city).ilike('vendor_id', curVendor.bizName || '');
+    } else if(typeof curRider !== 'undefined' && curRider){
+      q = q.eq('city', curRider.city);
+    } else if(typeof curCity !== 'undefined' && curCity){
+      q = q.eq('city', curCity);
+    }
+    const { data, error } = await q;
     if(error){ console.warn('pull failed', error.message); return; }
     const byId = {};
     orders.forEach(o => { byId[String(o.id)] = o; });
@@ -1290,7 +1298,7 @@ const saveOrders = () => {
     try{ if(typeof renderStats === 'function') renderStats(); }catch(e){}
   }catch(e){ console.warn('pull error', e); }
 }
-setInterval(pullOrders, 15000);
+
   async function pullVendors(){
   try{
     const { data, error } = await sb.from('vendors').select('data');
