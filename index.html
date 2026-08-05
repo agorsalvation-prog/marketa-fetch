@@ -1313,6 +1313,17 @@ pullRiders();
 setInterval(pullRiders, 60000);
   async function pullCustomers(){
   try{
+    let id = null;
+    try{ id = localStorage.getItem('mf_cust_session'); }catch(e){}
+    if(!id) return;
+    const { data, error } = await sb.from('customers').select('data').eq('id', id);
+    if(error){ console.warn('customer pull failed', error.message); return; }
+    (data||[]).forEach(r => { if(r.data && r.data.id) customers[r.data.id] = r.data; });
+    try{ localStorage.setItem('mf_customers', JSON.stringify(customers)); }catch(e){}
+  }catch(e){ console.warn('customer pull error', e); }
+}
+
+  try{
     const { data, error } = await sb.from('customers').select('data');
     if(error){ console.warn('customer pull failed', error.message); return; }
     (data||[]).forEach(r => { if(r.data && r.data.id) customers[r.data.id] = r.data; });
