@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fetch Ops — Marketa Fetch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --ink:#0E1611;
+  --forest:#123B2A;
+  --lime:#C8F135;
+  --paper:#F6F8F0;
+  --card:#FFFFFF;
+  --rule:#DDE3D6;
+  --muted:#6B7A70;
+  --danger:#B3312C;
+  --display:'Unbounded',system-ui,sans-serif;
+  --body:'Manrope',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:var(--body);
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- masthead ---------- */
+.masthead{
+  border-bottom:2px solid var(--ink);
+  padding:20px 24px 14px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:16px;
+  align-items:baseline;
+  justify-content:space-between;
+}
+.wordmark{
+  font-family:var(--display);
+  font-weight:900;
+  font-size:1.05rem;
+  letter-spacing:-.02em;
+}
+.wordmark span{color:var(--muted);font-weight:500}
+.stamp{
+  font-family:var(--mono);
+  font-size:.7rem;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  color:var(--muted);
+}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select,button{font-family:var(--body);font-size:.85rem}
+select{
+  border:1px solid var(--rule);
+  background:var(--card);
+  padding:7px 10px;
+  border-radius:2px;
+  color:var(--ink);
+}
+.refresh{
+  border:1px solid var(--ink);
+  background:none;
+  padding:7px 14px;
+  border-radius:2px;
+  cursor:pointer;
+  font-weight:600;
+}
+.refresh:hover{background:var(--ink);color:var(--paper)}
+
+/* ---------- shell ---------- */
+main{max-width:1180px;margin:0 auto;padding:0 24px 96px}
+section{margin-top:44px}
+.sec-head{
+  display:flex;
+  align-items:baseline;
+  gap:12px;
+  border-bottom:1px solid var(--ink);
+  padding-bottom:6px;
+  margin-bottom:2px;
+}
+h2{
+  font-family:var(--display);
+  font-weight:700;
+  font-size:1.15rem;
+  letter-spacing:-.015em;
+}
+.sec-note{font-size:.8rem;color:var(--muted);margin-left:auto}
+
+/* ---------- tallies ---------- */
+.tallies{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  border-top:1px solid var(--rule);
+  margin-top:28px;
+}
+.tally{
+  border-bottom:1px solid var(--rule);
+  border-right:1px solid var(--rule);
+  padding:16px 18px;
+}
+.tally:last-child{border-right:none}
+.tally-n{
+  font-family:var(--mono);
+  font-size:1.9rem;
+  font-weight:500;
+  letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;
+}
+.tally-l{
+  font-size:.7rem;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--muted);
+  margin-top:2px;
+}
+
+/* ---------- payout ledger (the signature) ---------- */
+.ledger{border-top:1px solid var(--ink)}
+.ledger-row{
+  display:grid;
+  grid-template-columns:1fr auto auto;
+  gap:16px;
+  align-items:center;
+  padding:14px 0;
+  border-bottom:1px solid var(--rule);
+}
+.led-name{font-weight:600}
+.led-sub{
+  font-size:.75rem;
+  color:var(--muted);
+  font-family:var(--mono);
+}
+.led-amt{
+  font-family:var(--mono);
+  font-size:1.15rem;
+  font-weight:500;
+  font-variant-numeric:tabular-nums;
+}
+.pay-btn{
+  border:1px solid var(--ink);
+  background:var(--lime);
+  padding:8px 16px;
+  border-radius:2px;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.pay-btn:hover{background:var(--ink);color:var(--lime)}
+.pay-btn:disabled{background:none;border-color:var(--rule);color:var(--muted);cursor:default}
+.ledger-total{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  padding:16px 0 0;
+  font-family:var(--mono);
+  font-size:1.4rem;
+  font-weight:600;
+  font-variant-numeric:tabular-nums;
+}
+.ledger-total span:first-child{
+  font-family:var(--body);
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  color:var(--muted);
+}
+
+/* ---------- tables ---------- */
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{
+  text-align:left;
+  font-size:.68rem;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--muted);
+  font-weight:600;
+  padding:10px 10px 8px 0;
+  border-bottom:1px solid var(--rule);
+}
+td{padding:11px 10px 11px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+td.num,th.num{text-align:right;padding-right:0;font-family:var(--mono);font-variant-numeric:tabular-nums}
+td.id{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.pill{
+  display:inline-block;
+  font-size:.68rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  padding:3px 8px;
+  border-radius:2px;
+  border:1px solid var(--rule);
+}
+.pill.live{background:var(--lime);border-color:var(--ink)}
+.pill.done{background:var(--forest);color:var(--paper);border-color:var(--forest)}
+.pill.dead{color:var(--danger);border-color:var(--danger)}
+
+/* ---------- states ---------- */
+.empty{
+  padding:26px 0;
+  color:var(--muted);
+  font-size:.9rem;
+}
+.err{
+  margin-top:22px;
+  border-left:3px solid var(--danger);
+  padding:12px 14px;
+  background:var(--card);
+  font-size:.85rem;
+}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:44px}
+@media(max-width:760px){
+  .cols{grid-template-columns:1fr;gap:44px}
+  .ledger-row{grid-template-columns:1fr auto}
+  .pay-btn{grid-column:2}
+  main{padding:0 16px 72px}
+  .masthead{padding:16px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div>
+    <div class="wordmark">marketa fetch <span>/ ops</span></div>
+    <div class="stamp" id="stamp">loading…</div>
+  </div>
+  <div class="controls">
+    <select id="cityFilter"><option value="">All cities</option></select>
+    <button class="refresh" id="refreshBtn">Refresh</button>
+  </div>
+</header>
+
+<main>
+  <div id="error"></div>
+
+  <div class="tallies" id="tallies"></div>
+
+  <section>
+    <div class="sec-head">
+      <h2>Owed out</h2>
+      <div class="sec-note">Completed orders not yet paid to the vendor</div>
+    </div>
+    <div id="ledger"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Orders</h2>
+      <div class="sec-note" id="ordersNote"></div>
+    </div>
+    <table>
+      <thead><tr>
+        <th>Order</th><th>Vendor</th><th>City</th><th>Placed</th><th>Status</th><th class="num">Total</th>
+      </tr></thead>
+      <tbody id="ordersBody"></tbody>
+    </table>
+  </section>
+
+  <div class="cols">
+    <section>
+      <div class="sec-head"><h2>Vendors</h2></div>
+      <table>
+        <thead><tr><th>Business</th><th>City</th><th class="num">Orders</th></tr></thead>
+        <tbody id="vendorsBody"></tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="sec-head"><h2>Riders</h2></div>
+      <table>
+        <thead><tr><th>Name</th><th>City</th><th>Vehicle</th></tr></thead>
+        <tbody id="ridersBody"></tbody>
+      </table>
+    </section>
+  </div>
+</main>
+
+<script>
+const SUPABASE_URL = 'https://weahsmfgwmtoriirsfmd.supabase.co';
+const SUPABASE_KEY = 'PASTE_YOUR_PUBLISHABLE_KEY';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const COMMISSION = 0.15;
+const ACTIVE = ['incoming','accepted','preparing','ready','assigned','picked'];
+
+let ORDERS = [], VENDORS = [], RIDERS = [], CUSTOMERS = [];
+let city = '';
+
+const naira = n => '₦' + Math.round(n || 0).toLocaleString('en-NG');
+const esc = s => String(s ?? '').replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+
+// The store name lives on each line item, not the order root.
+const storeOf = o =>
+  o.store || (o.items && o.items[0] && o.items[0].store) || '—';
+
+// Commission is taken on food value only — never the delivery fee.
+const foodValue = o =>
+  (o.items || []).reduce((sum, i) => sum + (i.price || 0) * (i.qty || 1), 0);
+
+const vendorNet = o => foodValue(o) * (1 - COMMISSION);
+
+async function load(){
+  document.getElementById('error').innerHTML = '';
+  try{
+    const [o, v, r, c] = await Promise.all([
+      sb.from('orders').select('data'),
+      sb.from('vendors').select('data'),
+      sb.from('riders').select('data'),
+      sb.from('customers').select('data')
+    ]);
+    const firstErr = [o,v,r,c].find(x => x.error);
+    if(firstErr){ showError(firstErr.error.message); return; }
+
+    ORDERS    = (o.data || []).map(x => x.data).filter(Boolean);
+    VENDORS   = (v.data || []).map(x => x.data).filter(Boolean);
+    RIDERS    = (r.data || []).map(x => x.data).filter(Boolean);
+    CUSTOMERS = (c.data || []).map(x => x.data).filter(Boolean);
+
+    buildCityFilter();
+    render();
+    document.getElementById('stamp').textContent =
+      'updated ' + new Date().toLocaleTimeString('en-NG', {hour:'2-digit', minute:'2-digit'});
+  }catch(e){
+    showError(e.message || String(e));
+  }
+}
+
+function showError(msg){
+  document.getElementById('error').innerHTML =
+    '<div class="err"><strong>Couldn\'t load.</strong> ' + esc(msg) +
+    '<br>Check the publishable key at the top of this file.</div>';
+}
+
+function buildCityFilter(){
+  const sel = document.getElementById('cityFilter');
+  const seen = [...new Set(ORDERS.map(o => o.city).filter(Boolean))].sort();
+  const keep = sel.value;
+  sel.innerHTML = '<option value="">All cities</option>' +
+    seen.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+  sel.value = keep;
+}
+
+const inScope = o => !city || o.city === city;
+
+function render(){
+  const orders = ORDERS.filter(inScope);
+
+  // ---- tallies ----
+  const live = orders.filter(o => ACTIVE.includes(o.status)).length;
+  const gmv = orders
+    .filter(o => o.status === 'completed')
+    .reduce((s,o) => s + foodValue(o), 0);
+  document.getElementById('tallies').innerHTML = [
+    [orders.length, 'Orders'],
+    [live, 'In flight'],
+    [naira(gmv * COMMISSION), 'Commission earned'],
+    [VENDORS.filter(v => !city || v.city === city).length, 'Vendors'],
+    [RIDERS.filter(r => !city || r.city === city).length, 'Riders'],
+    [CUSTOMERS.length, 'Customers']
+  ].map(([n,l]) =>
+    `<div class="tally"><div class="tally-n">${n}</div><div class="tally-l">${l}</div></div>`
+  ).join('');
+
+  renderLedger(orders);
+  renderOrders(orders);
+  renderVendors(orders);
+  renderRiders();
+}
+
+// ---- owed out ----
+function renderLedger(orders){
+  const unpaid = orders.filter(o => o.status === 'completed' && !o.vendorPaid);
+  const byVendor = {};
+  unpaid.forEach(o => {
+    const k = storeOf(o);
+    byVendor[k] = byVendor[k] || {name:k, amount:0, ids:[]};
+    byVendor[k].amount += vendorNet(o);
+    byVendor[k].ids.push(o.id);
+  });
+  const rows = Object.values(byVendor).sort((a,b) => b.amount - a.amount);
+  const el = document.getElementById('ledger');
+
+  if(!rows.length){
+    el.innerHTML = '<div class="empty">Nothing owed out. Every completed order has been paid.</div>';
+    return;
+  }
+
+  el.innerHTML = '<div class="ledger">' + rows.map(r => `
+    <div class="ledger-row">
+      <div>
+        <div class="led-name">${esc(r.name)}</div>
+        <div class="led-sub">${r.ids.length} order${r.ids.length > 1 ? 's' : ''} · ${r.ids.map(esc).join(' ')}</div>
+      </div>
+      <div class="led-amt">${naira(r.amount)}</div>
+      <button class="pay-btn" data-ids="${esc(r.ids.join(','))}">Mark paid</button>
+    </div>`).join('') + '</div>' +
+    `<div class="ledger-total"><span>Total due</span><span>${naira(rows.reduce((s,r) => s + r.amount, 0))}</span></div>`;
+
+  el.querySelectorAll('.pay-btn').forEach(b => b.addEventListener('click', () => markPaid(b)));
+}
+
+async function markPaid(btn){
+  const ids = btn.dataset.ids.split(',');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  try{
+    const rows = ORDERS.filter(o => ids.includes(String(o.id)))
+      .map(o => {
+        const updated = {...o, vendorPaid: true, paidAt: new Date().toISOString()};
+        return {
+          id: String(o.id),
+          city: o.city || null,
+          vendor_id: storeOf(o),
+          status: o.status || null,
+          data: updated
+        };
+      });
+    const {error} = await sb.from('orders').upsert(rows);
+    if(error) throw error;
+    await load();
+  }catch(e){
+    btn.disabled = false;
+    btn.textContent = 'Mark paid';
+    showError('Payout not saved: ' + (e.message || e));
+  }
+}
+
+// ---- orders ----
+function renderOrders(orders){
+  const sorted = [...orders].sort((a,b) =>
+    new Date(b.createdAt || 0) - new Date(a.createdAt || 0)).slice(0, 60);
+  document.getElementById('ordersNote').textContent =
+    `Showing ${sorted.length} of ${orders.length}`;
+
+  document.getElementById('ordersBody').innerHTML = sorted.length ? sorted.map(o => {
+    const cls = ACTIVE.includes(o.status) ? 'live'
+      : o.status === 'completed' ? 'done' : 'dead';
+    const when = o.createdAt
+      ? new Date(o.createdAt).toLocaleString('en-NG', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'})
+      : '—';
+    return `<tr>
+      <td class="id">${esc(o.id)}</td>
+      <td>${esc(storeOf(o))}</td>
+      <td>${esc(o.city || '—')}</td>
+      <td>${esc(when)}</td>
+      <td><span class="pill ${cls}">${esc(o.status || '—')}</span></td>
+      <td class="num">${naira(o.total || foodValue(o))}</td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="6" class="empty">No orders yet in this city.</td></tr>';
+}
+
+// ---- vendors ----
+function renderVendors(orders){
+  const list = VENDORS.filter(v => !city || v.city === city);
+  const counts = {};
+  orders.forEach(o => {
+    const k = String(storeOf(o)).trim().toLowerCase();
+    counts[k] = (counts[k] || 0) + 1;
+  });
+  document.getElementById('vendorsBody').innerHTML = list.length ? list
+    .map(v => ({v, n: counts[String(v.bizName || '').trim().toLowerCase()] || 0}))
+    .sort((a,b) => b.n - a.n)
+    .map(({v,n}) => `<tr>
+      <td>${esc(v.bizName || '—')}</td>
+      <td>${esc(v.city || '—')}</td>
+      <td class="num">${n}</td>
+    </tr>`).join('')
+    : '<tr><td colspan="3" class="empty">No vendors signed up yet.</td></tr>';
+}
+
+// ---- riders ----
+function renderRiders(){
+  const list = RIDERS.filter(r => !city || r.city === city);
+  document.getElementById('ridersBody').innerHTML = list.length ? list.map(r => `<tr>
+      <td>${esc([r.rFirst, r.rLast].filter(Boolean).join(' ') || r.name || '—')}</td>
+      <td>${esc(r.city || '—')}</td>
+      <td>${esc(r.vehicle || r.rVehicle || '—')}</td>
+    </tr>`).join('')
+    : '<tr><td colspan="3" class="empty">No riders signed up yet.</td></tr>';
+}
+
+document.getElementById('cityFilter').addEventListener('change', e => {
+  city = e.target.value;
+  render();
+});
+document.getElementById('refreshBtn').addEventListener('click', load);
+
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>
