@@ -2856,8 +2856,12 @@ function riderStatus(id, status){
   o.status = status;
   o.updatedAt = new Date().toISOString();
   saveOrders();
+      if(status==='picked') startRiderGPS(id);
+    if(status==='completed') stopRiderGPS();
+
   if(status==='completed'){
     curRider.activeJob = null; riders[curRider.id] = curRider; saveRiders();
+      
   }
   renderRiderDash();
   toast(status==='picked' ? 'Picked up — on the way' : 'Delivered! Earnings added', status==='picked' ? '📦' : '🎉');
