@@ -1779,6 +1779,27 @@ function startTracking(orderId){
   // re-read the order so vendor/rider actions show up here
   trackTimer = setInterval(renderTrack, 3000);
 }
+// ===== RIDER GPS =====
+let gpsWatchId = null, lastGpsPush = 0;
+function startRiderGPS(orderId){
+  if(!navigator.geolocation || gpsWatchId !== null) return;
+  gpsWatchId = navigator.geolocation.watchPosition(async pos => {
+    const now = Date.now();
+    if(now - lastGpsPush < 15000) return;
+    lastGpsPush = now;
+    try{
+      await sb.from('orders').update({
+        rider_lat: pos.coords.latitude,
+        rider_lng: pos.coords.longitude,
+        rider_at: new Date().toISOString()
+      }).eq('id', orderId);
+    }catch(e){ console.log('gps push failed', e); }
+  }, err => console.log('gps error', err),
+     { enableHighAccuracy:true, maximumAge:10000, timeout:20000 });
+}
+function stopRiderGPS(){
+  if(gpsWatchId !== null){ navigator.geolocation.clearWatch(gpsWatchId); gpsWatchId = null; }
+}
 
 let lastTrackStatus = null;
 function renderTrack(){
