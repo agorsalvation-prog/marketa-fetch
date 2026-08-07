@@ -1699,9 +1699,8 @@ function placeOrder(){
   if(!Object.keys(cart).length) return;
   if(!validate()){ toast('Fill in the highlighted fields','⚠️'); return; }
   const orderNo = 'MF-' + Math.floor(1000+Math.random()*9000);
-  document.getElementById('orderNo').textContent = 'Order #' + orderNo;
   const t = totals();
-  orders.push({
+  const orderData = {
     id: orderNo,
     customerId: curCustomer ? curCustomer.id : null,
     city: document.getElementById('inCity').value,
@@ -1715,10 +1714,42 @@ function placeOrder(){
     status: 'incoming',
     pickupCode: String(Math.floor(100 + Math.random()*900)),
     createdAt: new Date().toISOString()
+  };
+
+  if(payMethod === 'card'){
+    payWithPaystack(orderData);
+  }else{
+    finalizeOrder(orderData);
+  }
+}
+
+function payWithPaystack(orderData){
+  const phoneDigits = orderData.phone.replace(/\D/g,'');
+  const handler = PaystackPop.setup({
+    key: PAYSTACK_PUBLIC_KEY,
+    email: phoneDigits + '@marketafetch.ng',
+    amount: Math.round(orderData.total * 100),
+    currency: 'NGN',
+    ref: orderData.id,
+    metadata: { customer: orderData.customer, phone: orderData.phone },
+    callback: function(response){
+      orderData.paid = true;
+      orderData.paymentRef = response.reference;
+      finalizeOrder(orderData);
+    },
+    onClose: function(){
+      toast('Payment cancelled — order not placed','⚠️');
+    }
   });
+  handler.openIframe();
+}
+
+function finalizeOrder(orderData){
+  document.getElementById('orderNo').textContent = 'Order #' + orderData.id;
+  orders.push(orderData);
   saveOrders();
   cart = {}; saveCart(); updateCount(); renderCart();
-  startTracking(orderNo);
+  startTracking(orderData.id);
   go('tracking');
   toast('Order placed — rider assigned!','🛵');
 }
