@@ -1800,6 +1800,41 @@ function startRiderGPS(orderId){
 function stopRiderGPS(){
   if(gpsWatchId !== null){ navigator.geolocation.clearWatch(gpsWatchId); gpsWatchId = null; }
 }
+// ===== CUSTOMER MAP =====
+let trackMapObj = null, riderMarker = null, lastMapPull = 0;
+async function refreshRiderPin(orderId){
+  const now = Date.now();
+  if(now - lastMapPull < 10000) return;
+  lastMapPull = now;
+  const box = document.getElementById('trackMap');
+  const route = document.querySelector('#view-tracking .route');
+  let row = null;
+  try{
+    const r = await sb.from('orders')
+      .select('rider_lat,rider_lng,rider_at').eq('id', orderId).single();
+    row = r.data;
+  }catch(e){ return; }
+  const fresh = row && row.rider_lat && row.rider_at &&
+    (Date.now() - new Date(row.rider_at).getTime() < 120000);
+  if(!fresh){
+    box.style.display = 'none';
+    if(route) route.style.display = '';
+    return;
+  }
+  box.style.display = 'block';
+  if(route) route.style.display = 'none';
+  if(!trackMapObj){
+    trackMapObj = L.map('trackMap', {zoomControl:false, attributionControl:false})
+      .setView([row.rider_lat, row.rider_lng], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19})
+      .addTo(trackMapObj);
+    riderMarker = L.marker([row.rider_lat, row.rider_lng]).addTo(trackMapObj);
+  } else {
+    riderMarker.setLatLng([row.rider_lat, row.rider_lng]);
+    trackMapObj.setView([row.rider_lat, row.rider_lng]);
+  }
+  setTimeout(()=>trackMapObj.invalidateSize(), 100);
+}
 
 let lastTrackStatus = null;
 function renderTrack(){
@@ -1835,6 +1870,13 @@ function renderTrack(){
     document.getElementById('pathFill').style.width = '0%';
     if(trackTimer){ clearInterval(trackTimer); trackTimer = null; }
     return;
+  }
+    if(o.status==='picked'){ refreshRiderPin(o.id); }
+  else {
+    const mb = document.getElementById('trackMap');
+    const rt = document.querySelector('#view-tracking .route');
+    if(mb) mb.style.display = 'none';
+    if(rt) rt.style.display = '';
   }
 
   const stage = STAGE_OF(o.status);
