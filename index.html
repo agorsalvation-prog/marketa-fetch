@@ -1304,6 +1304,10 @@ const saveOrders = () => {
     try{ if(typeof renderStats === 'function') renderStats(); }catch(e){}
   }catch(e){ console.warn('pull error', e); }
 }
+      pullOrders();
+    setInterval(pullOrders, 15000);
+
+  
 
   async function pullVendors(){
   try{
