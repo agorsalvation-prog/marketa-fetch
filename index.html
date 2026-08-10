@@ -1306,6 +1306,21 @@ const saveOrders = () => {
 }
       pullOrders();
     setInterval(pullOrders, 15000);
+async function setStoreLocation(){
+  if(!navigator.geolocation){ toast('Location not supported on this device'); return; }
+  toast('Getting your location…');
+  navigator.geolocation.getCurrentPosition(async pos => {
+    const lat = pos.coords.latitude, lng = pos.coords.longitude;
+    curVendor.lat = lat; curVendor.lng = lng;
+    vendors[curVendor.id] = curVendor;
+    saveVendors();
+    try{
+      await sb.from('vendors').update({ lat, lng }).eq('id', curVendor.id);
+      toast('Store location saved 📍');
+    }catch(e){ toast('Saved on this device, sync failed'); }
+  }, err => toast('Could not get location — allow location access'),
+     { enableHighAccuracy:true, timeout:20000 });
+}
 
   
 
