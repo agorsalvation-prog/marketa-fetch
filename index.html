@@ -1857,6 +1857,13 @@ function storeLatLngFor(o){
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19})
       .addTo(trackMapObj);
     riderMarker = L.marker([row.rider_lat, row.rider_lng]).addTo(trackMapObj);
+          const ord = orders.find(x => x.id === orderId);
+      const sp = ord ? storeLatLngFor(ord) : null;
+      if(sp){
+        storeMarker = L.marker(sp, {icon: L.divIcon({html:'🏪', className:'', iconSize:[28,28]})}).addTo(trackMapObj);
+        trackMapObj.fitBounds([sp, [row.rider_lat, row.rider_lng]], {padding:[40,40]});
+      }
+
   } else {
     riderMarker.setLatLng([row.rider_lat, row.rider_lng]);
     trackMapObj.setView([row.rider_lat, row.rider_lng]);
