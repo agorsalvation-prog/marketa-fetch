@@ -595,6 +595,11 @@ footer{border-top:1px solid var(--line);margin-top:40px;background:var(--card)}
         <select id="inCity"><option value="asaba">Asaba</option><option value="warri">Warri</option><option value="abraka">Abraka</option></select>
       </div>
       <div class="field" id="f-addr"><label for="inAddr">Delivery address</label><input id="inAddr" autocomplete="street-address" placeholder="Street, area, landmark"><div class="err">Enter your delivery address</div></div>
+      <div class="field" style="margin-top:-6px">
+  <button type="button" class="back-btn" onclick="useMyLocation()">📍 Use my current location</button>
+  <span id="dropStatus" class="note" style="margin-left:8px"></span>
+</div>
+
       <div class="field"><label for="inNote">Note for the rider (optional)</label><input id="inNote" placeholder="e.g. Call when you reach the junction"></div>
     </div>
 
@@ -1719,6 +1724,18 @@ function validate(){
   }
   return ok;
 }
+  let dropLat = null, dropLng = null;
+function useMyLocation(){
+  const s = document.getElementById('dropStatus');
+  if(!navigator.geolocation){ s.textContent = 'Not supported'; return; }
+  s.textContent = 'Locating…';
+  navigator.geolocation.getCurrentPosition(pos => {
+    dropLat = pos.coords.latitude; dropLng = pos.coords.longitude;
+    s.textContent = '📍 Location captured';
+  }, err => { s.textContent = 'Could not get location — address only'; },
+     { enableHighAccuracy:true, timeout:20000 });
+}
+
 function placeOrder(){
   if(!Object.keys(cart).length) return;
   if(!validate()){ toast('Fill in the highlighted fields','⚠️'); return; }
@@ -1732,6 +1749,8 @@ function placeOrder(){
     phone: document.getElementById('inPhone').value.trim(),
     address: document.getElementById('inAddr').value.trim(),
     note: document.getElementById('inNote').value.trim(),
+        dropLat: dropLat, dropLng: dropLng,
+
     items: Object.values(cart).map(c=>({name:c.item.name, qty:c.qty, price:c.item.price, store:c.store.name})),
     total: t.total,
     payMethod, speed,
