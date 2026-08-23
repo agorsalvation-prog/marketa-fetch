@@ -1731,7 +1731,20 @@ function useMyLocation(){
   s.textContent = 'Locating…';
   navigator.geolocation.getCurrentPosition(pos => {
     dropLat = pos.coords.latitude; dropLng = pos.coords.longitude;
-    s.textContent = '📍 Location captured';
+       s.textContent = '📍 Location captured';
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${dropLat}&lon=${dropLng}`)
+      .then(r => r.json())
+      .then(d => {
+        const a = d.address || {};
+        const parts = [a.road, a.suburb || a.neighbourhood, a.city || a.town].filter(Boolean);
+        const box = document.getElementById('inAddr');
+        if(parts.length && !box.value.trim()){
+          box.value = parts.join(', ');
+          box.classList.remove('invalid');
+        }
+      })
+      .catch(()=>{});
+
   }, err => { s.textContent = 'Could not get location — address only'; },
      { enableHighAccuracy:true, timeout:20000 });
 }
