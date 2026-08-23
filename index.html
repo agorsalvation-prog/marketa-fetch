@@ -1895,6 +1895,10 @@ function storeLatLngFor(o){
         storeMarker = L.marker(sp, {icon: L.divIcon({html:'🏪', className:'', iconSize:[28,28]})}).addTo(trackMapObj);
         trackMapObj.fitBounds([sp, [row.rider_lat, row.rider_lng]], {padding:[40,40]});
       }
+          if(ord && ord.dropLat && ord.dropLng){
+        L.marker([ord.dropLat, ord.dropLng], {icon: L.divIcon({html:'🏠', className:'', iconSize:[28,28]})}).addTo(trackMapObj);
+      }
+
 
   } else {
     riderMarker.setLatLng([row.rider_lat, row.rider_lng]);
