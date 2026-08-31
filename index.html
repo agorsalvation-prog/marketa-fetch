@@ -2955,7 +2955,8 @@ function renderActiveJob(){
       const navTo = (o.dropLat && o.dropLng)
       ? `${o.dropLat},${o.dropLng}`
       : encodeURIComponent(`${o.address||''} ${o.city||''}`);
-    action = `<button class="oa-btn" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${navTo}','_blank')">🧭 Navigate</button>` + action;
+    action = `<button class="oa-btn prep" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${navTo}','_blank')">🧭 Navigate</button>` + action;
+
 
   box.innerHTML = `
     <div class="job-card active">
