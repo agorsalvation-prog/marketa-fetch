@@ -1898,6 +1898,10 @@ function storeLatLngFor(o){
           if(ord && ord.dropLat && ord.dropLng){
         L.marker([ord.dropLat, ord.dropLng], {icon: L.divIcon({html:'🏠', className:'', iconSize:[28,28]})}).addTo(trackMapObj);
       }
+      if(ord && ord.dropLat && ord.dropLng){
+        L.polyline([[row.rider_lat, row.rider_lng], [ord.dropLat, ord.dropLng]],
+          {color:'#C8F135', weight:4, opacity:0.9}).addTo(trackMapObj);
+      }
 
 
   } else {
