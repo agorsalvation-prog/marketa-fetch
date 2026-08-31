@@ -1853,7 +1853,13 @@ function startRiderGPS(orderId){
 function stopRiderGPS(){
   if(gpsWatchId !== null){ navigator.geolocation.clearWatch(gpsWatchId); gpsWatchId = null; }
 }
-// ===== CUSTOMER MAP =====
+let storeMarker = null;
+function storeLatLngFor(o){
+  const name = (o.items && o.items[0] && o.items[0].store) || o.vendorId || '';
+  const v = Object.values(vendors||{}).find(x => x && (x.bizName||'') === name);
+  return (v && v.lat && v.lng) ? [v.lat, v.lng] : null;
+}
+  // ===== CUSTOMER MAP =====
 let trackMapObj = null, riderMarker = null, lastMapPull = 0;
 async function refreshRiderPin(orderId){
   const now = Date.now();
@@ -1862,12 +1868,7 @@ async function refreshRiderPin(orderId){
   const box = document.getElementById('trackMap');
   const route = document.querySelector('#view-tracking .route');
   let row = null;
-  let storeMarker = null;
-function storeLatLngFor(o){
-  const name = (o.items && o.items[0] && o.items[0].store) || o.vendorId || '';
-  const v = Object.values(vendors||{}).find(x => x && (x.bizName||'') === name);
-  return (v && v.lat && v.lng) ? [v.lat, v.lng] : null;
-}
+  
 
   try{
     const r = await sb.from('orders')
