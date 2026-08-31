@@ -2952,10 +2952,15 @@ function renderActiveJob(){
   let action = '';
   if(o.status==='assigned') action = `<button class="oa-btn prep" onclick="riderStatus('${o.id}','picked')">📦 Picked up</button>`;
   if(o.status==='picked') action = `<button class="oa-btn ready" onclick="riderStatus('${o.id}','completed')">✓ Delivered</button>`;
-      const navTo = (o.dropLat && o.dropLng)
-      ? `${o.dropLat},${o.dropLng}`
-      : encodeURIComponent(`${o.address||''} ${o.city||''}`);
-    action = `<button class="oa-btn prep" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${navTo}','_blank')">🧭 Navigate</button>` + action;
+    const goStore = (o.status === 'assigned');
+    const sp2 = storeLatLngFor(o);
+    const navTo = goStore
+      ? (sp2 ? `${sp2[0]},${sp2[1]}` : encodeURIComponent((o.items&&o.items[0]&&o.items[0].store)||''))
+      : ((o.dropLat && o.dropLng)
+          ? `${o.dropLat},${o.dropLng}`
+          : encodeURIComponent(`${o.address||''} ${o.city||''}`));
+    const navLabel = goStore ? '🧭 To store' : '🧭 To customer';
+    action = `<button class="oa-btn prep" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${navTo}','_blank')">${navLabel}</button>` + action;
 
 
   box.innerHTML = `
