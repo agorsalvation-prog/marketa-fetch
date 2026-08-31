@@ -1292,13 +1292,15 @@ const saveOrders = () => {
   async function pullOrders(){
   try{
     let q = sb.from('orders').select('data');
-    if(typeof curVendor !== 'undefined' && curVendor){
-      q = q.eq('city', curVendor.city).ilike('vendor_id', curVendor.bizName || '');
-    } else if(typeof curRider !== 'undefined' && curRider){
-      q = q.eq('city', curRider.city);
-    } else if(typeof curCity !== 'undefined' && curCity){
-      q = q.eq('city', curCity);
-    }
+          try{
+        if(typeof curVendor !== 'undefined' && curVendor){
+          q = q.eq('city', curVendor.city).ilike('vendor_id', curVendor.bizName || '');
+        } else if(typeof curRider !== 'undefined' && curRider){
+          q = q.eq('city', curRider.city);
+        } else if(typeof curCity !== 'undefined' && curCity){
+          q = q.eq('city', curCity);
+        }
+      }catch(e){}
     const { data, error } = await q;
     if(error){ console.warn('pull failed', error.message); return; }
     const byId = {};
