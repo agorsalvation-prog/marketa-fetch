@@ -2952,6 +2952,11 @@ function renderActiveJob(){
   let action = '';
   if(o.status==='assigned') action = `<button class="oa-btn prep" onclick="riderStatus('${o.id}','picked')">📦 Picked up</button>`;
   if(o.status==='picked') action = `<button class="oa-btn ready" onclick="riderStatus('${o.id}','completed')">✓ Delivered</button>`;
+      const navTo = (o.dropLat && o.dropLng)
+      ? `${o.dropLat},${o.dropLng}`
+      : encodeURIComponent(`${o.address||''} ${o.city||''}`);
+    action = `<a class="oa-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination=${navTo}">🧭 Navigate</a>` + action;
+
   box.innerHTML = `
     <div class="job-card active">
       <div class="order-top">
