@@ -2099,11 +2099,19 @@ function switchAuth(mode){
   document.getElementById('tab-signin').classList.toggle('on', mode==='signin');
 }
 
-function loginVendor(e){
+async function loginVendor(e){
   e.preventDefault();
   const email = document.getElementById('lEmail').value.trim().toLowerCase();
   const pass = document.getElementById('lPass').value;
-  const found = Object.values(vendors).find(v => v.email.toLowerCase()===email && v.pass===pass);
+  const { data: sess, error: serr } = await sb.auth.signInWithPassword({ email, password: pass });
+  let found = null;
+  if(sess && sess.user){
+    found = Object.values(vendors).find(v => v.authId === sess.user.id);
+  }
+  if(!found){
+    found = Object.values(vendors).find(v => v.email.toLowerCase()===email && v.pass===pass);
+  }
+
   const emailField = document.getElementById('lf-email');
   const passField = document.getElementById('lf-pass');
   emailField.classList.remove('invalid'); passField.classList.remove('invalid');
