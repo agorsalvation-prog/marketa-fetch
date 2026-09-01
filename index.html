@@ -2069,7 +2069,7 @@ async function registerVendor(e){
   vendors[vendorId] = {
     authId: au.user.id,
     id: vendorId,
-    bizName, firstName, lastName, bizType, branches, city, phone, email, pass,
+    bizName, firstName, lastName, bizType, branches, city, phone, email,
     samePhone, whatsapp, hasReg, fee, time,
     createdAt: new Date().toISOString(),
     menus: []
@@ -2108,8 +2108,7 @@ async function loginVendor(e){
   if(sess && sess.user){
     found = Object.values(vendors).find(v => v.authId === sess.user.id);
   }
-  if(!found){
-    found = Object.values(vendors).find(v => v.email.toLowerCase()===email && v.pass===pass);
+  
   }
 
   const emailField = document.getElementById('lf-email');
