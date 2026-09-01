@@ -2108,8 +2108,6 @@ async function loginVendor(e){
   if(sess && sess.user){
     found = Object.values(vendors).find(v => v.authId === sess.user.id);
   }
-  
-  }
 
   const emailField = document.getElementById('lf-email');
   const passField = document.getElementById('lf-pass');
