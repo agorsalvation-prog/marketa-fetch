@@ -1268,6 +1268,7 @@ const saveVendors = () => {
     const rows = Object.entries(vendors).map(([k,v]) => ({
       id: String(v.id || k),
       city: v.city || null,
+      auth_id: v.authId || null,
       data: v
     }));
     if(rows.length) sb.from('vendors').upsert(rows).then(({error}) => { if(error) console.warn('vendor sync failed', error.message); });
