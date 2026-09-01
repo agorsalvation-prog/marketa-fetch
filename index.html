@@ -2044,7 +2044,7 @@ function validateVendorForm(){
   return ok;
 }
 
-function registerVendor(e){
+async function registerVendor(e){
   e.preventDefault();
   if(!validateVendorForm()){ toast('Fill all required fields','⚠️'); return; }
 
@@ -2062,9 +2062,12 @@ function registerVendor(e){
   const hasReg = document.querySelector('input[name="vReg"]:checked').value;
   const fee = 800;   // default — vendor can change later
   const time = 25;   // default prep time (min)
+  const { data: au, error: aerr } = await sb.auth.signUp({ email, password: pass });
+  if(aerr){ toast(aerr.message,'⚠️'); return; }
 
   const vendorId = 'v-' + Math.random().toString(36).substr(2,9);
   vendors[vendorId] = {
+    authId: au.user.id,
     id: vendorId,
     bizName, firstName, lastName, bizType, branches, city, phone, email, pass,
     samePhone, whatsapp, hasReg, fee, time,
