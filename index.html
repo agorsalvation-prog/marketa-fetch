@@ -1269,6 +1269,10 @@ const saveVendors = () => {
       id: String(v.id || k),
       city: v.city || null,
       auth_id: v.authId || null,
+      public_data: {
+        id: v.id, bizName: v.bizName, bizType: v.bizType, city: v.city,
+        fee: v.fee, time: v.time, menus: v.menus || [], status: v.status || null
+      },
       data: v
     }));
     if(rows.length) sb.from('vendors').upsert(rows).then(({error}) => { if(error) console.warn('vendor sync failed', error.message); });
