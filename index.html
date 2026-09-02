@@ -2751,6 +2751,7 @@ const saveRiders = () => {
     const rows = Object.entries(riders).map(([k,v]) => ({
       id: String(v.id || k),
       city: v.city || null,
+      auth_id: v.authId || null,
       data: v
     }));
     if(rows.length) sb.from('riders').upsert(rows).then(({error}) => { if(error) console.warn('rider sync failed', error.message); });
