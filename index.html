@@ -2106,6 +2106,7 @@ async function loginVendor(e){
   const { data: sess, error: serr } = await sb.auth.signInWithPassword({ email, password: pass });
   let found = null;
   if(sess && sess.user){
+    await pullVendors();
     found = Object.values(vendors).find(v => v.authId === sess.user.id);
   }
 
