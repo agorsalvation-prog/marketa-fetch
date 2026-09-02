@@ -1289,6 +1289,10 @@ const saveOrders = () => {
       city: o.city || null,
       vendor_id: String(o.vendorId || o.vendor_id || o.store || (o.items && o.items[0] && o.items[0].store) || '') || null,
       status: o.status || null,
+      public_data: {
+        id: o.id, status: o.status || null, city: o.city || null,
+        eta: o.eta || null, createdAt: o.createdAt || null
+      },
       data: o
     }));
     if(rows.length) sb.from('orders').upsert(rows).then(({error}) => { if(error) console.warn('sync failed', error.message); });
