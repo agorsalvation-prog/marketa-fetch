@@ -2847,6 +2847,7 @@ async function loginRider(e){
     const { data: sess, error: serr } = await sb.auth.signInWithPassword({ email, password: pass });
   let found = null;
   if(sess && sess.user){
+    await pullRiders();
     found = Object.values(riders).find(r => r.authId === sess.user.id);
   }
 
