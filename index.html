@@ -2840,11 +2840,19 @@ function openRider(){
   go('rider-dash');
 }
 
-function loginRider(e){
+async function loginRider(e){
   e.preventDefault();
   const email = document.getElementById('rlEmail').value.trim().toLowerCase();
   const pass = document.getElementById('rlPass').value;
-  const found = Object.values(riders).find(r=>r.email.toLowerCase()===email && r.pass===pass);
+    const { data: sess, error: serr } = await sb.auth.signInWithPassword({ email, password: pass });
+  let found = null;
+  if(sess && sess.user){
+    found = Object.values(riders).find(r => r.authId === sess.user.id);
+  }
+  if(!found){
+    found = Object.values(riders).find(r=>r.email.toLowerCase()===email && r.pass===pass);
+  }
+
   document.getElementById('rlf-email').classList.toggle('invalid', !found);
   document.getElementById('rlf-pass').classList.toggle('invalid', !found);
   if(!found){ toast('No rider account found with that email and password','⚠️'); return; }
