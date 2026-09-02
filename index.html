@@ -2749,7 +2749,7 @@ try{ riders = JSON.parse(localStorage.getItem('mf_riders')) || {}; }catch(e){ ri
 const saveRiders = () => {
   try{ localStorage.setItem('mf_riders', JSON.stringify(riders)); }catch(e){}
   try{
-    const rows = Object.entries(riders).map(([k,v]) => ({
+    const rows = Object.entries(riders).filter(([k,v]) => v.authId).map(([k,v]) => ({
       id: String(v.id || k),
       city: v.city || null,
       auth_id: v.authId || null,
