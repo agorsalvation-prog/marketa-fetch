@@ -1340,9 +1340,10 @@ async function setStoreLocation(){
 
   async function pullVendors(){
   try{
-    const { data, error } = await sb.from('vendors').select('data');
+    const { data, error } = await sb.from('vendors').select('public_data');
     if(error){ console.warn('vendor pull failed', error.message); return; }
-    (data||[]).forEach(r => { if(r.data && r.data.id) vendors[r.data.id] = r.data; });
+    (data||[]).forEach(r => { const p = r.public_data; if(p && p.id) vendors[p.id] = Object.assign({}, vendors[p.id], p); });
+
     try{ localStorage.setItem('mf_vendors', JSON.stringify(vendors)); }catch(e){}
   }catch(e){ console.warn('vendor pull error', e); }
 }
