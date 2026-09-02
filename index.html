@@ -1265,7 +1265,7 @@ try{ vendors = JSON.parse(localStorage.getItem('mf_vendors')) || {}; }catch(e){ 
 const saveVendors = () => {
   try{ localStorage.setItem('mf_vendors', JSON.stringify(vendors)); }catch(e){}
   try{
-    const rows = Object.entries(vendors).map(([k,v]) => ({
+    const rows = Object.entries(vendors).filter(([k,v]) => v.authId).map(([k,v]) => ({
       id: String(v.id || k),
       city: v.city || null,
       auth_id: v.authId || null,
