@@ -2802,8 +2802,7 @@ async function registerRider(e){
     vehicle: document.getElementById('rVeh').value,
     availability: document.getElementById('rAvail').value,
     hasId: hasId.value,
-    pass,
-
+    
     online: false,
     activeJob: null,
     status: 'pending',
@@ -2848,9 +2847,6 @@ async function loginRider(e){
   let found = null;
   if(sess && sess.user){
     found = Object.values(riders).find(r => r.authId === sess.user.id);
-  }
-  if(!found){
-    found = Object.values(riders).find(r=>r.email.toLowerCase()===email && r.pass===pass);
   }
 
   document.getElementById('rlf-email').classList.toggle('invalid', !found);
