@@ -2757,7 +2757,7 @@ const saveRiders = () => {
     if(rows.length) sb.from('riders').upsert(rows).then(({error}) => { if(error) console.warn('rider sync failed', error.message); });
   }catch(e){ console.warn('rider sync error', e); }
 };
-function registerRider(e){
+async function registerRider(e){
   e.preventDefault();
   const checks = [
     ['rf-first','rFirst', v=>v.length>=2],
@@ -2782,6 +2782,11 @@ function registerRider(e){
   document.getElementById('rPolicyErr').style.display = policy ? 'none' : 'block';
   if(!policy) ok = false;
   if(!ok){ toast('Fill all required fields','⚠️'); return; }
+  
+  const email = document.getElementById('rEmail').value.trim();
+  const pass = document.getElementById('rPass').value;
+  const { data: au, error: aerr } = await sb.auth.signUp({ email, password: pass });
+  if(aerr){ toast(aerr.message,'⚠️'); return; }
 
   const id = 'r-' + Math.random().toString(36).substr(2,9);
   const first = document.getElementById('rFirst').value.trim();
@@ -2790,12 +2795,15 @@ function registerRider(e){
     id, firstName: first,
     lastName: document.getElementById('rLast').value.trim(),
     phone: '+234 ' + document.getElementById('rPhone').value.trim(),
-    email: document.getElementById('rEmail').value.trim(),
+        email,
+    authId: au.user.id,
+
     city,
     vehicle: document.getElementById('rVeh').value,
     availability: document.getElementById('rAvail').value,
     hasId: hasId.value,
-    pass: document.getElementById('rPass').value,
+    pass,
+
     online: false,
     activeJob: null,
     status: 'pending',
