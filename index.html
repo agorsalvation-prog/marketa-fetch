@@ -1300,7 +1300,8 @@ const saveOrders = () => {
 };
   async function pullOrders(){
   try{
-    let q = sb.from('orders').select('data');
+        const signedIn = (typeof curVendor !== 'undefined' && curVendor) || (typeof curRider !== 'undefined' && curRider);
+    let q = sb.from('orders').select(signedIn ? 'data' : 'public_data');
           try{
         if(typeof curVendor !== 'undefined' && curVendor){
           q = q.eq('city', curVendor.city).ilike('vendor_id', curVendor.bizName || '');
@@ -1314,7 +1315,7 @@ const saveOrders = () => {
     if(error){ console.warn('pull failed', error.message); return; }
     const byId = {};
     orders.forEach(o => { byId[String(o.id)] = o; });
-    (data||[]).forEach(r => { if(r.data && r.data.id) byId[String(r.data.id)] = r.data; });
+    (data||[]).forEach(r => { const d = r.data || r.public_data; if(d && d.id) byId[String(d.id)] = Object.assign({}, byId[String(d.id)], d); });
     orders.length = 0;
     Object.values(byId).forEach(o => orders.push(o));
     try{ localStorage.setItem('mf_orders', JSON.stringify(orders)); }catch(e){}
