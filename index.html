@@ -1271,7 +1271,8 @@ const saveVendors = () => {
       auth_id: v.authId || null,
       public_data: {
         id: v.id, bizName: v.bizName, bizType: v.bizType, city: v.city,
-        fee: v.fee, time: v.time, menus: v.menus || [], status: v.status || null
+        fee: v.fee, time: v.time, menus: v.menus || [], status: v.status || null,
+        cover: v.cover || null, logo: v.logo || null
       },
       data: v
     }));
