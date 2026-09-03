@@ -1301,7 +1301,8 @@ const saveOrders = () => {
 };
   async function pullOrders(){
   try{
-        const signedIn = (typeof curVendor !== 'undefined' && curVendor) || (typeof curRider !== 'undefined' && curRider);
+    let signedIn = false;
+    try{ signedIn = !!curVendor || !!curRider; }catch(e){}  
     let q = sb.from('orders').select(signedIn ? 'data' : 'public_data');
           try{
         if(typeof curVendor !== 'undefined' && curVendor){
