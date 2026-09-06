@@ -12,6 +12,12 @@
   const SUPABASE_URL = 'https://weahsmfgwmtoriirsfmd.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_nnAhcdpCI10W4SqARVkfNQ_UZqi-L6L';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    (async () => {
+    try{
+      const { data } = await sb.auth.getSession();
+      if(!data.session) await sb.auth.signInAnonymously();
+    }catch(e){ console.warn('anon auth failed', e); }
+  })();
 
 </script>
 <script src="https://js.paystack.co/v1/inline.js"></script>
