@@ -1822,8 +1822,9 @@ function payWithPaystack(orderData){
   handler.openIframe();
 }
 
-function finalizeOrder(orderData){
+async function finalizeOrder(orderData){
   document.getElementById('orderNo').textContent = 'Order #' + orderData.id;
+    try{ const { data: s } = await sb.auth.getSession(); if(s.session) orderData.customerAuthId = s.session.user.id; }catch(e){}
   orders.push(orderData);
   saveOrders();
   cart = {}; saveCart(); updateCount(); renderCart();
