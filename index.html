@@ -1293,6 +1293,7 @@ const saveOrders = () => {
   try{
     const rows = orders.map(o => ({
       id: String(o.id),
+      customer_auth_id: o.customerAuthId || null,
       city: o.city || null,
       vendor_id: String(o.vendorId || o.vendor_id || o.store || (o.items && o.items[0] && o.items[0].store) || '') || null,
       status: o.status || null,
