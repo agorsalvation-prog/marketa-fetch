@@ -2587,6 +2587,7 @@ const saveCustomers = () => {
   try{
     const rows = Object.entries(customers).map(([k,v]) => ({
       id: String(v.id || k),
+      auth_id: v.authId || null,
       data: v
     }));
     if(rows.length) sb.from('customers').upsert(rows).then(({error}) => { if(error) console.warn('customer sync failed', error.message); });
