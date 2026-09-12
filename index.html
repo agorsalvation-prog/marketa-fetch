@@ -2692,11 +2692,19 @@ const id = 'c-' + Math.random().toString(36).substr(2,9);
   toast(`Welcome, ${curCustomer.name.split(' ')[0]}!`,'🎉');
 }
 
-function loginCustomer(e){
+async function loginCustomer(e){
   e.preventDefault();
   const email = document.getElementById('clEmail').value.trim().toLowerCase();
   const pass = document.getElementById('clPass').value;
-  const found = Object.values(customers).find(c=>c.email.toLowerCase()===email && c.pass===pass);
+      const { data: sess, error: serr } = await sb.auth.signInWithPassword({ email, password: pass });
+    let found = null;
+    if(sess && sess.user){
+      await pullCustomers();
+      found = Object.values(customers).find(c => c.authId === sess.user.id);
+    }
+    if(!found){
+      found = Object.values(customers).find(c=>c.email.toLowerCase()===email && c.pass===pass);
+    }
   document.getElementById('clf-email').classList.toggle('invalid', !found);
   document.getElementById('clf-pass').classList.toggle('invalid', !found);
   if(!found){ toast('No account found with that email and password','⚠️'); return; }
