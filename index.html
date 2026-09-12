@@ -2681,7 +2681,6 @@ const id = 'c-' + Math.random().toString(36).substr(2,9);
     email,
     city: document.getElementById('cCity').value,
     address: document.getElementById('cAddr').value.trim(),
-    pass: document.getElementById('cPass').value,
     createdAt: new Date().toISOString()
   };
   saveCustomers();
@@ -2701,9 +2700,6 @@ async function loginCustomer(e){
     if(sess && sess.user){
       await pullCustomers();
       found = Object.values(customers).find(c => c.authId === sess.user.id);
-    }
-    if(!found){
-      found = Object.values(customers).find(c=>c.email.toLowerCase()===email && c.pass===pass);
     }
   document.getElementById('clf-email').classList.toggle('invalid', !found);
   document.getElementById('clf-pass').classList.toggle('invalid', !found);
