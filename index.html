@@ -2648,7 +2648,7 @@ function switchCustAuth(mode){
   document.getElementById('ctab-signin').classList.toggle('on', mode==='signin');
 }
 
-function registerCustomer(e){
+async function registerCustomer(e){
   e.preventDefault();
   const checks = [
     ['cf-name','cName', v=>v.length>=2],
@@ -2670,9 +2670,12 @@ function registerCustomer(e){
     document.getElementById('cf-email').classList.add('invalid');
     toast('An account already exists with that email','⚠️'); return;
   }
-  const id = 'c-' + Math.random().toString(36).substr(2,9);
+    const { data: au, error: aerr } = await sb.auth.signUp({ email, password: document.getElementById('cPass').value });
+    if(aerr){ toast(aerr.message,'⚠️'); return; }
+const id = 'c-' + Math.random().toString(36).substr(2,9);
   customers[id] = {
     id,
+    authId: au.user.id,
     name: document.getElementById('cName').value.trim(),
     phone: '+234 ' + document.getElementById('cPhone').value.trim(),
     email,
