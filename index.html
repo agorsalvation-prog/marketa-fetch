@@ -1332,7 +1332,7 @@ const saveOrders = () => {
     try{ if(typeof renderStats === 'function') renderStats(); }catch(e){}
   }catch(e){ console.warn('pull error', e); }
 }
-      pullOrders();
+    setTimeout(pullOrders, 0);  
     setInterval(pullOrders, 15000);
 async function setStoreLocation(){
   if(!navigator.geolocation){ toast('Location not supported on this device'); return; }
@@ -1361,7 +1361,7 @@ async function setStoreLocation(){
     try{ localStorage.setItem('mf_vendors', JSON.stringify(vendors)); }catch(e){}
   }catch(e){ console.warn('vendor pull error', e); }
 }
-pullVendors();
+setTimeout(pullVendors, 0);
 setInterval(pullVendors, 60000);
   async function pullRiders(){
   try{
@@ -1371,7 +1371,7 @@ setInterval(pullVendors, 60000);
     try{ localStorage.setItem('mf_riders', JSON.stringify(riders)); }catch(e){}
   }catch(e){ console.warn('rider pull error', e); }
 }
-pullRiders();
+setTimeout(pullRiders, 0);
 setInterval(pullRiders, 60000);
   async function pullCustomers(){
   try{
@@ -1384,7 +1384,7 @@ setInterval(pullRiders, 60000);
     try{ localStorage.setItem('mf_customers', JSON.stringify(customers)); }catch(e){}
   }catch(e){ console.warn('customer pull error', e); }
 }
-pullCustomers();
+setTimeout(pullCustomers, 0);
 setInterval(pullCustomers, 60000);
 const cityNames = s => s.cities.map(c=>CITIES[c]).join(' · ');
 const inCity = s => s.cities.includes(curCity);
