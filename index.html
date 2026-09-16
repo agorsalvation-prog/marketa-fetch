@@ -2574,6 +2574,9 @@ function setOrderStatus(id, status){
   o.status = status;
   o.updatedAt = new Date().toISOString();
   saveOrders();
+      sb.from('orders').update({ status: status, data: o }).eq('id', String(id))
+      .then(({error}) => { if(error) console.warn('status sync failed', error.message); });
+
   renderOrders(); renderStats(); renderHistory();
   const msgs = {accepted:['Order accepted','✓'], rejected:['Order rejected','✕'], preparing:['Marked as preparing','👨‍🍳'], ready:['Marked as ready for pickup','🛵'], completed:['Order completed','🎉'], cancelled:['Order cancelled','⚠️']};
   const [msg,emo] = msgs[status] || ['Updated','✅'];
