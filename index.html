@@ -1305,7 +1305,7 @@ const rows = mine.map(o => ({
       },
       data: o
     }));
-          if(rows.length) sb.from('orders').upsert(rows).then(({error}) => {
+          if(rows.length) sb.from('orders').insert(rows).then(({error}) => {
         if(error){ console.warn('sync failed', error.message); return; }
         mine.forEach(o => { o.synced = true; });
         try{ localStorage.setItem('mf_orders', JSON.stringify(orders)); }catch(e){}
