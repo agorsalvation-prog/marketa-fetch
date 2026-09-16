@@ -1291,7 +1291,9 @@ try{ orders = JSON.parse(localStorage.getItem('mf_orders')) || []; }catch(e){ or
 const saveOrders = () => {
   try{ localStorage.setItem('mf_orders', JSON.stringify(orders)); }catch(e){}
   try{
-    const rows = orders.map(o => ({
+const mine = orders.filter(o => o && o.id && !o.synced);
+const rows = mine.map(o => ({
+
       id: String(o.id),
       customer_auth_id: o.customerAuthId || null,
       city: o.city || null,
@@ -1303,7 +1305,12 @@ const saveOrders = () => {
       },
       data: o
     }));
-    if(rows.length) sb.from('orders').upsert(rows).then(({error}) => { if(error) console.warn('sync failed', error.message); });
+          if(rows.length) sb.from('orders').upsert(rows).then(({error}) => {
+        if(error){ console.warn('sync failed', error.message); return; }
+        mine.forEach(o => { o.synced = true; });
+        try{ localStorage.setItem('mf_orders', JSON.stringify(orders)); }catch(e){}
+      });
+    
   }catch(e){ console.warn('sync error', e); }
 };
   async function pullOrders(){
