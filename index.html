@@ -11,7 +11,10 @@
 <script>
   const SUPABASE_URL = 'https://weahsmfgwmtoriirsfmd.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_nnAhcdpCI10W4SqARVkfNQ_UZqi-L6L';
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: false }
+  });
+
     (async () => {
     try{
       const { data } = await sb.auth.getSession();
