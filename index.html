@@ -1837,7 +1837,7 @@ function payWithPaystack(orderData){
 }
 
 async function finalizeOrder(orderData){
-  document.getElementById('orderNo').textContent = 'Order #' + orderData.id;
+  document.getElementById('orderNo').textContent = 'Order #' + String(orderData.id).split('-').slice(0,2).join('-');
       try{ const { data: s } = await sb.auth.getSession();
       let cid = null; try{ cid = localStorage.getItem('mf_cust_session'); }catch(e){}
       if(s.session && cid && s.session.user.id === cid) orderData.customerAuthId = s.session.user.id;
@@ -1959,7 +1959,7 @@ function renderTrack(){
   try{ orders = JSON.parse(localStorage.getItem('mf_orders')) || orders; }catch(e){}
   const o = orders.find(x => x.id === trackedOrderId);
   if(!o) return;
-      document.getElementById('orderNo').textContent = 'Order #' + o.id;
+      document.getElementById('orderNo').textContent = 'Order #' + String(o.id).split('-').slice(0,2).join('-');
 
 
   // tell the customer when something actually changes
