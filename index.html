@@ -2578,7 +2578,7 @@ function setOrderStatus(id, status){
   o.status = status;
   o.updatedAt = new Date().toISOString();
   saveOrders();
-      sb.from('orders').update({ status: status, data: o }).eq('id', String(id))
+  sb.from('orders').update({ status: status, data: o, public_data: { id: o.id, status: status, city: o.city || null, eta: o.eta || null, createdAt: o.createdAt || null } }).eq('id', String(id))
       .then(({error}) => { if(error) console.warn('status sync failed', error.message); });
 
   renderOrders(); renderStats(); renderHistory();
