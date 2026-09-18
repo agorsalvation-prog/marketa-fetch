@@ -1309,7 +1309,11 @@ const rows = mine.map(o => ({
       data: o
     }));
           if(rows.length) sb.from('orders').insert(rows).then(({error}) => {
-            if(error){ console.warn('sync failed', error.message); toast('Sync failed: '+error.message,'⚠️'); return; }
+                if(error){ console.warn('sync failed', error.message);
+        if(String(error.message||'').indexOf('duplicate key') >= 0){ mine.forEach(o => { o.synced = true; });
+          try{ localStorage.setItem('mf_orders', JSON.stringify(orders)); }catch(e){}
+        } else { toast('Sync failed: '+error.message,'⚠️'); }
+        return; }  
         mine.forEach(o => { o.synced = true; });
         try{ localStorage.setItem('mf_orders', JSON.stringify(orders)); }catch(e){}
       });
@@ -1784,7 +1788,7 @@ function useMyLocation(){
 function placeOrder(){
   if(!Object.keys(cart).length) return;
   if(!validate()){ toast('Fill in the highlighted fields','⚠️'); return; }
-  const orderNo = 'MF-' + Math.floor(1000+Math.random()*9000);
+  const orderNo = 'MF-' + Math.floor(1000+Math.random()*9000) + '-' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
   const t = totals();
   const orderData = {
     id: orderNo,
