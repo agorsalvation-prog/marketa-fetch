@@ -1324,7 +1324,7 @@ const rows = mine.map(o => ({
   try{
     let signedIn = false;
     try{ signedIn = !!curVendor || !!curRider; }catch(e){}  
-    let q = sb.from('orders').select(signedIn ? 'data' : 'public_data');
+    let q = signedIn ? sb.from('orders').select('data') : sb.from('public_orders').select('public_data');
           try{
         if(typeof curVendor !== 'undefined' && curVendor){
           q = q.eq('city', curVendor.city).ilike('vendor_id', curVendor.bizName || '');
