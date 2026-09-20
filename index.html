@@ -2115,11 +2115,12 @@ async function registerVendor(e){
       try{ for(let i=0;i<20;i++){ const { data: s } = await sb.auth.getSession();
       if(s.session && s.session.user.id === au.user.id) break;
       await new Promise(r=>setTimeout(r,150)); } }catch(e){}
-  saveVendors();
+  
   
   document.getElementById('successName').textContent = `Welcome, ${bizName}!`;
   document.getElementById('successCity').textContent = CITIES[city];
   curVendor = vendors[vendorId];
+  saveVendors();
   try{ localStorage.setItem('mf_session', vendorId); }catch(e){}
   
   go('vendor-success');
