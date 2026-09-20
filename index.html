@@ -2996,7 +2996,7 @@ function renderJobList(available){
 
 function riderPay(o){
   // rider keeps the delivery fee portion of the order
-  const stores = [...new Set(o.items.map(i=>i.store))];
+  const stores = [...new Set((o.items||[]).map(i=>i.store))];
   const base = allStores().filter(s=>stores.includes(s.name)).reduce((a,s)=>a+s.fee, 0) || 800;
   return o.speed==='priority' ? base + 600 : base;
 }
