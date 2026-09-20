@@ -1279,7 +1279,7 @@ const saveVendors = () => {
       city: v.city || null,
       auth_id: v.authId || null,
       public_data: {
-        id: v.id, bizName: v.bizName, bizType: v.bizType, city: v.city,
+      id: v.id, authId: v.authId || null, bizName: v.bizName, bizType: v.bizType, city: v.city,
         fee: v.fee, time: v.time, menus: v.menus || [], status: v.status || null,
         cover: v.cover || null, logo: v.logo || null
       },
@@ -2153,7 +2153,7 @@ async function loginVendor(e){
   emailField.classList.remove('invalid'); passField.classList.remove('invalid');
   if(!found){
     emailField.classList.add('invalid'); passField.classList.add('invalid');
-    toast(serr ? ('Auth: '+serr.message) : ('Auth ok, profile missing. vendors='+Object.keys(vendors).length+' uid='+(sess&&sess.user?sess.user.id.slice(0,8):'none')),'⚠️');
+    toast('No account found with that email and password','⚠️');
     return;
   }
   curVendor = found;
