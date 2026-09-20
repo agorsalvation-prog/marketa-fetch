@@ -2153,7 +2153,7 @@ async function loginVendor(e){
   emailField.classList.remove('invalid'); passField.classList.remove('invalid');
   if(!found){
     emailField.classList.add('invalid'); passField.classList.add('invalid');
-    toast('No account found with that email and password','⚠️');
+    toast(serr ? ('Auth: '+serr.message) : ('Auth ok, profile missing. vendors='+Object.keys(vendors).length+' uid='+(sess&&sess.user?sess.user.id.slice(0,8):'none')),'⚠️');
     return;
   }
   curVendor = found;
