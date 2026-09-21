@@ -2465,7 +2465,8 @@ function vendorStores(){
       menu: groupBySection(v.menus)
     }));
 }
-function allStores(){ return [...STORES, ...vendorStores()]; }
+const SHOW_DEMO = true; // set to false at launch, with Paystack live keys
+function allStores(){ return [...(SHOW_DEMO ? STORES : []), ...vendorStores()]; }
 
 function groupBySection(items){
   const map = {};
