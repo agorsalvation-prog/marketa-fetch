@@ -2142,6 +2142,15 @@ async function loginVendor(e){
   if(sess && sess.user){
     await pullVendors();
     found = Object.values(vendors).find(v => v.authId === sess.user.id);
+        if(found){
+      // pullVendors only fetches public_data - load this vendor's private details too,
+      // otherwise the next save overwrites them with blanks
+      const { data: own } = await sb.from('vendors').select('data').eq('id', found.id).single();
+      if(own && own.data){
+        found = Object.assign({}, found, own.data);
+        vendors[found.id] = found;
+      }
+    }
   }
 
   const emailField = document.getElementById('lf-email');
