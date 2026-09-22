@@ -2100,7 +2100,11 @@ async function registerVendor(e){
   }
 });
   if(aerr){ toast(aerr.message,'⚠️'); return; }
-
+  if(!au.session){
+  alert('Account created! Check your email and tap the confirmation link, then sign in here.');
+  switchAuth('signin');
+  return;
+}
   const vendorId = 'v-' + Math.random().toString(36).substr(2,9);
   vendors[vendorId] = {
     authId: au.user.id,
