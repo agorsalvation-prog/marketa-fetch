@@ -2090,9 +2090,15 @@ async function registerVendor(e){
   const samePhone = document.getElementById('vSamePhone').checked;
   const whatsapp = document.getElementById('vWhatsapp').checked;
   const hasReg = document.querySelector('input[name="vReg"]:checked').value;
-  const fee = 800;   // default — vendor can change later
+  const fee = 800;   // default — vendor can change; later
   const time = 25;   // default prep time (min)
-  const { data: au, error: aerr } = await sb.auth.signUp({ email, password: pass });
+  const { data: au, error: aerr } = await sb.auth.signUp({
+  email, password: pass,
+  options: {
+    emailRedirectTo: 'https://agorsalvation-prog.github.io/marketa-fetch/',
+    data: { role: 'vendor', bizName, firstName, lastName, bizType, branches, city, phone, samePhone, whatsapp, hasReg }
+  }
+});
   if(aerr){ toast(aerr.message,'⚠️'); return; }
 
   const vendorId = 'v-' + Math.random().toString(36).substr(2,9);
