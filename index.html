@@ -2161,6 +2161,25 @@ async function loginVendor(e){
         vendors[found.id] = found;
       }
     }
+        // first login after email confirmation: no store yet, so build it from the signup details
+    const m = sess.user.user_metadata || {};
+    if(!found && m.role === 'vendor'){
+      const { data: mine, error: merr } = await sb.from('vendors').select('id').eq('auth_id', sess.user.id).maybeSingle();
+      if(!merr && !mine){
+        const vendorId = 'v-' + Math.random().toString(36).substr(2,9);
+        found = {
+          authId: sess.user.id, id: vendorId,
+          bizName: m.bizName, firstName: m.firstName, lastName: m.lastName,
+          bizType: m.bizType, branches: m.branches, city: m.city, phone: m.phone,
+          email: sess.user.email, samePhone: m.samePhone, whatsapp: m.whatsapp, hasReg: m.hasReg,
+          fee: 800, time: 25, createdAt: new Date().toISOString(), menus: []
+        };
+        vendors[vendorId] = found;
+        curVendor = found;
+        saveVendors();
+      }
+    }
+
   }
 
   const emailField = document.getElementById('lf-email');
