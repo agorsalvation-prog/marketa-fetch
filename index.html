@@ -2650,7 +2650,7 @@ const saveCustomers = () => {
       auth_id: v.authId || null,
       data: v
     }));
-    if(rows.length) sb.from('customers').upsert(rows).then(({error}) => { if(error) console.warn('customer sync failed', error.message); });
+    if(rows.length) sb.from('customers').upsert(rows).then(({error}) => { if(error) toast('customer sync failed (' + rows.length + ' rows): ' + error.message, '⚠️'); });
   }catch(e){ console.warn('customer sync error', e); }
 };
 let curCustomer = null;
