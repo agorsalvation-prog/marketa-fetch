@@ -2843,8 +2843,7 @@ const saveRiders = () => {
       auth_id: v.authId || null,
       data: v
     }));
-    if(rows.length) sb.from('riders').upsert(rows).then(({error}) => { if(error) toast('rider sync failed: ' + error.message, '⚠️'); });
-
+    if(rows.length) sb.from('riders').upsert(rows).then(({error}) => { if(error) toast('rider sync failed (' + rows.length + ' rows): ' + error.message, '⚠️'); });
   }catch(e){ console.warn('rider sync error', e); }
 };
 async function registerRider(e){
