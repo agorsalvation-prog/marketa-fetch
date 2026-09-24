@@ -2874,9 +2874,27 @@ async function registerRider(e){
   
   const email = document.getElementById('rEmail').value.trim();
   const pass = document.getElementById('rPass').value;
-  const { data: au, error: aerr } = await sb.auth.signUp({ email, password: pass });
+  const { data: au, error: aerr } = await sb.auth.signUp({
+  email, password: pass,
+  options: {
+    emailRedirectTo: 'https://agorsalvation-prog.github.io/marketa-fetch/',
+    data: {
+      role: 'rider',
+      firstName: document.getElementById('rFirst').value.trim(),
+      lastName: document.getElementById('rLast').value.trim(),
+      phone: '+234 ' + document.getElementById('rPhone').value.trim(),
+      city: document.getElementById('rCity').value,
+      vehicle: document.getElementById('rVeh').value,
+      availability: document.getElementById('rAvail').value,
+      hasId: hasId.value
+    }
+  }
+});
   if(aerr){ toast(aerr.message,'⚠️'); return; }
-
+    if(!au.session){
+    alert('Account created! Check your email and tap the confirmation link, then sign in here.');
+    return;
+  }
   const id = 'r-' + Math.random().toString(36).substr(2,9);
   const first = document.getElementById('rFirst').value.trim();
   const city = document.getElementById('rCity').value;
