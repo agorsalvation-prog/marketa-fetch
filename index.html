@@ -1383,8 +1383,8 @@ setInterval(pullRiders, 60000);
   try{
     let id = null;
     try{ id = localStorage.getItem('mf_cust_session'); }catch(e){}
-    if(!id) return;
-    const { data, error } = await sb.from('customers').select('data').eq('id', id);
+    
+    const { data, error } = await sb.from('customers').select('data');
     if(error){ console.warn('customer pull failed', error.message); return; }
     (data||[]).forEach(r => { if(r.data && r.data.id) customers[r.data.id] = r.data; });
     try{ localStorage.setItem('mf_customers', JSON.stringify(customers)); }catch(e){}
@@ -2645,7 +2645,7 @@ try{ customers = JSON.parse(localStorage.getItem('mf_customers')) || {}; }catch(
 const saveCustomers = () => {
   try{ localStorage.setItem('mf_customers', JSON.stringify(customers)); }catch(e){}
   try{
-    const rows = Object.entries(customers).map(([k,v]) => ({
+    const rows = Object.entries(customers).filter(([k,v]) => v.authId && curCustomer && v.authId === curCustomer.authId).map(([k,v]) => ({
       id: String(v.id || k),
       auth_id: v.authId || null,
       data: v
@@ -2743,6 +2743,7 @@ const id = 'c-' + Math.random().toString(36).substr(2,9);
     address: document.getElementById('cAddr').value.trim(),
     createdAt: new Date().toISOString()
   };
+  curCustomer = customers[id];
   saveCustomers();
   curCustomer = customers[id];
   try{ localStorage.setItem('mf_cust_session', id); }catch(e){}
