@@ -2893,6 +2893,7 @@ async function registerRider(e){
   if(aerr){ toast(aerr.message,'⚠️'); return; }
     if(!au.session){
     alert('Account created! Check your email and tap the confirmation link, then sign in here.');
+    switchRiderAuth('signin');
     return;
   }
   const id = 'r-' + Math.random().toString(36).substr(2,9);
@@ -2951,10 +2952,33 @@ async function loginRider(e){
   const email = document.getElementById('rlEmail').value.trim().toLowerCase();
   const pass = document.getElementById('rlPass').value;
     const { data: sess, error: serr } = await sb.auth.signInWithPassword({ email, password: pass });
+    if(serr && /confirm/i.test(serr.message||'')){
+    alert('Please confirm your email first — check your inbox for the confirmation link.');
+    return;
+  }
   let found = null;
   if(sess && sess.user){
     await pullRiders();
     found = Object.values(riders).find(r => r.authId === sess.user.id);
+        // first login after email confirmation: no rider row yet, so build it from the signup details
+    const m = sess.user.user_metadata || {};
+    if(!found && m.role === 'rider'){
+      const { data: mine, error: merr } = await sb.from('riders').select('id').eq('auth_id', sess.user.id).maybeSingle();
+      if(!merr && !mine){
+        const id = 'r-' + Math.random().toString(36).substr(2,9);
+        found = {
+          id, authId: sess.user.id,
+          firstName: m.firstName, lastName: m.lastName,
+          phone: m.phone, email: sess.user.email,
+          city: m.city, vehicle: m.vehicle,
+          availability: m.availability, hasId: m.hasId,
+          online: false, activeJob: null, status: 'pending',
+          createdAt: new Date().toISOString()
+        };
+        riders[id] = found;
+        saveRiders();
+      }
+    }
   }
 
   document.getElementById('rlf-email').classList.toggle('invalid', !found);
