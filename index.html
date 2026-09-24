@@ -2176,7 +2176,7 @@ async function loginVendor(e){
           bizName: m.bizName, firstName: m.firstName, lastName: m.lastName,
           bizType: m.bizType, branches: m.branches, city: m.city, phone: m.phone,
           email: sess.user.email, samePhone: m.samePhone, whatsapp: m.whatsapp, hasReg: m.hasReg,
-          fee: 800, time: 25, createdAt: new Date().toISOString(), menus: []
+          fee: m.fee || 800, time: m.time || 25, createdAt: new Date().toISOString(), menus: []
         };
         vendors[vendorId] = found;
         curVendor = found;
