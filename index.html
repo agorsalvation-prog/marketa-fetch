@@ -2730,8 +2730,25 @@ async function registerCustomer(e){
     document.getElementById('cf-email').classList.add('invalid');
     toast('An account already exists with that email','⚠️'); return;
   }
-    const { data: au, error: aerr } = await sb.auth.signUp({ email, password: document.getElementById('cPass').value });
+    const { data: au, error: aerr } = await sb.auth.signUp({
+  email, password: document.getElementById('cPass').value,
+  options: {
+    emailRedirectTo: 'https://agorsalvation-prog.github.io/marketa-fetch/',
+    data: {
+      role: 'customer',
+      name: document.getElementById('cName').value.trim(),
+      phone: '+234 ' + document.getElementById('cPhone').value.trim(),
+      city: document.getElementById('cCity').value,
+      address: document.getElementById('cAddr').value.trim()
+    }
+  }
+});
     if(aerr){ toast(aerr.message,'⚠️'); return; }
+    if(!au.session){
+    alert('Account created! Check your email and tap the confirmation link, then sign in here.');
+    switchCustAuth('signin');
+    return;
+  }
 const id = 'c-' + Math.random().toString(36).substr(2,9);
   customers[id] = {
     id,
@@ -2757,10 +2774,31 @@ async function loginCustomer(e){
   const email = document.getElementById('clEmail').value.trim().toLowerCase();
   const pass = document.getElementById('clPass').value;
       const { data: sess, error: serr } = await sb.auth.signInWithPassword({ email, password: pass });
+    if(serr && /confirm/i.test(serr.message||'')){
+    alert('Please confirm your email first — check your inbox for the confirmation link.');
+    return;
+  }
     let found = null;
     if(sess && sess.user){
       await pullCustomers();
       found = Object.values(customers).find(c => c.authId === sess.user.id);
+          // first login after email confirmation: no customer row yet, so build it from the signup details
+    const m = sess.user.user_metadata || {};
+    if(!found && m.role === 'customer'){
+      const { data: mine, error: merr } = await sb.from('customers').select('id').eq('auth_id', sess.user.id).maybeSingle();
+      if(!merr && !mine){
+        const id = 'c-' + Math.random().toString(36).substr(2,9);
+        found = {
+          id, authId: sess.user.id,
+          name: m.name, phone: m.phone, email: sess.user.email,
+          city: m.city, address: m.address,
+          createdAt: new Date().toISOString()
+        };
+        customers[id] = found;
+        curCustomer = found;
+        saveCustomers();
+      }
+    }
     }
   document.getElementById('clf-email').classList.toggle('invalid', !found);
   document.getElementById('clf-pass').classList.toggle('invalid', !found);
