@@ -2149,7 +2149,10 @@ async function loginVendor(e){
   const pass = document.getElementById('lPass').value;
   const { data: sess, error: serr } = await sb.auth.signInWithPassword({ email, password: pass });
       if(serr && /confirm/i.test(serr.message||'')){
-      alert('Please confirm your email first — check your inbox for the confirmation link.');
+      if(confirm("Please confirm your email first. Didn't get the link? Tap OK to send a new one.")){
+  const { error: rerr } = await sb.auth.resend({ type: 'signup', email, options: { emailRedirectTo: 'https://agorsalvation-prog.github.io/marketa-fetch/' } });
+  toast(rerr ? rerr.message : 'New confirmation link sent — check your inbox', rerr ? '⚠️' : '📧');
+}
       return;
     }
   let found = null;
@@ -2775,7 +2778,10 @@ async function loginCustomer(e){
   const pass = document.getElementById('clPass').value;
       const { data: sess, error: serr } = await sb.auth.signInWithPassword({ email, password: pass });
     if(serr && /confirm/i.test(serr.message||'')){
-    alert('Please confirm your email first — check your inbox for the confirmation link.');
+    if(confirm("Please confirm your email first. Didn't get the link? Tap OK to send a new one.")){
+  const { error: rerr } = await sb.auth.resend({ type: 'signup', email, options: { emailRedirectTo: 'https://agorsalvation-prog.github.io/marketa-fetch/' } });
+  toast(rerr ? rerr.message : 'New confirmation link sent — check your inbox', rerr ? '⚠️' : '📧');
+}
     return;
   }
     let found = null;
@@ -2994,7 +3000,10 @@ async function loginRider(e){
   const pass = document.getElementById('rlPass').value;
     const { data: sess, error: serr } = await sb.auth.signInWithPassword({ email, password: pass });
     if(serr && /confirm/i.test(serr.message||'')){
-    alert('Please confirm your email first — check your inbox for the confirmation link.');
+    if(confirm("Please confirm your email first. Didn't get the link? Tap OK to send a new one.")){
+  const { error: rerr } = await sb.auth.resend({ type: 'signup', email, options: { emailRedirectTo: 'https://agorsalvation-prog.github.io/marketa-fetch/' } });
+  toast(rerr ? rerr.message : 'New confirmation link sent — check your inbox', rerr ? '⚠️' : '📧');
+}
     return;
   }
   let found = null;
