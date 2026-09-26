@@ -3146,7 +3146,7 @@ function acceptJob(id){
   o.status = 'assigned';
   o.updatedAt = new Date().toISOString();
   saveOrders();
-  sb.from('orders').update({ status: 'assigned', data: o, public_data: { id: o.id, status: o.status, city: o.city || null, eta: o.eta || null, createdAt: o.createdAt || null } }).eq('id', id).then(({error}) => { if(error) toast('Job sync failed: ' + error.message, '⚠️'); });
+  sb.from('orders').update({ status: 'assigned', data: o, public_data: { id: o.id, status: o.status, city: o.city || null, eta: o.eta || null, createdAt: o.createdAt || null, riderId: o.riderId || null, riderName: (o.riderName || '').split(' ')[0] || null, riderVehicle: o.riderVehicle || null } }).eq('id', id).then(({error}) => { if(error) toast('Job sync failed: ' + error.message, '⚠️'); });
   curRider.activeJob = id; riders[curRider.id] = curRider; saveRiders();
   renderRiderDash();
   toast('Job accepted — head to the store','🛵');
@@ -3195,7 +3195,7 @@ function riderStatus(id, status){
   o.status = status;
   o.updatedAt = new Date().toISOString();
   saveOrders();
-    sb.from('orders').update({ status: status, data: o, public_data: { id: o.id, status: o.status, city: o.city || null, eta: o.eta || null, createdAt: o.createdAt || null } }).eq('id', id).then(({error}) => { if(error) toast('Status sync failed: ' + error.message, '⚠️'); });
+    sb.from('orders').update({ status: status, data: o, public_data: { id: o.id, status: o.status, city: o.city || null, eta: o.eta || null, createdAt: o.createdAt || null, riderId: o.riderId || null, riderName: (o.riderName || '').split(' ')[0] || null, riderVehicle: o.riderVehicle || null } }).eq('id', id).then(({error}) => { if(error) toast('Status sync failed: ' + error.message, '⚠️'); });
     if(status==='picked') startRiderGPS(id);
     if(status==='completed') stopRiderGPS();
 
