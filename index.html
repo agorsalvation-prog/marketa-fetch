@@ -2011,7 +2011,7 @@ function renderTrack(){
   if(o.riderId && o.status!=='completed'){
     panel.innerHTML = `<div class="rider-strip" style="text-align:left">
       <div><b>🛵 ${o.riderName}</b><span>${o.riderVehicle||''} · ${o.status==='picked' ? 'bringing your order now' : 'collecting from the store'}</span></div>
-      <a class="call-btn" href="tel:${(o.riderPhone||'').replace(/\s/g,'')}">📞 Call</a>
+      ${o.riderPhone ? `<a class="call-btn" href="tel:${o.riderPhone.replace(/\s/g,'')}">📞 Call</a>` : ''}
     </div>`;
   } else if(o.status==='completed'){
     panel.innerHTML = `<div class="wallet-ok" style="text-align:left">Delivered by ${o.riderName||'your rider'}. Thanks for ordering with Marketa Fetch!</div>`;
