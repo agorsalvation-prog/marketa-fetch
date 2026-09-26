@@ -3172,7 +3172,7 @@ function renderActiveJob(){
           : encodeURIComponent(`${o.address||''} ${o.city||''}`));
     const navLabel = goStore ? '🧭 To store' : '🧭 To customer';
     action = `<button class="oa-btn prep" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${navTo}','_blank')">${navLabel}</button>` + action;
-
+    if(o.phone) action += `<button class="oa-btn prep" onclick="location.href='tel:${o.phone.replace(/\s/g,'').replace(/^\+2340/,'+234')}'">📞 Call customer</button>`;
 
   box.innerHTML = `
     <div class="job-card active">
