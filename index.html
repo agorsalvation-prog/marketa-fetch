@@ -3160,6 +3160,7 @@ function renderActiveJob(){
     box.innerHTML = `<div class="empty-menu">No active delivery. Accept a job below to get started.</div>`;
     return;
   }
+    if(o.status==='picked') startRiderGPS(o.id);
   let action = '';
   if(o.status==='assigned') action = `<button class="oa-btn prep" onclick="riderStatus('${o.id}','picked')">📦 Picked up</button>`;
   if(o.status==='picked') action = `<button class="oa-btn ready" onclick="riderStatus('${o.id}','completed')">✓ Delivered</button>`;
