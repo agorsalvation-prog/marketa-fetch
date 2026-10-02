@@ -2017,7 +2017,7 @@ function renderTrack(){
   document.getElementById('trackTitle').textContent = titles[stage];
 
   const base = o.speed==='priority' ? 20 : 30;
-  const left = Math.max(2, Math.round(base * (1 - stage/6)));
+  const left = (o.status==='picked' && roadEtaMin) ? roadEtaMin : Math.max(2, Math.round(base * (1 - stage/6)));
   document.getElementById('trackEta').textContent = o.status==='completed'
     ? 'Order complete 🎉'
     : `Arriving in ~${left} min`;
