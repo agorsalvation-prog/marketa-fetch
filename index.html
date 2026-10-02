@@ -1893,7 +1893,7 @@ function storeLatLngFor(o){
   return (v && v.lat && v.lng) ? [v.lat, v.lng] : null;
 }
   // ===== CUSTOMER MAP =====
-let trackMapObj = null, riderMarker = null, lastMapPull = 0;
+let trackMapObj = null, riderMarker = null, lastMapPull = 0, routeLine = null;
 async function refreshRiderPin(orderId){
   const now = Date.now();
   if(now - lastMapPull < 10000) return;
@@ -1933,14 +1933,21 @@ async function refreshRiderPin(orderId){
         L.marker([ord.dropLat, ord.dropLng], {icon: L.divIcon({html:'🏠', className:'', iconSize:[28,28]})}).addTo(trackMapObj);
       }
       if(ord && ord.dropLat && ord.dropLng){
-        L.polyline([[row.rider_lat, row.rider_lng], [ord.dropLat, ord.dropLng]],
+        routeLine = L.polyline([[row.rider_lat, row.rider_lng], [ord.dropLat, ord.dropLng]],
           {color:'#C8F135', weight:4, opacity:0.9}).addTo(trackMapObj);
+        trackMapObj.fitBounds(routeLine.getBounds(), {padding:[40,40], maxZoom:16});
       }
 
 
   } else {
     riderMarker.setLatLng([row.rider_lat, row.rider_lng]);
-    trackMapObj.setView([row.rider_lat, row.rider_lng]);
+        const ord2 = orders.find(x => x.id === orderId);
+    if(routeLine && ord2 && ord2.dropLat && ord2.dropLng){
+      routeLine.setLatLngs([[row.rider_lat, row.rider_lng], [ord2.dropLat, ord2.dropLng]]);
+      trackMapObj.fitBounds(routeLine.getBounds(), {padding:[40,40], maxZoom:16});
+    } else {
+      trackMapObj.setView([row.rider_lat, row.rider_lng]);
+    }
   }
   setTimeout(()=>trackMapObj.invalidateSize(), 100);
 }
