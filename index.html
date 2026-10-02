@@ -1894,6 +1894,21 @@ function storeLatLngFor(o){
 }
   // ===== CUSTOMER MAP =====
 let trackMapObj = null, riderMarker = null, lastMapPull = 0, routeLine = null;
+  let lastRouteFrom = null, roadEtaMin = null;
+async function updateRoadRoute(rLat, rLng, dLat, dLng){
+  if(!routeLine) return;
+  if(lastRouteFrom && trackMapObj.distance([rLat, rLng], lastRouteFrom) < 100) return;
+  lastRouteFrom = [rLat, rLng];
+  try{
+    const res = await fetch(`https://router.project-osrm.org/route/v1/driving/${rLng},${rLat};${dLng},${dLat}?overview=full&geometries=geojson`);
+    const j = await res.json();
+    if(j.code !== 'Ok' || !j.routes || !j.routes.length) return;
+    const pts = j.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+    routeLine.setLatLngs(pts);
+    trackMapObj.fitBounds(routeLine.getBounds(), {padding:[40,40], maxZoom:16});
+    roadEtaMin = Math.max(1, Math.round(j.routes[0].duration / 60));
+  }catch(e){ console.log('route fetch failed', e); }
+}
 async function refreshRiderPin(orderId){
   const now = Date.now();
   if(now - lastMapPull < 10000) return;
@@ -1936,6 +1951,7 @@ async function refreshRiderPin(orderId){
         routeLine = L.polyline([[row.rider_lat, row.rider_lng], [ord.dropLat, ord.dropLng]],
           {color:'#C8F135', weight:4, opacity:0.9}).addTo(trackMapObj);
         trackMapObj.fitBounds(routeLine.getBounds(), {padding:[40,40], maxZoom:16});
+        lastRouteFrom = null; updateRoadRoute(row.rider_lat, row.rider_lng, ord.dropLat, ord.dropLng);
       }
 
 
@@ -1943,8 +1959,7 @@ async function refreshRiderPin(orderId){
     riderMarker.setLatLng([row.rider_lat, row.rider_lng]);
         const ord2 = orders.find(x => x.id === orderId);
     if(routeLine && ord2 && ord2.dropLat && ord2.dropLng){
-      routeLine.setLatLngs([[row.rider_lat, row.rider_lng], [ord2.dropLat, ord2.dropLng]]);
-      trackMapObj.fitBounds(routeLine.getBounds(), {padding:[40,40], maxZoom:16});
+    updateRoadRoute(row.rider_lat, row.rider_lng, ord2.dropLat, ord2.dropLng);
     } else {
       trackMapObj.setView([row.rider_lat, row.rider_lng]);
     }
