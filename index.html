@@ -2117,7 +2117,7 @@ async function registerVendor(e){
   const { data: au, error: aerr } = await sb.auth.signUp({
   email, password: pass,
   options: {
-    emailRedirectTo: 'https://agorsalvation-prog.github.io/marketa-fetch/',
+    emailRedirectTo: 'https://marketafetch.ng/',
     data: { role: 'vendor', bizName, firstName, lastName, bizType, branches, city, phone, samePhone, whatsapp, hasReg }
   }
 });
@@ -2172,7 +2172,7 @@ async function loginVendor(e){
   const { data: sess, error: serr } = await sb.auth.signInWithPassword({ email, password: pass });
       if(serr && /confirm/i.test(serr.message||'')){
       if(confirm("Please confirm your email first. Didn't get the link? Tap OK to send a new one.")){
-  const { error: rerr } = await sb.auth.resend({ type: 'signup', email, options: { emailRedirectTo: 'https://agorsalvation-prog.github.io/marketa-fetch/' } });
+  const { error: rerr } = await sb.auth.resend({ type: 'signup', email, options: { emailRedirectTo: 'https://marketafetch.ng/ } });
   toast(rerr ? rerr.message : 'New confirmation link sent — check your inbox', rerr ? '⚠️' : '📧');
 }
       return;
